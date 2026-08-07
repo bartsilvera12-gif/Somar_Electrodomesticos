@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:#fff; color:#202023; font-family:'Lato',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  * { box-sizing:border-box; }
+  a { color:#1D703A; text-decoration:none; }
+  a:hover { color:#3A8A47; }
+  ::selection { background:#1D703A; color:#fff; }
+  .sm-scroll::-webkit-scrollbar { height:6px; }
+  .sm-scroll::-webkit-scrollbar-thumb { background:#d6e2d8; border-radius:99px; }
+  @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+  @keyframes somarUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+  @keyframes somarIn { from { opacity:0; } to { opacity:1; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; }
+    *, *::before, *::after { animation:none !important; transition-duration:0.01ms !important; }
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:60;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-bottom:1px solid #e8eee9;transition:padding 260ms ease, box-shadow 260ms ease">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:18px;height:100%">
+    <a href="#inicio" onClick="{{ goHome }}" style="display:flex;align-items:center;flex:none">
+      <img src="assets/somar-logo-oval.png" alt="SOMAR Electrodomésticos" style="height:46px;width:auto;display:block;transition:height 260ms ease" ref="{{ logoRef }}">
+    </a>
+
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;align-items:center;gap:2px;margin-left:4px;min-width:0;flex-shrink:1;overflow:hidden">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+          <a href="{{ n.href }}" onClick="{{ n.go }}" style="padding:9px 11px;border-radius:99px;font-size:14.5px;font-weight:700;color:#202023;white-space:nowrap;transition:background 200ms ease,color 200ms ease" style-hover="background:#EEF3EF;color:#1D703A">{{ n.label }}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+
+    <div style="flex:1"></div>
+
+    <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;background:#EEF3EF;border:1px solid #e2eae4;border-radius:99px;padding:0 6px 0 14px;height:42px;flex:0 1 280px;min-width:0;transition:border-color 200ms ease" style-hover="border-color:#3A8A47">
+        <input value="{{ q }}" onChange="{{ onSearch }}" onKeyDown="{{ onSearchKey }}" placeholder="Buscar productos..." aria-label="Buscar productos" style="border:0;outline:0;background:transparent;flex:1;font-family:'Lato',sans-serif;font-size:14px;color:#202023;min-width:0">
+        <button onClick="{{ submitSearch }}" aria-label="Buscar" style="border:0;cursor:pointer;background:#1D703A;color:#fff;width:32px;height:32px;border-radius:99px;display:grid;place-items:center;transition:background 200ms ease" style-hover="background:#3A8A47">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+        </button>
+      </div>
+    </sc-if>
+
+    <a href="{{ waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp" style="width:42px;height:42px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;flex:none;transition:transform 200ms ease,background 200ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+    </a>
+
+    <button onClick="{{ toggleCart }}" aria-label="Mi pedido" style="position:relative;height:42px;padding:0 16px;border:0;cursor:pointer;border-radius:99px;background:#202023;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;flex:none;transition:background 200ms ease" style-hover="background:#1D703A">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2 11.5h10.6L20 7H6"></path><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}"><span>Mi pedido</span></sc-if>
+      <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+        <span style="position:absolute;top:-4px;right:-4px;min-width:21px;height:21px;padding:0 5px;border-radius:99px;background:#3A8A47;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12.5px;display:grid;place-items:center;border:2px solid #fff">{{ cartCount }}</span>
+      </sc-if>
+    </button>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleMenu }}" aria-label="Menú" style="width:42px;height:42px;border-radius:14px;border:1px solid #e2eae4;background:#fff;cursor:pointer;display:grid;place-items:center;flex:none">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#202023" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+      </button>
+    </sc-if>
+  </div>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;background:rgba(32,32,35,0.45);animation:somarIn 200ms ease" onClick="{{ closeMenu }}">
+    <div onClick="{{ stop }}" style="position:absolute;top:0;right:0;bottom:0;width:min(86vw,340px);background:#fff;padding:22px;display:flex;flex-direction:column;gap:6px;animation:somarUp 260ms ease">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <img src="assets/somar-logo-oval.png" alt="SOMAR" style="height:42px;width:auto">
+        <button onClick="{{ closeMenu }}" aria-label="Cerrar" style="width:38px;height:38px;border-radius:12px;border:1px solid #e8eee9;background:#fff;cursor:pointer;font-size:20px;line-height:1;color:#202023">×</button>
+      </div>
+      <div style="display:flex;align-items:center;background:#EEF3EF;border-radius:14px;padding:0 14px;height:48px;margin-bottom:8px">
+        <input value="{{ q }}" onChange="{{ onSearch }}" onKeyDown="{{ onSearchKey }}" placeholder="Buscar productos..." style="border:0;outline:0;background:transparent;flex:1;font-family:'Lato',sans-serif;font-size:16px;min-width:0">
+      </div>
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+        <a href="{{ n.href }}" onClick="{{ n.go }}" style="padding:14px 12px;border-radius:14px;font-size:17px;font-weight:700;color:#202023;border-bottom:1px solid #f1f5f2">{{ n.label }}</a>
+      </sc-for>
+      <a href="{{ waLink }}" target="_blank" rel="noopener" style="margin-top:16px;height:54px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;font-weight:900;font-size:16px">Comprar por WhatsApp</a>
+    </div>
+  </div>
+</sc-if>
+
+<main style="flex:1">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section id="inicio" style="position:relative;overflow:hidden;background:linear-gradient(180deg,#EEF3EF 0%,#ffffff 78%)">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
+      <div>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #d8e5da;color:#1D703A;border-radius:99px;padding:8px 16px;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;animation:somarUp 500ms ease both">
+          <span style="width:7px;height:7px;border-radius:99px;background:#3A8A47;display:block"></span>Tecnología para tu hogar
+        </span>
+        <h1 style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">Todo lo que necesitás para hacer tu hogar mejor.</h1>
+        <p style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">Electrodomésticos, tecnología y calidad al mejor alcance.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:somarUp 560ms 240ms ease both">
+          <a href="#productos" onClick="{{ goList }}" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.24);transition:transform 220ms ease,background 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">Ver productos
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"></line><polyline points="13,6 19,12 13,18"></polyline></svg>
+          </a>
+          <a href="{{ waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 28px;border-radius:99px;background:#fff;border:1.5px solid #202023;color:#202023;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;gap:10px;transition:transform 220ms ease,border-color 220ms ease,color 220ms ease" style-hover="border-color:#1D703A;color:#1D703A;transform:translateY(-2px)">Comprar por WhatsApp</a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:36px;animation:somarUp 560ms 320ms ease both">
+          <sc-for list="{{ heroPoints }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:9px;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:15.5px;color:#3f4a44;text-transform:uppercase;letter-spacing:0.04em">
+              <span style="width:20px;height:20px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;font-size:12px;line-height:1">✓</span>{{ h }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position:relative;min-height:clamp(340px,42vw,470px)">
+        <div style="position:absolute;inset:0;border-radius:28px;overflow:hidden;background:#fff;box-shadow:0 24px 60px rgba(32,32,35,0.12);animation:somarUp 700ms 120ms ease both">
+          <image-slot id="somar-hero" shape="rect" placeholder="Composición de electrodomésticos (TV, heladera, lavarropas)"></image-slot>
+        </div>
+        <div style="position:absolute;left:-6px;top:16%;background:#fff;border-radius:16px;padding:12px 16px;box-shadow:0 12px 30px rgba(32,32,35,0.14);display:flex;align-items:center;gap:10px;animation:somarFloat 6s ease-in-out infinite">
+          <span style="width:30px;height:30px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;font-size:14px">✓</span>
+          <span style="font-weight:900;font-size:14.5px;white-space:nowrap">Calidad garantizada</span>
+        </div>
+        <div style="position:absolute;right:-4px;top:44%;background:#1D703A;color:#fff;border-radius:16px;padding:12px 18px;box-shadow:0 12px 30px rgba(29,112,58,0.3);animation:somarFloat 7s 1s ease-in-out infinite">
+          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap">Ofertas especiales</span>
+        </div>
+        <div style="position:absolute;left:8%;bottom:-14px;background:#fff;border-radius:16px;padding:12px 16px;box-shadow:0 12px 30px rgba(32,32,35,0.14);display:flex;align-items:center;gap:10px;animation:somarFloat 6.5s 0.5s ease-in-out infinite">
+          <span style="width:30px;height:30px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;font-size:14px">💬</span>
+          <span style="font-weight:900;font-size:14.5px;white-space:nowrap">Compra fácil</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="categorias" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
+      <div>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Categorías</span>
+        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">¿Qué estás buscando?</h2>
+      </div>
+      <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px">Ver todo el catálogo →</a>
+    </div>
+    <div data-reveal class="sm-scroll" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px">
+      <sc-for list="{{ categories }}" as="c" hint-placeholder-count="8">
+        <button onClick="{{ c.go }}" style="scroll-snap-align:start;min-width:200px;text-align:left;border:1px solid #e8eee9;background:#fff;border-radius:20px;padding:0;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif;transition:transform 260ms ease,box-shadow 260ms ease,border-color 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.11);border-color:#d3e3d7">
+          <div style="height:132px;background:#EEF3EF;overflow:hidden">
+            <image-slot id="{{ c.slot }}" shape="rect" placeholder="{{ c.name }}"></image-slot>
+          </div>
+          <div style="padding:14px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div>
+              <div style="font-weight:900;font-size:16px">{{ c.name }}</div>
+              <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;color:#7c8781">{{ c.count }} productos</div>
+            </div>
+            <span style="width:32px;height:32px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;flex:none">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="18" y2="12"></line><polyline points="12,6 18,12 12,18"></polyline></svg>
+            </span>
+          </div>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="productos" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
+      <div>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Selección SOMAR</span>
+        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Productos destacados</h2>
+      </div>
+      <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px">Ver todos →</a>
+    </div>
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
+      <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+        <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
+          <div style="position:relative;height:210px;background:#f7faf8;overflow:hidden;cursor:pointer" onClick="{{ p.open }}">
+            <image-slot id="{{ p.slot }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+          </div>
+          <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+            <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
+          </sc-if>
+          <button onClick="{{ p.fav }}" aria-label="Favorito" style="position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:99px;border:1px solid #e8eee9;background:rgba(255,255,255,0.94);cursor:pointer;display:grid;place-items:center;font-size:15px;line-height:1;color:{{ p.favColor }};transition:transform 200ms ease" style-hover="transform:scale(1.12)">♥</button>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:6px;flex:1">
+            <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
+            <h3 style="font-size:16.5px;font-weight:700;line-height:1.32;margin:0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
+            <div style="display:flex;align-items:baseline;gap:10px;margin-top:6px;flex-wrap:wrap">
+              <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:24px;color:#1D703A;letter-spacing:-0.01em">{{ p.priceFmt }}</span>
+              <sc-if value="{{ p.prevFmt }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:'Roboto Condensed',sans-serif;font-size:16px;color:#a3aca7;text-decoration:line-through">{{ p.prevFmt }}</span>
+              </sc-if>
+              <sc-if value="{{ p.discount }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;background:#EEF3EF;color:#1D703A;padding:3px 8px;border-radius:6px">-{{ p.discount }}%</span>
+              </sc-if>
+            </div>
+            <div style="font-size:13.5px;color:{{ p.stockColor }};margin-top:2px">{{ p.stockLabel }}</div>
+            <div style="display:flex;gap:8px;margin-top:auto;padding-top:14px">
+              <button onClick="{{ p.open }}" style="flex:1;height:44px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;color:#202023;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Ver producto</button>
+              <button onClick="{{ p.consult }}" style="flex:1;height:44px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:background 200ms ease" style-hover="background:#3A8A47">Consultar</button>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="ofertas" style="margin-top:clamp(56px,7vw,90px);background:#1D703A;color:#fff;overflow:hidden">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,6vw,80px) 20px">
+      <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px">
+        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:0;max-width:16ch;line-height:1.08">Ofertas que no podés dejar pasar</h2>
+        <a href="#productos" onClick="{{ goOffers }}" style="height:50px;padding:0 26px;border-radius:99px;background:#fff;color:#1D703A;font-weight:900;font-size:15.5px;display:inline-flex;align-items:center;transition:transform 220ms ease" style-hover="transform:translateY(-2px);color:#1D703A">Ver todas las ofertas</a>
+      </div>
+      <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+        <div style="grid-column:span 2;min-width:0;background:#175c30;border-radius:24px;padding:clamp(26px,3.4vw,42px);display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:280px;position:relative;overflow:hidden">
+          <div>
+            <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.75">Tiempo limitado</span>
+            <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:clamp(52px,8vw,96px);line-height:0.95;letter-spacing:-0.02em;margin-top:10px">HASTA 20% OFF</div>
+            <p style="font-size:17px;opacity:0.85;margin:14px 0 0;max-width:38ch">Renová tu hogar. Promociones seleccionadas por tiempo limitado.</p>
+          </div>
+          <a href="#productos" onClick="{{ goOffers }}" style="align-self:flex-start;height:52px;padding:0 26px;border-radius:99px;background:#202023;color:#fff;font-weight:900;font-size:15.5px;display:inline-flex;align-items:center;transition:background 220ms ease" style-hover="background:#000;color:#fff">Aprovechar ahora</a>
+        </div>
+        <sc-for list="{{ offerCards }}" as="o" hint-placeholder-count="2">
+          <button onClick="{{ o.go }}" style="text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;background:#fff;color:#202023;border-radius:24px;padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:280px;transition:transform 260ms ease" style-hover="transform:translateY(-6px)">
+            <div style="flex:1;background:#EEF3EF;min-height:150px">
+              <image-slot id="{{ o.slot }}" shape="rect" placeholder="{{ o.name }}"></image-slot>
+            </div>
+            <div style="padding:18px">
+              <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#3A8A47">{{ o.tag }}</div>
+              <div style="font-weight:900;font-size:18px;margin-top:4px;line-height:1.3">{{ o.name }}</div>
+              <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:22px;color:#1D703A;margin-top:8px">{{ o.priceFmt }}</div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) 20px">
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+      <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;gap:12px;padding:18px;border-radius:16px;background:#EEF3EF;transition:background 240ms ease" style-hover="background:#e3ece5">
+          <span style="width:38px;height:38px;flex:none;border-radius:99px;background:#fff;color:#1D703A;display:grid;place-items:center;font-size:16px;font-weight:900">✓</span>
+          <span style="font-weight:700;font-size:15px;line-height:1.3">{{ b }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#f7faf8;border-top:1px solid #eef3ef;border-bottom:1px solid #eef3ef">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,6vw,80px) 20px">
+      <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px">
+        <div>
+          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Más vendidos</span>
+          <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Los favoritos de nuestros clientes</h2>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ scrollLeft }}" aria-label="Anterior" style="width:46px;height:46px;border-radius:99px;border:1.5px solid #dde7e0;background:#fff;cursor:pointer;display:grid;place-items:center;transition:border-color 200ms ease,background 200ms ease" style-hover="border-color:#1D703A;background:#EEF3EF">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#202023" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="14,5 7,12 14,19"></polyline></svg>
+          </button>
+          <button onClick="{{ scrollRight }}" aria-label="Siguiente" style="width:46px;height:46px;border-radius:99px;border:1.5px solid #dde7e0;background:#fff;cursor:pointer;display:grid;place-items:center;transition:border-color 200ms ease,background 200ms ease" style-hover="border-color:#1D703A;background:#EEF3EF">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#202023" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="10,5 17,12 10,19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      <div ref="{{ railRef }}" class="sm-scroll" style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 12px;scroll-behavior:smooth">
+        <sc-for list="{{ bestSellers }}" as="p" hint-placeholder-count="5">
+          <article style="scroll-snap-align:start;flex:0 0 auto;width:262px;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;position:relative;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
+            <div style="height:190px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+              <image-slot id="{{ p.slotB }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+            </div>
+            <div style="padding:16px">
+              <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
+              <h3 style="font-size:16px;font-weight:700;line-height:1.32;margin:6px 0 0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
+              <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:23px;color:#1D703A;margin-top:10px">{{ p.priceFmt }}</div>
+              <button onClick="{{ p.add }}" style="width:100%;margin-top:14px;height:44px;border-radius:99px;border:0;background:#202023;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:background 200ms ease" style-hover="background:#1D703A">Agregar al pedido</button>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="position:relative;border-radius:28px;overflow:hidden;background:#202023;color:#fff;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));min-height:340px">
+      <div style="padding:clamp(32px,4.4vw,58px);display:flex;flex-direction:column;justify-content:center;gap:18px">
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:#7ec78f">Promoción destacada</span>
+        <h2 style="font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-0.025em;line-height:1.06;margin:0">Equipá tu hogar con SOMAR</h2>
+        <p style="font-size:17.5px;line-height:1.55;color:#c4ccc7;margin:0;max-width:44ch">Encontrá tecnología, comodidad y calidad en un solo lugar.</p>
+        <a href="#productos" onClick="{{ goList }}" style="align-self:flex-start;margin-top:8px;height:54px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">Descubrir productos</a>
+      </div>
+      <div style="position:relative;min-height:260px" ref="{{ paraRef }}">
+        <image-slot id="somar-promo" shape="rect" placeholder="Ambiente de hogar equipado"></image-slot>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="text-align:center;max-width:640px;margin:0 auto 40px">
+      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Cómo comprar</span>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Comprar nunca fue tan fácil</h2>
+    </div>
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <div style="border:1px solid #e8eee9;border-radius:20px;padding:28px;background:#fff;transition:border-color 240ms ease,transform 240ms ease" style-hover="border-color:#cfe0d4;transform:translateY(-4px)">
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;color:#3A8A47">Paso {{ s.n }}</div>
+          <div style="font-size:20px;font-weight:900;margin-top:10px;line-height:1.3">{{ s.title }}</div>
+          <p style="color:#66716b;font-size:15.5px;line-height:1.55;margin:8px 0 0">{{ s.text }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:34px">
+      <a href="{{ waLink }}" target="_blank" rel="noopener" style="height:62px;padding:0 40px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:18px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 10px 28px rgba(29,112,58,0.26);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+        Comprar por WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <section style="margin-top:clamp(56px,7vw,90px);border-top:1px solid #eef3ef;border-bottom:1px solid #eef3ef;background:#fff;overflow:hidden">
+    <div style="max-width:1280px;margin:0 auto;padding:34px 20px">
+      <div style="text-align:center;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa39d;margin-bottom:22px">Marcas que encontrás en SOMAR</div>
+      <div class="sm-scroll" style="display:flex;gap:44px;overflow-x:auto;align-items:center;justify-content:flex-start;padding-bottom:6px">
+        <sc-for list="{{ brandsList }}" as="b" hint-placeholder-count="8">
+          <span style="flex:0 0 auto;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:26px;letter-spacing:0.02em;color:#b6bfb9;filter:grayscale(1);transition:color 240ms ease" style-hover="color:#1D703A">{{ b }}</span>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="nosotros" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(28px,4vw,56px);align-items:center">
+      <div style="border-radius:24px;overflow:hidden;min-height:320px;background:#EEF3EF">
+        <image-slot id="somar-local" shape="rect" placeholder="Foto del local o del equipo SOMAR"></image-slot>
+      </div>
+      <div>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Sobre SOMAR</span>
+        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 16px;line-height:1.1">Tecnología y calidad para tu hogar</h2>
+        <p style="font-size:17.5px;line-height:1.6;color:#55605a;margin:0;max-width:52ch;text-wrap:pretty">En SOMAR Electrodomésticos ofrecemos productos confiables y una atención cercana. Te acompañamos antes, durante y después de la compra para que elijas con seguridad.</p>
+        <div style="display:flex;gap:34px;margin-top:28px;flex-wrap:wrap">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+            <div>
+              <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:34px;color:#1D703A;line-height:1">{{ s.v }}</div>
+              <div style="font-size:14.5px;color:#7c8781;margin-top:4px">{{ s.l }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="margin-bottom:26px">
+      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Testimonios · datos demo</span>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Clientes que confían en SOMAR</h2>
+    </div>
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+      <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+        <div style="border:1px solid #e8eee9;border-radius:20px;padding:26px;background:#fff;display:flex;flex-direction:column;gap:14px">
+          <div style="color:#1D703A;font-size:16px;letter-spacing:2px">{{ t.stars }}</div>
+          <p style="font-size:16px;line-height:1.6;color:#3f4a44;margin:0;text-wrap:pretty">{{ t.text }}</p>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:auto">
+            <span style="width:40px;height:40px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;font-weight:900">{{ t.initial }}</span>
+            <div>
+              <div style="font-weight:700;font-size:15px">{{ t.name }}</div>
+              <div style="font-size:13px;color:#9aa39d">Testimonio demo</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+    <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px">
+      <h2 style="font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:-0.02em;margin:0">Seguinos en nuestras redes</h2>
+      <a href="https://instagram.com" target="_blank" rel="noopener" style="height:48px;padding:0 24px;border-radius:99px;border:1.5px solid #202023;color:#202023;font-weight:900;font-size:15px;display:inline-flex;align-items:center;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Seguir a SOMAR</a>
+    </div>
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+      <sc-for list="{{ instagram }}" as="ig" hint-placeholder-count="6">
+        <a href="https://instagram.com" target="_blank" rel="noopener" style="position:relative;display:block;aspect-ratio:1;border-radius:14px;overflow:hidden;background:#EEF3EF">
+          <image-slot id="{{ ig.slot }}" shape="rect" placeholder="Post de Instagram"></image-slot>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="contacto" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px clamp(56px,7vw,90px)">
+    <div data-reveal style="border-radius:28px;background:#EEF3EF;padding:clamp(36px,5vw,64px);text-align:center">
+      <h2 style="font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-0.025em;margin:0;line-height:1.06">¿Buscás un electrodoméstico?</h2>
+      <p style="font-size:18px;color:#55605a;margin:14px auto 0;max-width:48ch;line-height:1.55">Escribinos y te ayudamos a encontrar la mejor opción.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+        <a href="{{ waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">Hablar por WhatsApp</a>
+        <a href="#productos" onClick="{{ goList }}" style="height:56px;padding:0 30px;border-radius:99px;background:#fff;color:#202023;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;transition:transform 220ms ease" style-hover="transform:translateY(-2px);color:#1D703A">Ver productos</a>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1280px;margin:0 auto;padding:26px 20px 80px">
+  <div style="font-family:'Roboto Condensed',sans-serif;font-size:14.5px;color:#8b958f;margin-bottom:18px">
+    <a href="#inicio" onClick="{{ goHome }}">Inicio</a> / <span style="color:#202023">Productos</span>
+  </div>
+  <h1 style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.025em;margin:0 0 6px">Productos</h1>
+  <p style="color:#7c8781;font-size:16px;margin:0 0 24px">{{ resultLabel }}</p>
+
+  <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+    <div style="display:flex;align-items:center;background:#fff;border:1.5px solid #e2eae4;border-radius:99px;padding:0 16px;height:50px;flex:1;min-width:220px">
+      <input value="{{ q }}" onChange="{{ onSearch }}" placeholder="Buscar por nombre o marca..." style="border:0;outline:0;background:transparent;flex:1;font-family:'Lato',sans-serif;font-size:15.5px;min-width:0">
+    </div>
+    <select value="{{ sort }}" onChange="{{ onSort }}" aria-label="Ordenar" style="height:50px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;padding:0 18px;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer;color:#202023">
+      <option value="destacados">Destacados</option>
+      <option value="menor">Menor precio</option>
+      <option value="mayor">Mayor precio</option>
+      <option value="recientes">Más recientes</option>
+    </select>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ openFilters }}" style="height:50px;padding:0 22px;border-radius:99px;border:0;background:#202023;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer">Filtros</button>
+    </sc-if>
+  </div>
+
+  <div style="display:grid;grid-template-columns:{{ listCols }};gap:24px;align-items:start">
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <aside style="position:sticky;top:110px;border:1px solid #e8eee9;border-radius:20px;padding:22px;background:#fff;display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-weight:900;font-size:17px">Filtros</span>
+          <button onClick="{{ clearFilters }}" style="border:0;background:transparent;cursor:pointer;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:#1D703A;padding:0">Limpiar filtros</button>
+        </div>
+        <div>
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Categoría</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="6">
+              <button onClick="{{ c.go }}" style="border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};border-radius:99px;padding:8px 14px;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 200ms ease">{{ c.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Marca</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ brandChips }}" as="c" hint-placeholder-count="6">
+              <button onClick="{{ c.go }}" style="border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};border-radius:99px;padding:8px 14px;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 200ms ease">{{ c.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Precio hasta {{ maxPriceFmt }}</div>
+          <input type="range" min="300000" max="6000000" step="100000" value="{{ maxPrice }}" onChange="{{ onPrice }}" style="width:100%;accent-color:#1D703A">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer">
+            <input type="checkbox" checked="{{ onlyOffer }}" onChange="{{ toggleOffer }}" style="width:18px;height:18px;accent-color:#1D703A">En promoción
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer">
+            <input type="checkbox" checked="{{ onlyStock }}" onChange="{{ toggleStock }}" style="width:18px;height:18px;accent-color:#1D703A">Solo disponibles
+          </label>
+        </div>
+      </aside>
+    </sc-if>
+
+    <div style="min-width:0">
+      <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px">
+          <sc-for list="{{ list }}" as="p" hint-placeholder-count="8">
+            <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;animation:somarUp 320ms ease both;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
+              <div style="height:190px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+                <image-slot id="{{ p.slotL }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+              </div>
+              <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+                <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
+              </sc-if>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:5px;flex:1">
+                <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
+                <h3 style="font-size:16px;font-weight:700;line-height:1.32;margin:0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
+                <div style="display:flex;align-items:baseline;gap:9px;margin-top:6px;flex-wrap:wrap">
+                  <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:23px;color:#1D703A">{{ p.priceFmt }}</span>
+                  <sc-if value="{{ p.prevFmt }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:'Roboto Condensed',sans-serif;font-size:15px;color:#a3aca7;text-decoration:line-through">{{ p.prevFmt }}</span>
+                  </sc-if>
+                </div>
+                <div style="font-size:13.5px;color:{{ p.stockColor }}">{{ p.stockLabel }}</div>
+                <div style="display:flex;gap:8px;margin-top:auto;padding-top:14px">
+                  <button onClick="{{ p.open }}" style="flex:1;height:42px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Ver</button>
+                  <button onClick="{{ p.add }}" style="flex:1;height:42px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 200ms ease" style-hover="background:#3A8A47">Agregar</button>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px dashed #d6e2d8;border-radius:20px;padding:60px 24px;text-align:center;background:#f7faf8">
+          <div style="font-size:20px;font-weight:900">No encontramos productos</div>
+          <p style="color:#7c8781;font-size:15.5px;margin:8px 0 20px">Probá con otra búsqueda o quitá algunos filtros.</p>
+          <button onClick="{{ clearFilters }}" style="height:48px;padding:0 24px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer">Limpiar filtros</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:1280px;margin:0 auto;padding:26px 20px 80px">
+  <div style="font-family:'Roboto Condensed',sans-serif;font-size:14.5px;color:#8b958f;margin-bottom:22px">
+    <a href="#inicio" onClick="{{ goHome }}">Inicio</a> / <a href="#productos" onClick="{{ goList }}">Productos</a> / <span style="color:#202023">{{ current.name }}</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,56px)">
+    <div>
+      <div style="border-radius:24px;overflow:hidden;background:#f7faf8;aspect-ratio:4/3;border:1px solid #eef3ef">
+        <image-slot id="{{ current.slotD }}" shape="rect" placeholder="{{ current.name }}"></image-slot>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
+        <sc-for list="{{ current.gallery }}" as="g" hint-placeholder-count="4">
+          <div style="aspect-ratio:1;border-radius:14px;overflow:hidden;background:#f7faf8;border:1px solid #eef3ef">
+            <image-slot id="{{ g }}" shape="rect" placeholder="Vista"></image-slot>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f">{{ current.brand }}</div>
+      <h1 style="font-size:clamp(26px,3.4vw,38px);font-weight:900;letter-spacing:-0.02em;line-height:1.12;margin:8px 0 0">{{ current.name }}</h1>
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:20px">
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:clamp(34px,4.4vw,46px);color:#1D703A;line-height:1">{{ current.priceFmt }}</span>
+        <sc-if value="{{ current.prevFmt }}" hint-placeholder-val="{{ true }}">
+          <span style="font-family:'Roboto Condensed',sans-serif;font-size:20px;color:#a3aca7;text-decoration:line-through">{{ current.prevFmt }}</span>
+        </sc-if>
+        <sc-if value="{{ current.discount }}" hint-placeholder-val="{{ true }}">
+          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:15px;background:#EEF3EF;color:#1D703A;padding:5px 10px;border-radius:8px">-{{ current.discount }}% OFF</span>
+        </sc-if>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:15px;color:{{ current.stockColor }}">
+        <span style="width:8px;height:8px;border-radius:99px;background:currentColor"></span>{{ current.stockLabel }}
+      </div>
+      <p style="font-size:16.5px;line-height:1.62;color:#55605a;margin:22px 0 0;max-width:56ch;text-wrap:pretty">{{ current.description }}</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+        <a href="{{ current.waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.22);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+          Consultar por WhatsApp
+        </a>
+        <button onClick="{{ current.add }}" style="height:56px;padding:0 28px;border-radius:99px;border:1.5px solid #202023;background:#fff;color:#202023;font-family:'Lato',sans-serif;font-weight:900;font-size:16px;cursor:pointer;transition:border-color 220ms ease,color 220ms ease" style-hover="border-color:#1D703A;color:#1D703A">Agregar al pedido</button>
+      </div>
+      <div style="margin-top:30px;border-top:1px solid #eef3ef;padding-top:24px">
+        <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:12px">Características</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ current.features }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:15.5px;color:#3f4a44">
+              <span style="color:#1D703A;font-weight:900">✓</span>{{ f }}
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top:26px;border:1px solid #eef3ef;border-radius:18px;overflow:hidden">
+        <sc-for list="{{ current.specs }}" as="s" hint-placeholder-count="4">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 18px;border-bottom:1px solid #f3f7f4;font-size:15px">
+            <span style="color:#8b958f">{{ s.k }}</span><span style="font-weight:700;text-align:right">{{ s.v }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:clamp(48px,6vw,80px)">
+    <h2 style="font-size:clamp(22px,2.8vw,30px);font-weight:900;letter-spacing:-0.02em;margin:0 0 20px">Productos relacionados</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px">
+      <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
+        <article style="border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.1)">
+          <div style="height:170px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+            <image-slot id="{{ p.slotR }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+          </div>
+          <div style="padding:15px">
+            <div style="font-family:'Roboto Condensed',sans-serif;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
+            <h3 style="font-size:15.5px;font-weight:700;line-height:1.3;margin:5px 0 0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
+            <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:21px;color:#1D703A;margin-top:8px">{{ p.priceFmt }}</div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</main>
+
+<footer style="background:#14261a;color:#fff;margin-top:auto">
+  <div style="max-width:1280px;margin:0 auto;padding:56px 20px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:36px">
+    <div>
+      <img src="assets/somar-logo-oval.png" alt="SOMAR Electrodomésticos" style="height:56px;width:auto;background:#fff;border-radius:12px;padding:6px 10px">
+      <p style="font-family:'Roboto Condensed',sans-serif;font-size:17px;letter-spacing:0.08em;text-transform:uppercase;color:#7ec78f;margin:16px 0 0">Innovación y calidad</p>
+      <p style="color:#a7b3ab;font-size:15px;line-height:1.6;margin:12px 0 0;max-width:34ch">Electrodomésticos, tecnología y productos para el hogar.</p>
+    </div>
+    <div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.14em;text-transform:uppercase;color:#7f8c84;margin-bottom:14px">Menú</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ footerNav }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.href }}" onClick="{{ n.go }}" style="color:#dbe4dd;font-size:15.5px;transition:color 200ms ease" style-hover="color:#7ec78f">{{ n.label }}</a>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.14em;text-transform:uppercase;color:#7f8c84;margin-bottom:14px">Contacto</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="tel:0971244226" style="color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:21px;transition:color 200ms ease" style-hover="color:#7ec78f">0971 244 226</a>
+        <a href="tel:0975515519" style="color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:21px;transition:color 200ms ease" style-hover="color:#7ec78f">0975 515 519</a>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <sc-for list="{{ social }}" as="s" hint-placeholder-count="3">
+          <a href="{{ s.href }}" target="_blank" rel="noopener" style="height:40px;padding:0 16px;border-radius:99px;border:1px solid #2c4433;color:#dbe4dd;font-size:14px;font-weight:700;display:inline-flex;align-items:center;transition:background 200ms ease,color 200ms ease" style-hover="background:#1D703A;color:#fff">{{ s.label }}</a>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="border-top:1px solid #22392a">
+    <div style="max-width:1280px;margin:0 auto;padding:18px 20px;font-size:14px;color:#8d998f">© {{ year }} SOMAR Electrodomésticos. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:100;background:rgba(32,32,35,0.45);animation:somarIn 200ms ease" onClick="{{ toggleCart }}">
+    <div onClick="{{ stop }}" style="position:absolute;top:0;right:0;bottom:0;width:min(94vw,430px);background:#fff;display:flex;flex-direction:column;animation:somarUp 280ms ease">
+      <div style="padding:22px;border-bottom:1px solid #eef3ef;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:20px;font-weight:900">Mi pedido</div>
+          <div style="font-size:14px;color:#8b958f">{{ cartCount }} producto(s)</div>
+        </div>
+        <button onClick="{{ toggleCart }}" aria-label="Cerrar" style="width:38px;height:38px;border-radius:12px;border:1px solid #e8eee9;background:#fff;cursor:pointer;font-size:20px;line-height:1">×</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px">
+        <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+            <div style="display:flex;gap:12px;align-items:center;border:1px solid #eef3ef;border-radius:16px;padding:12px">
+              <div style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;background:#f7faf8">
+                <image-slot id="{{ l.slotC }}" shape="rect" placeholder="."></image-slot>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:14.5px;line-height:1.3">{{ l.name }}</div>
+                <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:16px;color:#1D703A;margin-top:2px">{{ l.subtotalFmt }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex:none">
+                <button onClick="{{ l.dec }}" aria-label="Quitar uno" style="width:30px;height:30px;border-radius:99px;border:1px solid #e2eae4;background:#fff;cursor:pointer;font-size:16px;line-height:1">−</button>
+                <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;min-width:18px;text-align:center">{{ l.qty }}</span>
+                <button onClick="{{ l.inc }}" aria-label="Agregar uno" style="width:30px;height:30px;border-radius:99px;border:1px solid #e2eae4;background:#fff;cursor:pointer;font-size:16px;line-height:1">+</button>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{ emptyCart }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:60px 10px">
+            <div style="font-size:17px;font-weight:900">Tu pedido está vacío</div>
+            <p style="color:#8b958f;font-size:15px;margin:8px 0 20px">Agregá productos y coordinamos todo por WhatsApp.</p>
+            <button onClick="{{ goListFromCart }}" style="height:48px;padding:0 24px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer">Ver productos</button>
+          </div>
+        </sc-if>
+      </div>
+      <div style="border-top:1px solid #eef3ef;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+          <span style="font-size:15px;color:#7c8781">Total estimado</span>
+          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:26px;color:#1D703A">{{ cartTotalFmt }}</span>
+        </div>
+        <a href="{{ cartWaLink }}" target="_blank" rel="noopener" style="height:56px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 220ms ease" style-hover="background:#3A8A47;color:#fff">Finalizar pedido por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<a href="{{ waLink }}" target="_blank" rel="noopener" aria-label="¿Necesitás ayuda? Escribinos por WhatsApp" style="position:fixed;right:18px;bottom:18px;z-index:70;height:58px;border-radius:99px;background:#1D703A;color:#fff;display:flex;align-items:center;gap:0;padding:0 17px;box-shadow:0 10px 26px rgba(29,112,58,0.34);transition:gap 260ms ease,padding 260ms ease,background 220ms ease" style-hover="background:#3A8A47;gap:10px;padding:0 22px 0 17px;color:#fff">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+  <span style="max-width:0;overflow:hidden;white-space:nowrap;font-weight:900;font-size:15px;transition:max-width 300ms ease" style-hover="max-width:160px">¿Necesitás ayuda?</span>
+</a>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:110;background:#202023;color:#fff;padding:14px 22px;border-radius:99px;font-weight:700;font-size:15px;box-shadow:0 12px 30px rgba(0,0,0,0.25);animation:somarUp 260ms ease;display:flex;align-items:center;gap:10px">
+    <span style="width:20px;height:20px;border-radius:99px;background:#3A8A47;display:grid;place-items:center;font-size:12px">✓</span>{{ toast }}
+  </div>
+</sc-if>
+
+<sc-if value="{{ filtersOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:100;background:rgba(32,32,35,0.45)" onClick="{{ closeFilters }}">
+    <div onClick="{{ stop }}" style="position:absolute;top:0;left:0;bottom:0;width:min(88vw,340px);background:#fff;padding:22px;overflow-y:auto;animation:somarUp 260ms ease">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <span style="font-weight:900;font-size:19px">Filtros</span>
+        <button onClick="{{ closeFilters }}" aria-label="Cerrar" style="width:38px;height:38px;border-radius:12px;border:1px solid #e8eee9;background:#fff;cursor:pointer;font-size:20px;line-height:1">×</button>
+      </div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Categoría</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px">
+        <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.go }}" style="border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};border-radius:99px;padding:9px 15px;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer">{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Marca</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px">
+        <sc-for list="{{ brandChips }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.go }}" style="border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};border-radius:99px;padding:9px 15px;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer">{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:10px">Precio hasta {{ maxPriceFmt }}</div>
+      <input type="range" min="300000" max="6000000" step="100000" value="{{ maxPrice }}" onChange="{{ onPrice }}" style="width:100%;accent-color:#1D703A;margin-bottom:22px">
+      <label style="display:flex;align-items:center;gap:10px;font-size:16px;margin-bottom:12px">
+        <input type="checkbox" checked="{{ onlyOffer }}" onChange="{{ toggleOffer }}" style="width:20px;height:20px;accent-color:#1D703A">En promoción
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:16px;margin-bottom:22px">
+        <input type="checkbox" checked="{{ onlyStock }}" onChange="{{ toggleStock }}" style="width:20px;height:20px;accent-color:#1D703A">Solo disponibles
+      </label>
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ clearFilters }}" style="flex:1;height:50px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer">Limpiar</button>
+        <button onClick="{{ closeFilters }}" style="flex:1;height:50px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:15px;cursor:pointer">Ver resultados</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const WA = '595971244226';
+const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs) =>
+  ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs });
+
+const PRODUCTS = [
+  P(1,'smart-tv-50-4k','Smart TV 50" 4K UHD','Samsung','Televisores',2490000,2990000,'Oferta',7,true,true,
+    'Smart TV de 50 pulgadas con resolución 4K UHD, sistema operativo con apps integradas y control por voz. Imagen nítida y colores reales para toda la familia.',
+    ['Resolución 4K UHD real','Apps de streaming preinstaladas','3 puertos HDMI y 2 USB','Wi-Fi y Bluetooth integrados'],
+    [{k:'Pantalla',v:'50" LED'},{k:'Resolución',v:'3840 x 2160'},{k:'Conectividad',v:'Wi-Fi / BT / HDMI'},{k:'Garantía',v:'12 meses'}]),
+  P(2,'smart-tv-65-qled','Smart TV 65" QLED','LG','Televisores',4890000,null,null,4,true,false,
+    'Pantalla QLED de 65 pulgadas con alto brillo y contraste. Ideal para living amplio y para disfrutar deportes y películas.',
+    ['Panel QLED de alto brillo','Modo cine y modo deportes','Sonido envolvente','Control remoto inteligente'],
+    [{k:'Pantalla',v:'65" QLED'},{k:'Resolución',v:'4K UHD'},{k:'HDMI',v:'4 puertos'},{k:'Garantía',v:'12 meses'}]),
+  P(3,'heladera-no-frost-380','Heladera No Frost 380L','Whirlpool','Heladeras',4290000,4790000,'Oferta',3,true,true,
+    'Heladera No Frost de 380 litros con freezer superior, estantes regulables y bajo consumo energético.',
+    ['Tecnología No Frost','Estantes de vidrio templado','Cajón para verduras','Bajo consumo'],
+    [{k:'Capacidad',v:'380 litros'},{k:'Tipo',v:'No Frost'},{k:'Eficiencia',v:'Clase A'},{k:'Garantía',v:'12 meses'}]),
+  P(4,'heladera-frio-seco-250','Heladera Frío Seco 250L','Midea','Heladeras',2190000,null,null,9,false,false,
+    'Heladera compacta de 250 litros, práctica para departamentos y familias pequeñas.',
+    ['Freezer independiente','Interior iluminado','Puerta reversible','Bandejas amplias'],
+    [{k:'Capacidad',v:'250 litros'},{k:'Tipo',v:'Frío seco'},{k:'Color',v:'Blanco'},{k:'Garantía',v:'12 meses'}]),
+  P(5,'cocina-4-hornallas','Cocina 4 hornallas con horno','Tokyo','Cocinas',1590000,null,'Más vendido',12,false,true,
+    'Cocina de 4 hornallas con horno amplio, encendido eléctrico y puerta con visor.',
+    ['Encendido eléctrico','Horno con visor','Tapa de vidrio','Válvula de seguridad'],
+    [{k:'Hornallas',v:'4'},{k:'Horno',v:'Con visor'},{k:'Ancho',v:'56 cm'},{k:'Garantía',v:'12 meses'}]),
+  P(6,'lavarropas-automatico-8kg','Lavarropas Automático 8kg','LG','Lavarropas',3290000,3690000,'Oferta',5,true,true,
+    'Lavarropas automático de carga frontal con 8 kilos de capacidad y múltiples programas de lavado.',
+    ['8 kg de capacidad','12 programas de lavado','Motor silencioso','Bloqueo para niños'],
+    [{k:'Capacidad',v:'8 kg'},{k:'Carga',v:'Frontal'},{k:'Centrifugado',v:'1200 rpm'},{k:'Garantía',v:'12 meses'}]),
+  P(7,'aire-split-12000','Aire Acondicionado Split 12.000 BTU','Midea','Aires acondicionados',2790000,null,'Más vendido',8,true,true,
+    'Split frío/calor de 12.000 BTU con tecnología inverter y bajo nivel de ruido.',
+    ['Tecnología inverter','Frío y calor','Filtro lavable','Control remoto con display'],
+    [{k:'Potencia',v:'12.000 BTU'},{k:'Tipo',v:'Inverter'},{k:'Función',v:'Frío / Calor'},{k:'Garantía',v:'12 meses'}]),
+  P(8,'aire-split-18000','Aire Acondicionado Split 18.000 BTU','Tokyo','Aires acondicionados',3590000,null,'Últimas unidades',2,false,false,
+    'Split de 18.000 BTU pensado para ambientes grandes, con arranque rápido y modo nocturno.',
+    ['Para ambientes grandes','Modo nocturno','Arranque rápido','Instalación coordinada'],
+    [{k:'Potencia',v:'18.000 BTU'},{k:'Tipo',v:'On/Off'},{k:'Función',v:'Frío / Calor'},{k:'Garantía',v:'12 meses'}]),
+  P(9,'celular-128gb','Celular 128GB 6GB RAM','Xiaomi','Celulares',1890000,2150000,'Oferta',10,true,true,
+    'Celular con 128GB de almacenamiento, batería de larga duración y triple cámara.',
+    ['128GB + 6GB RAM','Batería 5000 mAh','Triple cámara','Carga rápida'],
+    [{k:'Memoria',v:'128 GB'},{k:'RAM',v:'6 GB'},{k:'Batería',v:'5000 mAh'},{k:'Garantía',v:'12 meses'}]),
+  P(10,'microondas-25l','Microondas 25L Digital','Electrolux','Pequeños electrodomésticos',890000,null,null,14,false,false,
+    'Microondas digital de 25 litros con programas automáticos y panel táctil.',
+    ['25 litros de capacidad','Panel digital','Programas automáticos','Interior fácil de limpiar'],
+    [{k:'Capacidad',v:'25 litros'},{k:'Potencia',v:'900 W'},{k:'Panel',v:'Digital'},{k:'Garantía',v:'12 meses'}]),
+  P(11,'licuadora-15l','Licuadora 1.5L 5 velocidades','Philips','Pequeños electrodomésticos',320000,null,'Nuevo',20,false,false,
+    'Licuadora de jarra 1,5 litros con 5 velocidades y cuchillas de acero inoxidable.',
+    ['Jarra de 1,5 litros','5 velocidades + pulso','Cuchillas de acero','Base antideslizante'],
+    [{k:'Capacidad',v:'1,5 litros'},{k:'Velocidades',v:'5'},{k:'Potencia',v:'600 W'},{k:'Garantía',v:'6 meses'}]),
+  P(12,'ventilador-de-pie','Ventilador de pie 20"','Tokyo','Hogar',285000,340000,'Oferta',0,false,false,
+    'Ventilador de pie de 20 pulgadas, altura regulable y 3 velocidades.',
+    ['Altura regulable','3 velocidades','Aspas de 20 pulgadas','Base estable'],
+    [{k:'Aspas',v:'20 pulgadas'},{k:'Velocidades',v:'3'},{k:'Oscilación',v:'Sí'},{k:'Garantía',v:'6 meses'}])
+];
+
+const CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Hogar'];
+
+class Component extends DCLogic {
+  state = {
+    view: 'home', slug: null, q: '', cat: 'Todas', brand: 'Todas',
+    maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados',
+    cart: [], favs: [], cartOpen: false, menuOpen: false, filtersOpen: false,
+    toast: null, w: typeof window !== 'undefined' ? window.innerWidth : 1280
+  };
+
+  headerRef = React.createRef();
+  logoRef = React.createRef();
+  railRef = React.createRef();
+  paraRef = React.createRef();
+
+  componentDidMount() {
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onResize);
+    this.onScroll = () => {
+      const y = window.scrollY;
+      const h = this.headerRef.current, l = this.logoRef.current;
+      if (h) { h.style.height = y > 40 ? '62px' : '76px'; h.style.boxShadow = y > 40 ? '0 6px 20px rgba(32,32,35,0.07)' : 'none'; }
+      if (l) l.style.height = y > 40 ? '38px' : '46px';
+      const p = this.paraRef.current;
+      if (p) {
+        const r = p.getBoundingClientRect();
+        p.style.transform = 'translateY(' + Math.max(-16, Math.min(16, (window.innerHeight / 2 - r.top - r.height / 2) * 0.045)) + 'px)';
+      }
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.onScroll();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && 'IntersectionObserver' in window) {
+      this.io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; this.io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      this.armReveals();
+    }
+  }
+  componentDidUpdate() { if (this.io) this.armReveals(); }
+  armReveals() {
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      if (el.dataset.revealArmed) return;
+      el.dataset.revealArmed = '1';
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92) return;
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+      el.style.transition = 'opacity 520ms ease, transform 520ms ease';
+      this.io.observe(el);
+    });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('scroll', this.onScroll);
+    if (this.io) this.io.disconnect();
+  }
+
+  fmt(n) { return 'Gs. ' + Math.round(n).toLocaleString('de-DE'); }
+  wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+  toast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+  top() { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  go(view, slug) { this.setState({ view, slug: slug || null, menuOpen: false }); this.top(); }
+  add(p) {
+    this.setState(s => {
+      const i = s.cart.findIndex(c => c.id === p.id);
+      const cart = i >= 0 ? s.cart.map((c, k) => k === i ? { ...c, qty: c.qty + 1 } : c) : [...s.cart, { id: p.id, qty: 1 }];
+      return { cart };
+    });
+    this.toast(p.name + ' agregado al pedido');
+  }
+  qty(id, d) {
+    this.setState(s => ({ cart: s.cart.map(c => c.id === id ? { ...c, qty: c.qty + d } : c).filter(c => c.qty > 0) }));
+  }
+
+  decorate(p, prefix) {
+    const disc = p.previousPrice ? Math.round((1 - p.price / p.previousPrice) * 100) : null;
+    const fav = this.state.favs.includes(p.id);
+    return {
+      ...p,
+      slot: 'prod-' + p.id, slotB: 'best-' + p.id, slotL: 'list-' + p.id, slotR: 'rel-' + p.id, slotD: 'det-' + p.id, slotC: 'cart-' + p.id,
+      priceFmt: this.fmt(p.price),
+      prevFmt: p.previousPrice ? this.fmt(p.previousPrice) : null,
+      discount: disc,
+      stockLabel: p.stock === 0 ? 'Sin stock — consultanos' : (p.stock <= 3 ? 'Últimas ' + p.stock + ' unidades' : 'Disponible'),
+      stockColor: p.stock === 0 ? '#b0433a' : (p.stock <= 3 ? '#b07a1f' : '#3A8A47'),
+      favColor: fav ? '#1D703A' : '#c9d2cc',
+      gallery: [1, 2, 3, 4].map(n => 'gal-' + p.id + '-' + n),
+      waLink: this.wa('Hola SOMAR, estoy interesado/a en el producto: ' + p.name + '.'),
+      open: () => this.go('detalle', p.slug),
+      add: () => this.add(p),
+      consult: () => window.open(this.wa('Hola SOMAR, estoy interesado/a en el producto: ' + p.name + '.'), '_blank'),
+      fav: (e) => { if (e) e.stopPropagation(); this.setState(s => ({ favs: s.favs.includes(p.id) ? s.favs.filter(x => x !== p.id) : [...s.favs, p.id] })); }
+    };
+  }
+
+  chip(name, active, onClick) {
+    return { name, go: onClick, border: active ? '#1D703A' : '#e2eae4', bg: active ? '#1D703A' : '#fff', color: active ? '#fff' : '#202023' };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const isMobile = s.w < 900;
+    const dec = p => this.decorate(p);
+    const all = PRODUCTS.map(dec);
+
+    let list = all.filter(p => {
+      const q = s.q.trim().toLowerCase();
+      if (q && !(p.name + ' ' + p.brand + ' ' + p.category).toLowerCase().includes(q)) return false;
+      if (s.cat !== 'Todas' && p.category !== s.cat) return false;
+      if (s.brand !== 'Todas' && p.brand !== s.brand) return false;
+      if (p.price > s.maxPrice) return false;
+      if (s.onlyOffer && !p.previousPrice) return false;
+      if (s.onlyStock && p.stock === 0) return false;
+      return true;
+    });
+    if (s.sort === 'menor') list = [...list].sort((a, b) => a.price - b.price);
+    if (s.sort === 'mayor') list = [...list].sort((a, b) => b.price - a.price);
+    if (s.sort === 'recientes') list = [...list].sort((a, b) => b.id - a.id);
+    if (s.sort === 'destacados') list = [...list].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+    const current = s.slug ? all.find(p => p.slug === s.slug) : null;
+    const cartLines = s.cart.map(c => {
+      const p = all.find(x => x.id === c.id);
+      return { ...p, qty: c.qty, subtotalFmt: this.fmt(p.price * c.qty), inc: () => this.qty(c.id, 1), dec: () => this.qty(c.id, -1) };
+    });
+    const total = cartLines.reduce((t, l) => t + l.price * l.qty, 0);
+    const cartMsg = 'Hola SOMAR, quisiera consultar por el siguiente pedido:\n\n'
+      + cartLines.map(l => '- ' + l.name + ' x' + l.qty).join('\n')
+      + '\n\nTotal estimado: ' + this.fmt(total);
+
+    const nav = [
+      ['Inicio', 'inicio'], ['Productos', 'productos'], ['Categorías', 'categorias'],
+      ['Ofertas', 'ofertas'], ['Nosotros', 'nosotros'], ['Contacto', 'contacto']
+    ].map(([label, id]) => ({
+      label, href: '#' + id,
+      go: (e) => {
+        e.preventDefault();
+        if (id === 'productos') return this.go('productos');
+        this.setState({ view: 'home', menuOpen: false }, () => {
+          setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+          }, 40);
+        });
+      }
+    }));
+
+    return {
+      year: new Date().getFullYear(),
+      isMobile, isDesktop: !isMobile, isWide: s.w >= 1150,
+      isHome: s.view === 'home', isList: s.view === 'productos', isDetail: s.view === 'detalle' && !!current,
+      headerRef: this.headerRef, logoRef: this.logoRef, railRef: this.railRef, paraRef: this.paraRef,
+      navItems: nav,
+      footerNav: nav.filter(n => n.label !== 'Categorías'),
+      social: [
+        { label: 'WhatsApp', href: this.wa('Hola SOMAR, estoy interesado/a en conocer más sobre sus productos.') },
+        { label: 'Facebook', href: 'https://facebook.com' },
+        { label: 'Instagram', href: 'https://instagram.com' }
+      ],
+      waLink: this.wa('Hola SOMAR, estoy interesado/a en conocer más sobre sus productos.'),
+      q: s.q, sort: s.sort, maxPrice: s.maxPrice, maxPriceFmt: this.fmt(s.maxPrice),
+      onlyOffer: s.onlyOffer, onlyStock: s.onlyStock,
+      onSearch: e => this.setState({ q: e.target.value }),
+      onSearchKey: e => { if (e.key === 'Enter') this.go('productos'); },
+      submitSearch: () => this.go('productos'),
+      onSort: e => this.setState({ sort: e.target.value }),
+      onPrice: e => this.setState({ maxPrice: Number(e.target.value) }),
+      toggleOffer: () => this.setState(x => ({ onlyOffer: !x.onlyOffer })),
+      toggleStock: () => this.setState(x => ({ onlyStock: !x.onlyStock })),
+      clearFilters: () => this.setState({ q: '', cat: 'Todas', brand: 'Todas', maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados' }),
+      openFilters: () => this.setState({ filtersOpen: true }),
+      closeFilters: () => this.setState({ filtersOpen: false }),
+      filtersOpen: s.filtersOpen,
+      listCols: isMobile ? '1fr' : '270px 1fr',
+      catChips: ['Todas', ...CATEGORIES].map(c => this.chip(c, s.cat === c, () => this.setState({ cat: c }))),
+      brandChips: ['Todas', ...Array.from(new Set(PRODUCTS.map(p => p.brand)))].map(b => this.chip(b, s.brand === b, () => this.setState({ brand: b }))),
+      list, hasResults: list.length > 0, noResults: list.length === 0,
+      resultLabel: list.length + ' producto(s) encontrados',
+      featured: all.filter(p => p.featured).slice(0, 4),
+      bestSellers: all.filter(p => p.best),
+      offerCards: all.filter(p => p.previousPrice).slice(0, 2).map(p => ({ ...p, tag: 'Promoción', slot: 'offer-' + p.id, go: () => this.go('detalle', p.slug) })),
+      categories: CATEGORIES.map(c => ({
+        name: c, slot: 'cat-' + c.toLowerCase().replace(/[^a-z]+/g, '-'),
+        count: PRODUCTS.filter(p => p.category === c).length,
+        go: () => { this.setState({ cat: c, q: '' }); this.go('productos'); }
+      })),
+      current, related: current ? all.filter(p => p.category === current.category && p.id !== current.id).concat(all.filter(p => p.category !== current.category)).slice(0, 4) : [],
+      heroPoints: ['Calidad garantizada', 'Atención cercana', 'Entregas coordinadas'],
+      benefits: ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'],
+      steps: [
+        { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.' },
+        { n: '2', title: 'Consultanos por WhatsApp', text: 'Te respondemos con precio, stock y formas de pago.' },
+        { n: '3', title: 'Coordinamos tu compra', text: 'Acordamos entrega o retiro y listo.' }
+      ],
+      brandsList: ['SAMSUNG', 'LG', 'TOKYO', 'MIDEA', 'WHIRLPOOL', 'ELECTROLUX', 'PHILIPS', 'XIAOMI'],
+      stats: [{ v: '+8', l: 'Categorías' }, { v: '2', l: 'Líneas de atención' }, { v: '100%', l: 'Atención personalizada' }],
+      testimonials: [
+        { name: 'María G.', initial: 'M', stars: '★★★★★', text: 'Compré mi heladera y me asesoraron en todo. La entrega fue rápida y en el horario acordado.' },
+        { name: 'Carlos R.', initial: 'C', stars: '★★★★★', text: 'Consulté por WhatsApp y en minutos tenía el precio y la disponibilidad. Muy práctico.' },
+        { name: 'Lucía B.', initial: 'L', stars: '★★★★☆', text: 'Buenos precios y atención cercana. Volvería a comprar sin dudarlo.' }
+      ],
+      instagram: [1, 2, 3, 4, 5, 6].map(n => ({ slot: 'ig-' + n })),
+      cartOpen: s.cartOpen, menuOpen: s.menuOpen, toast: s.toast,
+      hasCart: cartLines.length > 0, emptyCart: cartLines.length === 0,
+      cartLines, cartCount: s.cart.reduce((t, c) => t + c.qty, 0),
+      cartTotalFmt: this.fmt(total), cartWaLink: this.wa(cartMsg),
+      toggleCart: () => this.setState(x => ({ cartOpen: !x.cartOpen })),
+      toggleMenu: () => this.setState(x => ({ menuOpen: !x.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      goListFromCart: () => { this.setState({ cartOpen: false }); this.go('productos'); },
+      stop: e => e.stopPropagation(),
+      goHome: e => { if (e) e.preventDefault(); this.go('home'); },
+      goList: e => { if (e) e.preventDefault(); this.go('productos'); },
+      goOffers: e => { if (e) e.preventDefault(); this.setState({ onlyOffer: true, cat: 'Todas', q: '' }); this.go('productos'); },
+      scrollLeft: () => { const r = this.railRef.current; if (r) r.scrollBy({ left: -560, behavior: 'smooth' }); },
+      scrollRight: () => { const r = this.railRef.current; if (r) r.scrollBy({ left: 560, behavior: 'smooth' }); }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
