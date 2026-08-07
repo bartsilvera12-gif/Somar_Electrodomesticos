@@ -3,12 +3,14 @@
 Sitio comercial de SOMAR Electrodomésticos (inicio, catálogo con filtros, ficha de producto, pedido por WhatsApp).
 
 ## Cómo verlo
-Abrir `SOMAR Electrodomesticos.dc.html` en el navegador, o servirlo:
+Abrir `index.html` en el navegador, o servirlo:
 
     npx serve .
 
+En local queda en `http://localhost:PUERTO/` (ya no hace falta la ruta con espacios). En Vercel se sirve en la raíz `/`.
+
 ## Archivos
-- `SOMAR Electrodomesticos.dc.html` — la página completa (marcado + lógica)
+- `index.html` — la página completa (marcado + lógica)
 - `support.js` — runtime necesario
 - `image-slot.js` — componente de espacios de imagen
 - `assets/` — logo SOMAR

@@ -100,8 +100,10 @@
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <section id="inicio" style="position:relative;overflow:hidden;background:linear-gradient(180deg,#EEF3EF 0%,#ffffff 78%)">
-    <div style="max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
+  <section id="inicio" style="position:relative;overflow:hidden;background:#EFF4F0">
+    <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none"></canvas>
+    <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:42%;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#ffffff 94%)"></div>
+    <div style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
       <div>
         <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #d8e5da;color:#1D703A;border-radius:99px;padding:8px 16px;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;animation:somarUp 500ms ease both">
           <span style="width:7px;height:7px;border-radius:99px;background:#3A8A47;display:block"></span>Tecnología para tu hogar
@@ -201,6 +203,9 @@
               </sc-if>
             </div>
             <div style="font-size:13.5px;color:{{ p.stockColor }};margin-top:2px">{{ p.stockLabel }}</div>
+            <sc-if value="{{ p.cuotaLine }}" hint-placeholder-val="{{ true }}">
+              <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;font-weight:700;color:#3A8A47;margin-top:2px">{{ p.cuotaLine }}</div>
+            </sc-if>
             <div style="display:flex;gap:8px;margin-top:auto;padding-top:14px">
               <button onClick="{{ p.open }}" style="flex:1;height:44px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;color:#202023;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Ver producto</button>
               <button onClick="{{ p.consult }}" style="flex:1;height:44px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:background 200ms ease" style-hover="background:#3A8A47">Consultar</button>
@@ -279,6 +284,9 @@
               <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
               <h3 style="font-size:16px;font-weight:700;line-height:1.32;margin:6px 0 0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
               <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:23px;color:#1D703A;margin-top:10px">{{ p.priceFmt }}</div>
+              <sc-if value="{{ p.cuotaLine }}" hint-placeholder-val="{{ true }}">
+                <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;font-weight:700;color:#3A8A47;margin-top:4px">{{ p.cuotaLine }}</div>
+              </sc-if>
               <button onClick="{{ p.add }}" style="width:100%;margin-top:14px;height:44px;border-radius:99px;border:0;background:#202023;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14.5px;cursor:pointer;transition:background 200ms ease" style-hover="background:#1D703A">Agregar al pedido</button>
             </div>
           </article>
@@ -486,6 +494,9 @@
                   </sc-if>
                 </div>
                 <div style="font-size:13.5px;color:{{ p.stockColor }}">{{ p.stockLabel }}</div>
+                <sc-if value="{{ p.cuotaLine }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;font-weight:700;color:#3A8A47">{{ p.cuotaLine }}</div>
+                </sc-if>
                 <div style="display:flex;gap:8px;margin-top:auto;padding-top:14px">
                   <button onClick="{{ p.open }}" style="flex:1;height:42px;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Ver</button>
                   <button onClick="{{ p.add }}" style="flex:1;height:42px;border-radius:99px;border:0;background:#1D703A;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:background 200ms ease" style-hover="background:#3A8A47">Agregar</button>
@@ -540,6 +551,19 @@
       <div style="display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:15px;color:{{ current.stockColor }}">
         <span style="width:8px;height:8px;border-radius:99px;background:currentColor"></span>{{ current.stockLabel }}
       </div>
+      <sc-if value="{{ current.hasCuotas }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:22px;border:1px solid #eef3ef;border-radius:16px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;padding:12px 16px;background:#EEF3EF;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#1D703A">
+            <span>Plan de cuotas</span><span>Valor por cuota</span>
+          </div>
+          <sc-for list="{{ current.cuotasFmt }}" as="c" hint-placeholder-count="12">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-top:1px solid #f3f7f4;font-size:15px">
+              <span style="font-weight:700;color:#3f4a44">{{ c.label }}</span>
+              <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;color:#1D703A;font-size:16px">{{ c.vFmt }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
       <p style="font-size:16.5px;line-height:1.62;color:#55605a;margin:22px 0 0;max-width:56ch;text-wrap:pretty">{{ current.description }}</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
         <a href="{{ current.waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.22);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
@@ -722,58 +746,21 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 const WA = '595971244226';
-const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs) =>
-  ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs });
+const DEFAULT_RATE = 0.064; // interés mensual por defecto para calcular cuotas (1 a 12)
+const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate) =>
+  ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate: (typeof rate === 'number') ? rate : DEFAULT_RATE });
 
 const PRODUCTS = [
-  P(1,'smart-tv-50-4k','Smart TV 50" 4K UHD','Samsung','Televisores',2490000,2990000,'Oferta',7,true,true,
-    'Smart TV de 50 pulgadas con resolución 4K UHD, sistema operativo con apps integradas y control por voz. Imagen nítida y colores reales para toda la familia.',
-    ['Resolución 4K UHD real','Apps de streaming preinstaladas','3 puertos HDMI y 2 USB','Wi-Fi y Bluetooth integrados'],
-    [{k:'Pantalla',v:'50" LED'},{k:'Resolución',v:'3840 x 2160'},{k:'Conectividad',v:'Wi-Fi / BT / HDMI'},{k:'Garantía',v:'12 meses'}]),
-  P(2,'smart-tv-65-qled','Smart TV 65" QLED','LG','Televisores',4890000,null,null,4,true,false,
-    'Pantalla QLED de 65 pulgadas con alto brillo y contraste. Ideal para living amplio y para disfrutar deportes y películas.',
-    ['Panel QLED de alto brillo','Modo cine y modo deportes','Sonido envolvente','Control remoto inteligente'],
-    [{k:'Pantalla',v:'65" QLED'},{k:'Resolución',v:'4K UHD'},{k:'HDMI',v:'4 puertos'},{k:'Garantía',v:'12 meses'}]),
-  P(3,'heladera-no-frost-380','Heladera No Frost 380L','Whirlpool','Heladeras',4290000,4790000,'Oferta',3,true,true,
-    'Heladera No Frost de 380 litros con freezer superior, estantes regulables y bajo consumo energético.',
-    ['Tecnología No Frost','Estantes de vidrio templado','Cajón para verduras','Bajo consumo'],
-    [{k:'Capacidad',v:'380 litros'},{k:'Tipo',v:'No Frost'},{k:'Eficiencia',v:'Clase A'},{k:'Garantía',v:'12 meses'}]),
-  P(4,'heladera-frio-seco-250','Heladera Frío Seco 250L','Midea','Heladeras',2190000,null,null,9,false,false,
-    'Heladera compacta de 250 litros, práctica para departamentos y familias pequeñas.',
-    ['Freezer independiente','Interior iluminado','Puerta reversible','Bandejas amplias'],
-    [{k:'Capacidad',v:'250 litros'},{k:'Tipo',v:'Frío seco'},{k:'Color',v:'Blanco'},{k:'Garantía',v:'12 meses'}]),
-  P(5,'cocina-4-hornallas','Cocina 4 hornallas con horno','Tokyo','Cocinas',1590000,null,'Más vendido',12,false,true,
-    'Cocina de 4 hornallas con horno amplio, encendido eléctrico y puerta con visor.',
-    ['Encendido eléctrico','Horno con visor','Tapa de vidrio','Válvula de seguridad'],
-    [{k:'Hornallas',v:'4'},{k:'Horno',v:'Con visor'},{k:'Ancho',v:'56 cm'},{k:'Garantía',v:'12 meses'}]),
-  P(6,'lavarropas-automatico-8kg','Lavarropas Automático 8kg','LG','Lavarropas',3290000,3690000,'Oferta',5,true,true,
-    'Lavarropas automático de carga frontal con 8 kilos de capacidad y múltiples programas de lavado.',
-    ['8 kg de capacidad','12 programas de lavado','Motor silencioso','Bloqueo para niños'],
-    [{k:'Capacidad',v:'8 kg'},{k:'Carga',v:'Frontal'},{k:'Centrifugado',v:'1200 rpm'},{k:'Garantía',v:'12 meses'}]),
-  P(7,'aire-split-12000','Aire Acondicionado Split 12.000 BTU','Midea','Aires acondicionados',2790000,null,'Más vendido',8,true,true,
-    'Split frío/calor de 12.000 BTU con tecnología inverter y bajo nivel de ruido.',
-    ['Tecnología inverter','Frío y calor','Filtro lavable','Control remoto con display'],
-    [{k:'Potencia',v:'12.000 BTU'},{k:'Tipo',v:'Inverter'},{k:'Función',v:'Frío / Calor'},{k:'Garantía',v:'12 meses'}]),
-  P(8,'aire-split-18000','Aire Acondicionado Split 18.000 BTU','Tokyo','Aires acondicionados',3590000,null,'Últimas unidades',2,false,false,
-    'Split de 18.000 BTU pensado para ambientes grandes, con arranque rápido y modo nocturno.',
-    ['Para ambientes grandes','Modo nocturno','Arranque rápido','Instalación coordinada'],
-    [{k:'Potencia',v:'18.000 BTU'},{k:'Tipo',v:'On/Off'},{k:'Función',v:'Frío / Calor'},{k:'Garantía',v:'12 meses'}]),
-  P(9,'celular-128gb','Celular 128GB 6GB RAM','Xiaomi','Celulares',1890000,2150000,'Oferta',10,true,true,
-    'Celular con 128GB de almacenamiento, batería de larga duración y triple cámara.',
-    ['128GB + 6GB RAM','Batería 5000 mAh','Triple cámara','Carga rápida'],
-    [{k:'Memoria',v:'128 GB'},{k:'RAM',v:'6 GB'},{k:'Batería',v:'5000 mAh'},{k:'Garantía',v:'12 meses'}]),
-  P(10,'microondas-25l','Microondas 25L Digital','Electrolux','Pequeños electrodomésticos',890000,null,null,14,false,false,
-    'Microondas digital de 25 litros con programas automáticos y panel táctil.',
-    ['25 litros de capacidad','Panel digital','Programas automáticos','Interior fácil de limpiar'],
-    [{k:'Capacidad',v:'25 litros'},{k:'Potencia',v:'900 W'},{k:'Panel',v:'Digital'},{k:'Garantía',v:'12 meses'}]),
-  P(11,'licuadora-15l','Licuadora 1.5L 5 velocidades','Philips','Pequeños electrodomésticos',320000,null,'Nuevo',20,false,false,
-    'Licuadora de jarra 1,5 litros con 5 velocidades y cuchillas de acero inoxidable.',
-    ['Jarra de 1,5 litros','5 velocidades + pulso','Cuchillas de acero','Base antideslizante'],
-    [{k:'Capacidad',v:'1,5 litros'},{k:'Velocidades',v:'5'},{k:'Potencia',v:'600 W'},{k:'Garantía',v:'6 meses'}]),
-  P(12,'ventilador-de-pie','Ventilador de pie 20"','Tokyo','Hogar',285000,340000,'Oferta',0,false,false,
-    'Ventilador de pie de 20 pulgadas, altura regulable y 3 velocidades.',
-    ['Altura regulable','3 velocidades','Aspas de 20 pulgadas','Base estable'],
-    [{k:'Aspas',v:'20 pulgadas'},{k:'Velocidades',v:'3'},{k:'Oscilación',v:'Sí'},{k:'Garantía',v:'6 meses'}])
+  P(1,'lavarropas-jam-grace-6kg','Lavarropas Automático JAM Grace 6 kg','JAM','Lavarropas',2270000,null,null,5,true,true,
+    'Lavarropas automático de carga frontal JAM Grace (modelo F-056B) con 6 kilos de capacidad. Práctico y eficiente, con múltiples programas para el lavado diario del hogar.',
+    ['6 kg de capacidad','Carga frontal','Múltiples programas de lavado','Panel con display digital'],
+    [{k:'Capacidad',v:'6 kg'},{k:'Carga',v:'Frontal'},{k:'Modelo',v:'Grace F-056B'},{k:'Garantía',v:'12 meses'}],
+    0.064),
+  P(2,'horno-electrico-tokyo-listo-plus-56l','Horno Eléctrico Tokyo Listo Plus 56 L','Tokyo','Cocinas',920000,null,null,8,true,true,
+    'Horno eléctrico Tokyo Listo Plus de 56 litros con control de temperatura, timer y selector de funciones. Ideal para hornear, gratinar y calentar con comodidad.',
+    ['56 litros de capacidad','Control de temperatura','Timer con apagado automático','Incluye parrilla y bandeja'],
+    [{k:'Capacidad',v:'56 litros'},{k:'Tipo',v:'Eléctrico de mesada'},{k:'Funciones',v:'Temperatura / timer'},{k:'Garantía',v:'12 meses'}],
+    0.064)
 ];
 
 const CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Hogar'];
@@ -790,6 +777,7 @@ class Component extends DCLogic {
   logoRef = React.createRef();
   railRef = React.createRef();
   paraRef = React.createRef();
+  heroCanvasRef = React.createRef();
 
   componentDidMount() {
     this.onResize = () => this.setState({ w: window.innerWidth });
@@ -816,6 +804,7 @@ class Component extends DCLogic {
       }, { threshold: 0.08 });
       this.armReveals();
     }
+    this.startMesh();
   }
   componentDidUpdate() { if (this.io) this.armReveals(); }
   armReveals() {
@@ -834,10 +823,88 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.onScroll);
     if (this.io) this.io.disconnect();
+    if (this.meshRAF) window.cancelAnimationFrame(this.meshRAF);
   }
 
   fmt(n) { return 'Gs. ' + Math.round(n).toLocaleString('de-DE'); }
   wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+  // Mesh gradient "Pipo / Bloom Field" (21st.dev) adaptado a la marca SOMAR.
+  // Movimiento: reloj t en segundos, ph = t*0.86, drift por blob con fase estática p (hash del seed).
+  // Cada modulación es exactamente 0 en ph=0 (sin(x+p)-sin(p)) para que no salte al iniciar.
+  startMesh() {
+    this.meshReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const seed = 1;
+    const hashPhase = (i) => { const s = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453; return (s - Math.floor(s)) * Math.PI * 2; };
+    // Paleta Pipo adaptada: verde SOMAR + verde apoyo + papel claro, en tintes suaves (texto legible).
+    this.meshBlobs = [
+      { c: [58, 138, 71],   x: 68.10, y: 46.03, r: 41.10, a: 0.32, p: hashPhase(1), p2: hashPhase(1.7) },
+      { c: [29, 112, 58],   x: 25.17, y: 75.99, r: 44.60, a: 0.28, p: hashPhase(2), p2: hashPhase(2.7) },
+      { c: [238, 243, 239], x: 53.11, y: 12.71, r: 66.65, a: 0.90, p: hashPhase(3), p2: hashPhase(3.7) }
+    ];
+    this.meshBackdrop = '#EFF4F0';
+    // Grano bitmap (una sola vez): tile de ruido gris para textura sutil (blend overlay).
+    const nc = document.createElement('canvas'); nc.width = 120; nc.height = 120;
+    const nctx = nc.getContext('2d'); const img = nctx.createImageData(120, 120);
+    for (let i = 0; i < img.data.length; i += 4) { const v = 128 + (Math.random() * 2 - 1) * 90; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255; }
+    nctx.putImageData(img, 0, 0); this.meshNoise = nc;
+    this.meshT0 = null;
+    const loop = (now) => {
+      const cv = this.heroCanvasRef.current || document.getElementById('somar-hero-mesh');
+      let drew = false;
+      if (cv && cv.clientWidth && cv.clientHeight) { // espera a que el hero tenga tamaño real
+        if (this.meshT0 === null) this.meshT0 = now;
+        const t = this.meshReduce ? 0 : (now - this.meshT0) / 1000;
+        this.drawMesh(cv, t);
+        drew = true;
+      }
+      if (this.meshReduce && drew) { this.meshRAF = null; return; } // reduce-motion: una sola pasada estática
+      this.meshRAF = window.requestAnimationFrame(loop);
+    };
+    this.meshRAF = window.requestAnimationFrame(loop);
+  }
+  drawMesh(cv, t) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = this.meshBackdrop; ctx.fillRect(0, 0, w, h);
+    const ph = t * 0.86, amt = 0.72, diag = Math.hypot(w, h);
+    for (const b of this.meshBlobs) {
+      // valores animados sin redondear (no se quantizan) para que el movimiento no escalone
+      const dx = (Math.sin(ph * 0.55 + b.p) - Math.sin(b.p)) * 14 * amt;
+      const dy = (Math.sin(ph * 0.43 + b.p2) - Math.sin(b.p2)) * 14 * amt;
+      const x = (b.x + dx) / 100 * w, y = (b.y + dy) / 100 * h, r = Math.max(1, b.r / 100 * diag);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      const rgb = b.c[0] + ',' + b.c[1] + ',' + b.c[2];
+      g.addColorStop(0,    'rgba(' + rgb + ',' + b.a + ')');
+      g.addColorStop(0.28, 'rgba(' + rgb + ',' + (b.a * 0.5) + ')');
+      g.addColorStop(0.62, 'rgba(' + rgb + ',' + (b.a * 0.16) + ')');
+      g.addColorStop(1,    'rgba(' + rgb + ',0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    }
+    if (this.meshNoise) {
+      ctx.save();
+      ctx.globalAlpha = 0.05; ctx.globalCompositeOperation = 'overlay';
+      ctx.fillStyle = ctx.createPattern(this.meshNoise, 'repeat'); ctx.fillRect(0, 0, w, h);
+      ctx.restore();
+    }
+  }
+  cuotaValue(price, rate, n) {
+    const i = (typeof rate === 'number') ? rate : DEFAULT_RATE;
+    if (n <= 1 || i <= 0) return Math.round(price / 1000) * 1000; // 1 pago = contado
+    const f = i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1);   // cuota fija (sistema francés)
+    return Math.round(price * f / 1000) * 1000;                    // redondeo a Gs. 1.000
+  }
+  cuotaPlans(price, rate) {
+    const out = [];
+    for (let n = 1; n <= 12; n++) {
+      out.push({ n, label: n === 1 ? 'Contado (1 pago)' : (n + ' cuotas'), vFmt: this.fmt(this.cuotaValue(price, rate, n)) });
+    }
+    return out;
+  }
   toast(msg) {
     this.setState({ toast: msg });
     clearTimeout(this._t);
@@ -865,6 +932,9 @@ class Component extends DCLogic {
       slot: 'prod-' + p.id, slotB: 'best-' + p.id, slotL: 'list-' + p.id, slotR: 'rel-' + p.id, slotD: 'det-' + p.id, slotC: 'cart-' + p.id,
       priceFmt: this.fmt(p.price),
       prevFmt: p.previousPrice ? this.fmt(p.previousPrice) : null,
+      cuotasFmt: this.cuotaPlans(p.price, p.rate),
+      cuotaLine: '12 cuotas de ' + this.fmt(this.cuotaValue(p.price, p.rate, 12)),
+      hasCuotas: true,
       discount: disc,
       stockLabel: p.stock === 0 ? 'Sin stock — consultanos' : (p.stock <= 3 ? 'Últimas ' + p.stock + ' unidades' : 'Disponible'),
       stockColor: p.stock === 0 ? '#b0433a' : (p.stock <= 3 ? '#b07a1f' : '#3A8A47'),
@@ -968,7 +1038,7 @@ class Component extends DCLogic {
         name: c, slot: 'cat-' + c.toLowerCase().replace(/[^a-z]+/g, '-'),
         count: PRODUCTS.filter(p => p.category === c).length,
         go: () => { this.setState({ cat: c, q: '' }); this.go('productos'); }
-      })),
+      })).filter(c => c.count > 0),
       current, related: current ? all.filter(p => p.category === current.category && p.id !== current.id).concat(all.filter(p => p.category !== current.category)).slice(0, 4) : [],
       heroPoints: ['Calidad garantizada', 'Atención cercana', 'Entregas coordinadas'],
       benefits: ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'],
