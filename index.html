@@ -24,6 +24,12 @@
   @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
   @keyframes somarUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
   @keyframes somarIn { from { opacity:0; } to { opacity:1; } }
+  .somar-cat { transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease, border-color .32s ease; }
+  .somar-cat:hover { transform: translateY(-8px); }
+  .somar-cat-icon, .somar-cat-blob, .somar-cat-arrow { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  .somar-cat:hover .somar-cat-icon { transform: scale(1.1) rotate(-8deg); }
+  .somar-cat:hover .somar-cat-blob { transform: scale(1.7); }
+  .somar-cat:hover .somar-cat-arrow { transform: translateX(5px); }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior:auto; }
     *, *::before, *::after { animation:none !important; transition-duration:0.01ms !important; }
@@ -41,7 +47,11 @@
 
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
       <nav style="display:flex;align-items:center;gap:2px;margin-left:4px;min-width:0;flex-shrink:1;overflow:hidden">
-        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+        <button onMouseEnter="{{ openCatMenu }}" onClick="{{ toggleCatMenu }}" aria-haspopup="true" style="display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border:0;background:transparent;cursor:pointer;font-family:'Lato',sans-serif;font-size:14.5px;font-weight:700;color:#202023;border-radius:99px;white-space:nowrap;transition:background 200ms ease,color 200ms ease" style-hover="background:#EEF3EF;color:#1D703A">
+          Categorías
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"></polyline></svg>
+        </button>
+        <sc-for list="{{ menuNav }}" as="n" hint-placeholder-count="5">
           <a href="{{ n.href }}" onClick="{{ n.go }}" style="padding:9px 11px;border-radius:99px;font-size:14.5px;font-weight:700;color:#202023;white-space:nowrap;transition:background 200ms ease,color 200ms ease" style-hover="background:#EEF3EF;color:#1D703A">{{ n.label }}</a>
         </sc-for>
       </nav>
@@ -58,8 +68,9 @@
       </div>
     </sc-if>
 
-    <a href="{{ waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp" style="width:42px;height:42px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;flex:none;transition:transform 200ms ease,background 200ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+    <a href="{{ waLink }}" target="_blank" rel="noopener" aria-label="Contáctanos al WhatsApp" style="height:42px;padding:0 16px;border-radius:99px;background:#1D703A;color:#fff;display:inline-flex;align-items:center;gap:8px;flex:none;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;white-space:nowrap;transition:transform 200ms ease,background 200ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.892c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.334 11.949-11.892a11.821 11.821 0 00-3.48-8.454"/></svg>
+      <sc-if value="{{ isXWide }}" hint-placeholder-val="{{ true }}"><span>Contáctanos al WhatsApp</span></sc-if>
     </a>
 
     <button onClick="{{ toggleCart }}" aria-label="Mi pedido" style="position:relative;height:42px;padding:0 16px;border:0;cursor:pointer;border-radius:99px;background:#202023;color:#fff;font-family:'Lato',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;flex:none;transition:background 200ms ease" style-hover="background:#1D703A">
@@ -76,6 +87,37 @@
       </button>
     </sc-if>
   </div>
+
+  <sc-if value="{{ catMenuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onMouseLeave="{{ closeCatMenu }}" style="position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #eef3ef;box-shadow:0 24px 44px rgba(32,32,35,0.14);animation:somarIn 150ms ease">
+      <div style="max-width:1280px;margin:0 auto;padding:16px 20px 20px;display:grid;grid-template-columns:1.15fr 1fr 1fr">
+        <div style="border-right:1px solid #eef3ef;padding-right:14px;display:flex;flex-direction:column;gap:2px;max-height:64vh;overflow-y:auto">
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b958f;padding:6px 12px 8px">Categoría</div>
+          <sc-for list="{{ menuCats }}" as="c" hint-placeholder-count="7">
+            <button onMouseEnter="{{ c.hover }}" onClick="{{ c.go }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;color:{{ c.fg }};background:{{ c.bg }};border-radius:12px;padding:11px 12px;transition:background 140ms ease,color 140ms ease">
+              <span>{{ c.name }}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.45"><polyline points="9,6 15,12 9,18"></polyline></svg>
+            </button>
+          </sc-for>
+        </div>
+        <div style="border-right:1px solid #eef3ef;padding:0 14px;display:flex;flex-direction:column;gap:2px;max-height:64vh;overflow-y:auto">
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b958f;padding:6px 12px 8px">Marca · {{ menuActiveCat }}</div>
+          <sc-for list="{{ menuBrands }}" as="b" hint-placeholder-count="4">
+            <button onMouseEnter="{{ b.hover }}" onClick="{{ b.go }}" style="text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;color:{{ b.fg }};background:{{ b.bg }};border-radius:12px;padding:11px 12px;transition:background 140ms ease,color 140ms ease">{{ b.name }}</button>
+          </sc-for>
+        </div>
+        <div style="padding-left:14px;display:flex;flex-direction:column;gap:2px;max-height:64vh;overflow-y:auto">
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b958f;padding:6px 12px 8px">Color · {{ menuActiveBrand }}</div>
+          <sc-for list="{{ menuColors }}" as="col" hint-placeholder-count="4">
+            <button onClick="{{ col.go }}" style="display:flex;align-items:center;gap:10px;text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;color:#202023;background:transparent;border-radius:12px;padding:9px 12px;transition:background 140ms ease" style-hover="background:#EEF3EF">
+              <span style="width:18px;height:18px;border-radius:99px;border:1px solid #e2eae4;background:{{ col.hex }};flex:none"></span>
+              {{ col.name }}
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 </header>
 
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -88,7 +130,36 @@
       <div style="display:flex;align-items:center;background:#EEF3EF;border-radius:14px;padding:0 14px;height:48px;margin-bottom:8px">
         <input value="{{ q }}" onChange="{{ onSearch }}" onKeyDown="{{ onSearchKey }}" placeholder="Buscar productos..." style="border:0;outline:0;background:transparent;flex:1;font-family:'Lato',sans-serif;font-size:16px;min-width:0">
       </div>
-      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+      <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin:6px 4px 2px">Categorías</div>
+      <div style="max-height:50vh;overflow-y:auto;margin-bottom:6px">
+        <sc-for list="{{ menuTree }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.toggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:0;background:transparent;cursor:pointer;font-family:'Lato',sans-serif;font-size:16px;font-weight:700;color:#202023;padding:12px 8px;border-bottom:1px solid #f1f5f2">
+            <span>{{ c.name }} <span style="color:#a3aca7;font-weight:400;font-size:14px">({{ c.count }})</span></span>
+            <span style="color:#1D703A;font-size:20px;line-height:1">+</span>
+          </button>
+          <sc-if value="{{ c.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:2px 0 6px 10px;background:#f7faf8;border-radius:10px;margin:4px 0 8px">
+              <button onClick="{{ c.go }}" style="width:100%;text-align:left;border:0;background:transparent;cursor:pointer;font-family:'Lato',sans-serif;font-size:14.5px;font-weight:700;color:#1D703A;padding:9px 8px">Ver todo en {{ c.name }} →</button>
+              <sc-for list="{{ c.brands }}" as="b" hint-placeholder-count="3">
+                <button onClick="{{ b.toggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;border:0;background:transparent;cursor:pointer;font-family:'Lato',sans-serif;font-size:15px;font-weight:700;color:#202023;padding:9px 8px">
+                  <span>{{ b.name }}</span><span style="color:#8b958f;font-size:18px">+</span>
+                </button>
+                <sc-if value="{{ b.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 8px 10px 14px">
+                    <button onClick="{{ b.go }}" style="border:1px solid #d3e3d7;background:#fff;border-radius:99px;padding:6px 12px;font-size:13.5px;font-weight:700;color:#1D703A;cursor:pointer">Todos</button>
+                    <sc-for list="{{ b.colors }}" as="col" hint-placeholder-count="3">
+                      <button onClick="{{ col.go }}" style="display:inline-flex;align-items:center;gap:7px;border:1px solid #e2eae4;background:#fff;border-radius:99px;padding:6px 12px;font-size:13.5px;font-weight:700;color:#202023;cursor:pointer">
+                        <span style="width:14px;height:14px;border-radius:99px;border:1px solid #e2eae4;background:{{ col.hex }}"></span>{{ col.name }}
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </sc-for>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+      <sc-for list="{{ menuNav }}" as="n" hint-placeholder-count="5">
         <a href="{{ n.href }}" onClick="{{ n.go }}" style="padding:14px 12px;border-radius:14px;font-size:17px;font-weight:700;color:#202023;border-bottom:1px solid #f1f5f2">{{ n.label }}</a>
       </sc-for>
       <a href="{{ waLink }}" target="_blank" rel="noopener" style="margin-top:16px;height:54px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;font-weight:900;font-size:16px">Comprar por WhatsApp</a>
@@ -102,7 +173,7 @@
 <div>
   <section id="inicio" style="position:relative;overflow:hidden;background:#EFF4F0">
     <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none"></canvas>
-    <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:42%;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#ffffff 94%)"></div>
+    <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:16%;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#ffffff 97%)"></div>
     <div style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
       <div>
         <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #d8e5da;color:#1D703A;border-radius:99px;padding:8px 16px;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;animation:somarUp 500ms ease both">
@@ -154,19 +225,19 @@
     </div>
     <div data-reveal class="sm-scroll" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px">
       <sc-for list="{{ categories }}" as="c" hint-placeholder-count="8">
-        <button onClick="{{ c.go }}" style="scroll-snap-align:start;min-width:200px;text-align:left;border:1px solid #e8eee9;background:#fff;border-radius:20px;padding:0;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif;transition:transform 260ms ease,box-shadow 260ms ease,border-color 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.11);border-color:#d3e3d7">
-          <div style="height:132px;background:#EEF3EF;overflow:hidden">
-            <image-slot id="{{ c.slot }}" shape="rect" placeholder="{{ c.name }}"></image-slot>
+        <button onClick="{{ c.go }}" class="somar-cat" style="position:relative;scroll-snap-align:start;min-width:200px;text-align:left;border:1.5px solid #e8eee9;background:#fff;border-radius:22px;padding:22px 18px 18px;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif" style-hover="border-color:{{ c.accent }};box-shadow:0 20px 40px {{ c.glow }}">
+          <span aria-hidden="true" class="somar-cat-blob" style="position:absolute;top:-34px;right:-34px;width:96px;height:96px;border-radius:99px;background:{{ c.tint }}"></span>
+          <span class="somar-cat-icon" style="position:relative;width:56px;height:56px;border-radius:16px;background:{{ c.tint }};color:{{ c.accent }};display:grid;place-items:center;font-size:28px;line-height:1">{{ c.icon }}</span>
+          <div style="position:relative;margin-top:16px">
+            <div style="font-weight:900;font-size:17px;color:#202023">{{ c.name }}</div>
+            <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;color:#7c8781;margin-top:2px">{{ c.count }} productos</div>
           </div>
-          <div style="padding:14px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <div>
-              <div style="font-weight:900;font-size:16px">{{ c.name }}</div>
-              <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;color:#7c8781">{{ c.count }} productos</div>
-            </div>
-            <span style="width:32px;height:32px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;flex:none">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="18" y2="12"></line><polyline points="12,6 18,12 12,18"></polyline></svg>
+          <span class="somar-cat-cta" style="position:relative;display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-weight:800;font-size:14px;color:{{ c.accent }}">
+            Ver categoría
+            <span class="somar-cat-arrow" style="display:inline-grid;place-items:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="18" y2="12"></line><polyline points="12,6 18,12 12,18"></polyline></svg>
             </span>
-          </div>
+          </span>
         </button>
       </sc-for>
     </div>
@@ -184,7 +255,7 @@
       <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
         <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
           <div style="position:relative;height:210px;background:#f7faf8;overflow:hidden;cursor:pointer" onClick="{{ p.open }}">
-            <image-slot id="{{ p.slot }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+            <image-slot id="{{ p.slot }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
           </div>
           <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
             <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
@@ -234,7 +305,7 @@
         <sc-for list="{{ offerCards }}" as="o" hint-placeholder-count="2">
           <button onClick="{{ o.go }}" style="text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;background:#fff;color:#202023;border-radius:24px;padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:280px;transition:transform 260ms ease" style-hover="transform:translateY(-6px)">
             <div style="flex:1;background:#EEF3EF;min-height:150px">
-              <image-slot id="{{ o.slot }}" shape="rect" placeholder="{{ o.name }}"></image-slot>
+              <image-slot id="{{ o.slot }}" src="{{ o.image }}" shape="rect" fit="contain" placeholder="{{ o.name }}"></image-slot>
             </div>
             <div style="padding:18px">
               <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#3A8A47">{{ o.tag }}</div>
@@ -278,7 +349,7 @@
         <sc-for list="{{ bestSellers }}" as="p" hint-placeholder-count="5">
           <article style="scroll-snap-align:start;flex:0 0 auto;width:262px;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;position:relative;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
             <div style="height:190px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
-              <image-slot id="{{ p.slotB }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+              <image-slot id="{{ p.slotB }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
             </div>
             <div style="padding:16px">
               <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
@@ -316,16 +387,17 @@
     </div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
       <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
-        <div style="border:1px solid #e8eee9;border-radius:20px;padding:28px;background:#fff;transition:border-color 240ms ease,transform 240ms ease" style-hover="border-color:#cfe0d4;transform:translateY(-4px)">
-          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;color:#3A8A47">Paso {{ s.n }}</div>
-          <div style="font-size:20px;font-weight:900;margin-top:10px;line-height:1.3">{{ s.title }}</div>
-          <p style="color:#66716b;font-size:15.5px;line-height:1.55;margin:8px 0 0">{{ s.text }}</p>
+        <div style="border:1.5px solid {{ s.border }};border-radius:20px;padding:26px;background:{{ s.tint }};transition:border-color 240ms ease,transform 240ms ease,box-shadow 240ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 34px {{ s.tint }}">
+          <div style="width:48px;height:48px;border-radius:14px;background:{{ s.accent }};color:#fff;display:grid;place-items:center;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:23px;line-height:1;box-shadow:0 8px 18px {{ s.tint }}">{{ s.n }}</div>
+          <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:{{ s.accent }};margin-top:16px">Paso {{ s.n }}</div>
+          <div style="font-size:20px;font-weight:900;margin-top:6px;line-height:1.3;color:#202023">{{ s.title }}</div>
+          <p style="color:#5c6660;font-size:15.5px;line-height:1.55;margin:8px 0 0">{{ s.text }}</p>
         </div>
       </sc-for>
     </div>
     <div data-reveal style="text-align:center;margin-top:34px">
       <a href="{{ waLink }}" target="_blank" rel="noopener" style="height:62px;padding:0 40px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:18px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 10px 28px rgba(29,112,58,0.26);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.892c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.334 11.949-11.892a11.821 11.821 0 00-3.48-8.454"/></svg>
         Comprar por WhatsApp
       </a>
     </div>
@@ -336,7 +408,7 @@
       <div style="text-align:center;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa39d;margin-bottom:22px">Marcas que encontrás en SOMAR</div>
       <div class="sm-scroll" style="display:flex;gap:44px;overflow-x:auto;align-items:center;justify-content:flex-start;padding-bottom:6px">
         <sc-for list="{{ brandsList }}" as="b" hint-placeholder-count="8">
-          <span style="flex:0 0 auto;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:26px;letter-spacing:0.02em;color:#b6bfb9;filter:grayscale(1);transition:color 240ms ease" style-hover="color:#1D703A">{{ b }}</span>
+          <span style="flex:0 0 auto;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:22px;letter-spacing:0.04em;text-transform:uppercase;color:{{ b.color }};background:{{ b.tint }};padding:9px 20px;border-radius:99px;white-space:nowrap;cursor:default;transition:transform 220ms ease,box-shadow 220ms ease,background 220ms ease,color 220ms ease" style-hover="transform:translateY(-3px);box-shadow:0 10px 22px rgba(29,112,58,0.30);background:#1D703A;color:#fff">{{ b.name }}</span>
         </sc-for>
       </div>
     </div>
@@ -479,7 +551,7 @@
           <sc-for list="{{ list }}" as="p" hint-placeholder-count="8">
             <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;animation:somarUp 320ms ease both;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
               <div style="height:190px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
-                <image-slot id="{{ p.slotL }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+                <image-slot id="{{ p.slotL }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
               </div>
               <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
                 <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
@@ -526,7 +598,7 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,56px)">
     <div>
       <div style="border-radius:24px;overflow:hidden;background:#f7faf8;aspect-ratio:4/3;border:1px solid #eef3ef">
-        <image-slot id="{{ current.slotD }}" shape="rect" placeholder="{{ current.name }}"></image-slot>
+        <image-slot id="{{ current.slotD }}" src="{{ current.image }}" shape="rect" fit="contain" placeholder="{{ current.name }}"></image-slot>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
         <sc-for list="{{ current.gallery }}" as="g" hint-placeholder-count="4">
@@ -553,21 +625,40 @@
       </div>
       <sc-if value="{{ current.hasCuotas }}" hint-placeholder-val="{{ true }}">
         <div style="margin-top:22px;border:1px solid #eef3ef;border-radius:16px;overflow:hidden">
-          <div style="display:flex;justify-content:space-between;padding:12px 16px;background:#EEF3EF;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#1D703A">
-            <span>Plan de cuotas</span><span>Valor por cuota</span>
-          </div>
-          <sc-for list="{{ current.cuotasFmt }}" as="c" hint-placeholder-count="12">
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-top:1px solid #f3f7f4;font-size:15px">
-              <span style="font-weight:700;color:#3f4a44">{{ c.label }}</span>
-              <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;color:#1D703A;font-size:16px">{{ c.vFmt }}</span>
+          <button onClick="{{ toggleCuotas }}" aria-expanded="{{ cuotasOpen }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#EEF3EF;border:0;cursor:pointer;padding:14px 16px;text-align:left;font-family:'Lato',sans-serif;transition:background 200ms ease" style-hover="background:#e3ece5">
+            <span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+              <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:0.1em;text-transform:uppercase;color:#1D703A">Plan de cuotas</span>
+              <span style="font-size:15.5px;font-weight:700;color:#202023">{{ cuotaHeadline }}</span>
+            </span>
+            <span style="display:flex;align-items:center;gap:8px;color:#1D703A;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;white-space:nowrap;flex:none">
+              <span>{{ cuotasToggleLabel }}</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 220ms ease;transform:{{ cuotasChevron }}"><polyline points="6,9 12,15 18,9"></polyline></svg>
+            </span>
+          </button>
+          <sc-if value="{{ cuotasOpen }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid #eef3ef;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8b958f">
+                <span>Elegí tu plan</span><span>Valor por cuota</span>
+              </div>
+              <sc-for list="{{ detailCuotas }}" as="c" hint-placeholder-count="12">
+                <button onClick="{{ c.select }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;border-top:1px solid #f3f7f4;background:{{ c.rowBg }};cursor:pointer;padding:12px 16px;text-align:left;font-family:'Lato',sans-serif;transition:background 160ms ease">
+                  <span style="display:flex;align-items:center;gap:11px">
+                    <span style="width:19px;height:19px;border-radius:99px;border:2px solid {{ c.dotBorder }};display:grid;place-items:center;flex:none">
+                      <span style="width:9px;height:9px;border-radius:99px;background:{{ c.dotFill }}"></span>
+                    </span>
+                    <span style="font-weight:700;color:#3f4a44;font-size:15px">{{ c.label }}</span>
+                  </span>
+                  <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;color:#1D703A;font-size:16px">{{ c.vFmt }}</span>
+                </button>
+              </sc-for>
             </div>
-          </sc-for>
+          </sc-if>
         </div>
       </sc-if>
       <p style="font-size:16.5px;line-height:1.62;color:#55605a;margin:22px 0 0;max-width:56ch;text-wrap:pretty">{{ current.description }}</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
-        <a href="{{ current.waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.22);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+        <a href="{{ detailWaLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.22);transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.892c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.334 11.949-11.892a11.821 11.821 0 00-3.48-8.454"/></svg>
           Consultar por WhatsApp
         </a>
         <button onClick="{{ current.add }}" style="height:56px;padding:0 28px;border-radius:99px;border:1.5px solid #202023;background:#fff;color:#202023;font-family:'Lato',sans-serif;font-weight:900;font-size:16px;cursor:pointer;transition:border-color 220ms ease,color 220ms ease" style-hover="border-color:#1D703A;color:#1D703A">Agregar al pedido</button>
@@ -598,7 +689,7 @@
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <article style="border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.1)">
           <div style="height:170px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
-            <image-slot id="{{ p.slotR }}" shape="rect" placeholder="{{ p.name }}"></image-slot>
+            <image-slot id="{{ p.slotR }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
           </div>
           <div style="padding:15px">
             <div style="font-family:'Roboto Condensed',sans-serif;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
@@ -662,7 +753,7 @@
           <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
             <div style="display:flex;gap:12px;align-items:center;border:1px solid #eef3ef;border-radius:16px;padding:12px">
               <div style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;background:#f7faf8">
-                <image-slot id="{{ l.slotC }}" shape="rect" placeholder="."></image-slot>
+                <image-slot id="{{ l.slotC }}" src="{{ l.image }}" shape="rect" fit="contain" placeholder="."></image-slot>
               </div>
               <div style="flex:1;min-width:0">
                 <div style="font-weight:700;font-size:14.5px;line-height:1.3">{{ l.name }}</div>
@@ -696,7 +787,7 @@
 </sc-if>
 
 <a href="{{ waLink }}" target="_blank" rel="noopener" aria-label="¿Necesitás ayuda? Escribinos por WhatsApp" style="position:fixed;right:18px;bottom:18px;z-index:70;height:58px;border-radius:99px;background:#1D703A;color:#fff;display:flex;align-items:center;gap:0;padding:0 17px;box-shadow:0 10px 26px rgba(29,112,58,0.34);transition:gap 260ms ease,padding 260ms ease,background 220ms ease" style-hover="background:#3A8A47;gap:10px;padding:0 22px 0 17px;color:#fff">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.892c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652a12.062 12.062 0 005.71 1.447h.006c6.585 0 11.946-5.334 11.949-11.892a11.821 11.821 0 00-3.48-8.454"/></svg>
   <span style="max-width:0;overflow:hidden;white-space:nowrap;font-weight:900;font-size:15px;transition:max-width 300ms ease" style-hover="max-width:160px">¿Necesitás ayuda?</span>
 </a>
 
@@ -747,29 +838,137 @@
 <script type="text/x-dc" data-dc-script data-props="{}">
 const WA = '595971244226';
 const DEFAULT_RATE = 0.064; // interés mensual por defecto para calcular cuotas (1 a 12)
-const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate) =>
-  ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate: (typeof rate === 'number') ? rate : DEFAULT_RATE });
+const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate, cuotasFix, maxCuotas) =>
+  ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate: (typeof rate === 'number') ? rate : DEFAULT_RATE, cuotasFix: cuotasFix || {}, maxCuotas: maxCuotas || 12 });
 
 const PRODUCTS = [
   P(1,'lavarropas-jam-grace-6kg','Lavarropas Automático JAM Grace 6 kg','JAM','Lavarropas',2270000,null,null,5,true,true,
     'Lavarropas automático de carga frontal JAM Grace (modelo F-056B) con 6 kilos de capacidad. Práctico y eficiente, con múltiples programas para el lavado diario del hogar.',
     ['6 kg de capacidad','Carga frontal','Múltiples programas de lavado','Panel con display digital'],
     [{k:'Capacidad',v:'6 kg'},{k:'Carga',v:'Frontal'},{k:'Modelo',v:'Grace F-056B'},{k:'Garantía',v:'12 meses'}],
-    0.064),
+    0.064, {6:493000, 12:277000}),
   P(2,'horno-electrico-tokyo-listo-plus-56l','Horno Eléctrico Tokyo Listo Plus 56 L','Tokyo','Cocinas',920000,null,null,8,true,true,
     'Horno eléctrico Tokyo Listo Plus de 56 litros con control de temperatura, timer y selector de funciones. Ideal para hornear, gratinar y calentar con comodidad.',
     ['56 litros de capacidad','Control de temperatura','Timer con apagado automático','Incluye parrilla y bandeja'],
     [{k:'Capacidad',v:'56 litros'},{k:'Tipo',v:'Eléctrico de mesada'},{k:'Funciones',v:'Temperatura / timer'},{k:'Garantía',v:'12 meses'}],
-    0.064)
+    0.064, {6:199000, 12:112000}),
+  P(3,'cocina-jam-estandar-4h-blanca','Cocina JAM Estándar 4 Hornallas Blanca','JAM','Cocinas',813000,null,null,6,true,true,
+    'Cocina JAM Estándar de 4 hornallas a gas, color blanco, con horno amplio y tapa de vidrio templado. Práctica y confiable para el uso diario del hogar.',
+    ['4 hornallas a gas','Horno amplio','Tapa de vidrio templado','Terminación blanca'],
+    [{k:'Hornallas',v:'4'},{k:'Tipo',v:'A gas'},{k:'Color',v:'Blanco'},{k:'Garantía',v:'12 meses'}],
+    0.064, {6:177000, 8:138000, 10:114000, 12:99000}),
+  P(4,'sommier-parana-neo-pillow-negro','Sommier Paraná Neo Convencional c/ Pillow - Negro','Paraná','Muebles',1457000,null,null,5,true,true,
+    'Sommier Paraná Neo convencional con pillow top, color negro. Incluye colchón y base (box) para un descanso firme y confortable.',
+    ['Con pillow top','Colchón + base (box)','Tapizado negro','Estructura reforzada'],
+    [{k:'Tipo',v:'Sommier con pillow'},{k:'Color',v:'Negro'},{k:'Incluye',v:'Colchón + box'},{k:'Garantía',v:'12 meses'}],
+    0.064, {6:316000, 8:246000, 10:204000, 12:178000}),
+  P(5,'multiuso-2-puertas-esquinero-valijera','Multiuso 2 Puertas c/ Esquinero + Valijera','Nacional','Muebles',1215000,null,null,4,true,true,
+    'Ropero multiuso de 2 puertas con espejo, esquinero con estantes y valijera superior. Mucho espacio de guardado, ideal para el dormitorio.',
+    ['2 puertas + espejo','Esquinero con estantes','Valijera superior','Cajones amplios'],
+    [{k:'Puertas',v:'2'},{k:'Incluye',v:'Esquinero + valijera'},{k:'Espejo',v:'Sí'},{k:'Material',v:'Madera'}],
+    0.064, {6:264000, 8:206000, 10:171000, 12:148000}),
+  P(6,'ventilador-tokyo-pie-fs50-20','Ventilador de Pie Tokyo FS50 20" 3 Velocidades - Negro','Tokyo','Hogar',380000,null,null,10,true,true,
+    'Ventilador de pie Tokyo FS50 de 20 pulgadas, 3 velocidades, con base redonda y altura regulable. Color negro. Gran caudal de aire para ambientes amplios.',
+    ['20 pulgadas','3 velocidades','Altura regulable','Base redonda estable'],
+    [{k:'Aspas',v:'20 pulgadas'},{k:'Velocidades',v:'3'},{k:'Modelo',v:'FS50'},{k:'Color',v:'Negro'}],
+    0.064, {6:83000, 8:65000, 10:54000, 12:47000}),
+  P(7,'carpa-camping-automatica-3-4-personas','Carpa Camping Automática 3 a 4 Personas','Armafácil','Pesca',230000,null,null,8,true,true,
+    'Carpa de camping automática (armado fácil) para 3 a 4 personas, diseño camuflado. Medidas 210 x 150 x 120 cm. Ideal para pesca, camping y salidas al aire libre.',
+    ['Armado automático','Capacidad 3 a 4 personas','Diseño camuflado','Incluye bolso de transporte'],
+    [{k:'Capacidad',v:'3 a 4 personas'},{k:'Medidas',v:'210 x 150 x 120 cm'},{k:'Armado',v:'Automático'},{k:'Diseño',v:'Camuflado'}],
+    0.064, {6:50000, 8:39000, 10:33000, 12:28000}),
+  P(8,'secador-babyliss-pro-b6176hk-black-rose-gold','Secador de Pelo Babyliss PRO Nano Titanium B6176HK - Black Rose Gold','Babyliss','Belleza y Salud',495000,null,null,7,true,true,
+    'Secador de pelo profesional Babyliss PRO Nano Titanium, edición Black Rose Gold, de 2000 watts con motor AC de alto rendimiento. Secado rápido con cuidado del cabello.',
+    ['2000 watts','Motor AC profesional','Tecnología Nano Titanium','Edición Black Rose Gold'],
+    [{k:'Potencia',v:'2000 W'},{k:'Motor',v:'AC profesional'},{k:'Modelo',v:'B6176HK'},{k:'Tecnología',v:'Nano Titanium'}],
+    0.064, {6:108000, 8:84000, 10:70000, 12:61000}),
+  P(9,'nebulizador-aspen-piston-br-cn176','Nebulizador a Pistón Aspen Compact BR-CN176','Aspen','Belleza y Salud',390000,null,null,10,true,true,
+    'Nebulizador a pistón Aspen Compact (BR-CN176): eficiente, durable y con bajo nivel de ruido. Autorizado por ANMAT. Ideal para tratamientos respiratorios en casa.',
+    ['Compacto y eficiente','Bajo nivel de ruido','Autorizado ANMAT','Garantía 1 año'],
+    [{k:'Tipo',v:'A pistón'},{k:'Modelo',v:'BR-CN176'},{k:'Nivel de ruido',v:'Bajo'},{k:'Garantía',v:'12 meses'}],
+    0.064, {6:85000, 8:66000, 10:55000, 12:48000}),
+  P(10,'bicicleta-milano-torino-24-18v-naranja','Bicicleta Milano Torino 24" 18 Velocidades - Naranja','Milano','Deportes',1034000,null,null,5,true,true,
+    'Bicicleta Milano Torino rodado 24", 18 velocidades, color naranja. Cuadro resistente con suspensión delantera, cambios y frenos confiables. Ideal para adolescentes y uso recreativo.',
+    ['Rodado 24"','18 velocidades','Suspensión delantera','Color naranja'],
+    [{k:'Rodado',v:'24"'},{k:'Velocidades',v:'18'},{k:'Suspensión',v:'Delantera'},{k:'Color',v:'Naranja'}],
+    0.064, {6:225000, 8:175000, 10:145000, 12:126000}),
+  P(11,'juego-sillon-reposera-ratan-4-mesita','Juego de Sillones Reposera Ratán - 4 Sillones + Mesita','Nacional','Muebles',1285000,null,null,4,true,true,
+    'Juego de living/jardín en ratán sintético: 4 sillones reposera apilables más mesita. Cómodo y elegante para patio, terraza o galería, apto para interior y exterior.',
+    ['4 sillones + mesita','Ratán sintético','Apto interior/exterior','Estructura metálica reforzada'],
+    [{k:'Incluye',v:'4 sillones + mesita'},{k:'Material',v:'Ratán sintético'},{k:'Uso',v:'Interior / exterior'},{k:'Estructura',v:'Metálica'}],
+    0.064, {6:278000, 8:217000, 10:179000, 12:157000}),
+  P(12,'radio-ecopower-am-fm-ep-f302','Radio Ecopower AM/FM EP-F302 Bluetooth 4 Bandas','Ecopower','Pequeños electrodomésticos',120000,null,null,12,true,true,
+    'Radio Ecopower EP-F302 "Music Rabicho": 4 bandas (FM/AM/SW1-2), Bluetooth, reproductor USB/TF, linterna incorporada y batería recargable 18650. Con salida para auriculares.',
+    ['4 bandas FM/AM/SW1-2','Bluetooth + USB/TF','Linterna incorporada','Batería recargable 18650'],
+    [{k:'Bandas',v:'FM/AM/SW1-2'},{k:'Conectividad',v:'Bluetooth / USB / TF'},{k:'Modelo',v:'EP-F302'},{k:'Batería',v:'18650 recargable'}],
+    0.064, {6:25000, 8:20000}, 8),
+  P(13,'telefono-redmi-15c-8-128','Teléfono Redmi 15C 8GB RAM 128GB','Xiaomi','Celulares',1053000,null,'Nuevo',10,true,true,
+    'Redmi 15C con 8GB de RAM (4+4 con extensión) y 128GB de almacenamiento. Batería de 6000 mAh con carga rápida de 33W y pantalla de 6.9" a 120Hz.',
+    ['8GB RAM (4+4) + 128GB','Batería 6000 mAh · 33W','Pantalla 6.9" 120Hz','Equipo nuevo'],
+    [{k:'RAM',v:'8 GB (4+4)'},{k:'Almacenamiento',v:'128 GB'},{k:'Batería',v:'6000 mAh / 33W'},{k:'Pantalla',v:'6.9" 120Hz'}],
+    0.064, {6:229000, 8:178000, 10:148000, 12:129000}),
+  P(14,'licuadora-arno-power-mix-lq12-blanca','Licuadora Arno Power Mix LQ12 550W 2L - Blanca','Arno','Pequeños electrodomésticos',227000,null,null,10,true,true,
+    'Licuadora Arno Power Mix LQ12 de 550W con jarra de 2 litros y 2 velocidades. Cuchillas Zelkrom de acero inoxidable ultradurables, con alto poder de corte. Color blanco.',
+    ['550 watts de potencia','Jarra de 2 litros','2 velocidades','Cuchillas Zelkrom acero inox'],
+    [{k:'Potencia',v:'550 W'},{k:'Capacidad',v:'2 L (1,25 L útil)'},{k:'Velocidades',v:'2'},{k:'Color',v:'Blanco'}],
+    0.064, {6:50000, 10:25000}, 10),
+  P(15,'aspiradora-nappo-wet-dry-nlai-156-20l','Aspiradora Nappo Wet & Dry NLAI-156 20 Litros','Nappo','Pequeños electrodomésticos',766000,null,null,6,true,true,
+    'Aspiradora Nappo NLAI-156 Wet & Dry: aspira polvo y líquidos, con tanque de acero inoxidable de 20 litros. Potente, con ruedas giratorias y accesorios incluidos.',
+    ['Aspira polvo y líquidos','Tanque acero inox 20 L','Ruedas giratorias 360°','Accesorios incluidos'],
+    [{k:'Capacidad',v:'20 litros'},{k:'Tipo',v:'Wet & Dry'},{k:'Modelo',v:'NLAI-156'},{k:'Tanque',v:'Acero inox'}],
+    0.064, {6:166000, 8:130000, 10:108000, 12:94000}),
+  P(16,'compresor-vcp-50l-2hp','Compresor VCP 50 Litros 2HP','VCP','Herramientas',930000,null,null,5,true,true,
+    'Compresor de aire VCP de 50 litros con motor de 2HP y presión de 115 PSI / 8 bar. Con ruedas para traslado, manómetros y regulador. Ideal para taller, pintura e inflado.',
+    ['Tanque de 50 litros','Motor 2HP','115 PSI / 8 bar','Con ruedas y manija'],
+    [{k:'Tanque',v:'50 litros'},{k:'Motor',v:'2 HP'},{k:'Presión',v:'115 PSI / 8 bar'},{k:'Color',v:'Negro'}],
+    0.064, {6:202000, 8:157000, 10:131000, 12:114000}),
+  P(17,'barra-sonido-kolke-kpe-809-subwoofer','Barra de Sonido Kolke KPE-809 con Subwoofer 5.25"','Kolke','Pequeños electrodomésticos',740000,null,null,7,true,true,
+    'Barra de sonido Kolke KPE-809 con subwoofer de 5.25". Sonido envolvente para tu TV, con conexión Bluetooth y múltiples entradas. Ideal para películas y música.',
+    ['Subwoofer 5.25"','Sonido envolvente','Conexión Bluetooth','Ideal para TV / home theater'],
+    [{k:'Subwoofer',v:'5.25"'},{k:'Modelo',v:'KPE-809'},{k:'Conexión',v:'Bluetooth'},{k:'Color',v:'Negro'}],
+    0.064, {6:161000, 8:125000, 10:104000, 12:91000}),
+  P(18,'heladera-enxuta-215-renx14-215-fhs','Heladera Enxuta 215 L RENX14-215 FHS - Blanca','Enxuta','Heladeras',1722000,null,null,5,true,true,
+    'Heladera Enxuta RENX14-215 FHS de 215 litros con freezer superior, color blanco. Fabricada en Turquía. Amplia y eficiente para el hogar.',
+    ['215 litros de capacidad','Freezer superior','Color blanco','Fabricada en Turquía'],
+    [{k:'Capacidad',v:'215 litros'},{k:'Modelo',v:'RENX14-215 FHS'},{k:'Freezer',v:'Superior'},{k:'Color',v:'Blanco'}],
+    0.064, {6:374000, 8:259000, 10:242000, 12:210000})
 ];
 
-const CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Hogar'];
+const CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Muebles','Hogar','Pesca','Belleza y Salud','Deportes','Herramientas'];
+
+// Color por producto (inferido de las fotos). Se puede ajustar libremente.
+const PRODUCT_COLORS = { 1:'Blanco', 2:'Negro', 3:'Blanco', 4:'Negro', 5:'Cerezo', 6:'Negro', 7:'Camuflado', 8:'Negro', 9:'Blanco', 10:'Naranja', 11:'Marrón', 12:'Rojo', 13:'Azul', 14:'Blanco', 15:'Acero', 16:'Negro', 17:'Negro', 18:'Blanco' };
+PRODUCTS.forEach(p => { p.color = PRODUCT_COLORS[p.id] || 'Varios'; });
+// Foto por producto (en assets/). El 15 (Aspiradora Nappo) queda pendiente.
+const PRODUCT_IMAGES = { 1:'assets/prod-1.jpg', 2:'assets/prod-2.jpg', 3:'assets/prod-3.jpg', 4:'assets/prod-4.jpg', 5:'assets/prod-5.jpg', 6:'assets/prod-6.jpg', 7:'assets/prod-7.jpg', 8:'assets/prod-8.jpg', 9:'assets/prod-9.jpg', 10:'assets/prod-10.jpg', 11:'assets/prod-11.jpg', 12:'assets/prod-12.jpg', 13:'assets/prod-13.jpg', 14:'assets/prod-14.jpg', 15:'assets/prod-15.jpg', 16:'assets/prod-16.jpg', 17:'assets/prod-17.jpg', 18:'assets/prod-18.jpg' };
+const COLOR_HEX = { 'Blanco':'#eef0ee', 'Negro':'#202023', 'Cerezo':'#9a5b3b', 'Camuflado':'#5b6b3a', 'Naranja':'#e8722a', 'Marrón':'#7a4a2b', 'Rojo':'#c0392b', 'Azul':'#2f6fb0', 'Acero':'#b8bcbe', 'Varios':'#c7cec9' };
+
+// Ícono + color de acento por categoría (para las tarjetas del home)
+const CATEGORY_STYLE = {
+  'Televisores': { icon:'📺', accent:'#3A6EA5' },
+  'Heladeras': { icon:'❄️', accent:'#2AA5B5' },
+  'Cocinas': { icon:'🍳', accent:'#E8722A' },
+  'Lavarropas': { icon:'🫧', accent:'#2F8FD6' },
+  'Aires acondicionados': { icon:'🌬️', accent:'#17A2B8' },
+  'Celulares': { icon:'📱', accent:'#6C5CE7' },
+  'Pequeños electrodomésticos': { icon:'🔌', accent:'#E1477E' },
+  'Muebles': { icon:'🛋️', accent:'#9A5B3B' },
+  'Hogar': { icon:'🏠', accent:'#1D703A' },
+  'Pesca': { icon:'🎣', accent:'#0E9488' },
+  'Belleza y Salud': { icon:'💅', accent:'#D6336C' },
+  'Deportes': { icon:'🚴', accent:'#F08C00' },
+  'Herramientas': { icon:'🛠️', accent:'#E03131' }
+};
+const hexToRgba = (hex, a) => { const h = hex.replace('#',''); return 'rgba(' + parseInt(h.slice(0,2),16) + ',' + parseInt(h.slice(2,4),16) + ',' + parseInt(h.slice(4,6),16) + ',' + a + ')'; };
+const BRAND_PALETTE = ['#1D703A','#2F8FD6','#E1477E','#E8722A','#6C5CE7','#0E9488','#D6336C','#3A6EA5','#F08C00','#9A5B3B','#E03131','#2AA5B5','#3A8A47'];
 
 class Component extends DCLogic {
   state = {
-    view: 'home', slug: null, q: '', cat: 'Todas', brand: 'Todas',
+    view: 'home', slug: null, q: '', cat: 'Todas', brand: 'Todas', color: 'Todos',
     maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados',
     cart: [], favs: [], cartOpen: false, menuOpen: false, filtersOpen: false,
+    catMenuOpen: false, menuCat: null, menuBrand: null,
+    cuotasOpen: false, selectedCuota: null,
     toast: null, w: typeof window !== 'undefined' ? window.innerWidth : 1280
   };
 
@@ -837,11 +1036,11 @@ class Component extends DCLogic {
     const hashPhase = (i) => { const s = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453; return (s - Math.floor(s)) * Math.PI * 2; };
     // Paleta Pipo adaptada: verde SOMAR + verde apoyo + papel claro, en tintes suaves (texto legible).
     this.meshBlobs = [
-      { c: [58, 138, 71],   x: 68.10, y: 46.03, r: 41.10, a: 0.32, p: hashPhase(1), p2: hashPhase(1.7) },
-      { c: [29, 112, 58],   x: 25.17, y: 75.99, r: 44.60, a: 0.28, p: hashPhase(2), p2: hashPhase(2.7) },
-      { c: [238, 243, 239], x: 53.11, y: 12.71, r: 66.65, a: 0.90, p: hashPhase(3), p2: hashPhase(3.7) }
+      { c: [58, 138, 71],   x: 68.10, y: 46.03, r: 54.00, a: 0.72, p: hashPhase(1), p2: hashPhase(1.7) },
+      { c: [29, 112, 58],   x: 25.17, y: 75.99, r: 57.00, a: 0.64, p: hashPhase(2), p2: hashPhase(2.7) },
+      { c: [238, 243, 239], x: 53.11, y: 12.71, r: 66.65, a: 0.55, p: hashPhase(3), p2: hashPhase(3.7) }
     ];
-    this.meshBackdrop = '#EFF4F0';
+    this.meshBackdrop = '#DCEAE0';
     // Grano bitmap (una sola vez): tile de ruido gris para textura sutil (blend overlay).
     const nc = document.createElement('canvas'); nc.width = 120; nc.height = 120;
     const nctx = nc.getContext('2d'); const img = nctx.createImageData(120, 120);
@@ -880,8 +1079,8 @@ class Component extends DCLogic {
       const g = ctx.createRadialGradient(x, y, 0, x, y, r);
       const rgb = b.c[0] + ',' + b.c[1] + ',' + b.c[2];
       g.addColorStop(0,    'rgba(' + rgb + ',' + b.a + ')');
-      g.addColorStop(0.28, 'rgba(' + rgb + ',' + (b.a * 0.5) + ')');
-      g.addColorStop(0.62, 'rgba(' + rgb + ',' + (b.a * 0.16) + ')');
+      g.addColorStop(0.45, 'rgba(' + rgb + ',' + (b.a * 0.74) + ')');
+      g.addColorStop(0.80, 'rgba(' + rgb + ',' + (b.a * 0.36) + ')');
       g.addColorStop(1,    'rgba(' + rgb + ',0)');
       ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     }
@@ -892,16 +1091,18 @@ class Component extends DCLogic {
       ctx.restore();
     }
   }
-  cuotaValue(price, rate, n) {
+  cuotaValue(price, rate, n, fix) {
+    if (fix && fix[n] != null) return fix[n];                     // valor real fijado (ej. 6 y 12 cuotas)
     const i = (typeof rate === 'number') ? rate : DEFAULT_RATE;
     if (n <= 1 || i <= 0) return Math.round(price / 1000) * 1000; // 1 pago = contado
     const f = i * Math.pow(1 + i, n) / (Math.pow(1 + i, n) - 1);   // cuota fija (sistema francés)
     return Math.round(price * f / 1000) * 1000;                    // redondeo a Gs. 1.000
   }
-  cuotaPlans(price, rate) {
+  cuotaPlans(price, rate, fix, max) {
     const out = [];
-    for (let n = 1; n <= 12; n++) {
-      out.push({ n, label: n === 1 ? 'Contado (1 pago)' : (n + ' cuotas'), vFmt: this.fmt(this.cuotaValue(price, rate, n)) });
+    const top = max || 12;
+    for (let n = 1; n <= top; n++) {
+      out.push({ n, label: n === 1 ? 'Contado (1 pago)' : (n + ' cuotas'), vFmt: this.fmt(this.cuotaValue(price, rate, n, fix)) });
     }
     return out;
   }
@@ -911,7 +1112,11 @@ class Component extends DCLogic {
     this._t = setTimeout(() => this.setState({ toast: null }), 2200);
   }
   top() { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); }
-  go(view, slug) { this.setState({ view, slug: slug || null, menuOpen: false }); this.top(); }
+  go(view, slug) { this.setState({ view, slug: slug || null, menuOpen: false, cuotasOpen: false, selectedCuota: null }); this.top(); }
+  goFilter(cat, brand, color) {
+    this.setState({ cat: cat || 'Todas', brand: brand || 'Todas', color: color || 'Todos', q: '', catMenuOpen: false, menuOpen: false });
+    this.go('productos');
+  }
   add(p) {
     this.setState(s => {
       const i = s.cart.findIndex(c => c.id === p.id);
@@ -930,10 +1135,11 @@ class Component extends DCLogic {
     return {
       ...p,
       slot: 'prod-' + p.id, slotB: 'best-' + p.id, slotL: 'list-' + p.id, slotR: 'rel-' + p.id, slotD: 'det-' + p.id, slotC: 'cart-' + p.id,
+      image: PRODUCT_IMAGES[p.id] || '',
       priceFmt: this.fmt(p.price),
       prevFmt: p.previousPrice ? this.fmt(p.previousPrice) : null,
-      cuotasFmt: this.cuotaPlans(p.price, p.rate),
-      cuotaLine: '12 cuotas de ' + this.fmt(this.cuotaValue(p.price, p.rate, 12)),
+      cuotasFmt: this.cuotaPlans(p.price, p.rate, p.cuotasFix, p.maxCuotas),
+      cuotaLine: (p.maxCuotas || 12) + ' cuotas de ' + this.fmt(this.cuotaValue(p.price, p.rate, p.maxCuotas || 12, p.cuotasFix)),
       hasCuotas: true,
       discount: disc,
       stockLabel: p.stock === 0 ? 'Sin stock — consultanos' : (p.stock <= 3 ? 'Últimas ' + p.stock + ' unidades' : 'Disponible'),
@@ -963,6 +1169,7 @@ class Component extends DCLogic {
       if (q && !(p.name + ' ' + p.brand + ' ' + p.category).toLowerCase().includes(q)) return false;
       if (s.cat !== 'Todas' && p.category !== s.cat) return false;
       if (s.brand !== 'Todas' && p.brand !== s.brand) return false;
+      if (s.color !== 'Todos' && p.color !== s.color) return false;
       if (p.price > s.maxPrice) return false;
       if (s.onlyOffer && !p.previousPrice) return false;
       if (s.onlyStock && p.stock === 0) return false;
@@ -974,6 +1181,22 @@ class Component extends DCLogic {
     if (s.sort === 'destacados') list = [...list].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
     const current = s.slug ? all.find(p => p.slug === s.slug) : null;
+    const detailCuotas = current ? current.cuotasFmt.map(c => {
+      const sel = s.selectedCuota === c.n;
+      return { n: c.n, label: c.label, vFmt: c.vFmt,
+        rowBg: sel ? '#f2f8f4' : '#ffffff', dotBorder: sel ? '#1D703A' : '#cdd8d1', dotFill: sel ? '#1D703A' : 'transparent',
+        select: () => this.setState({ selectedCuota: c.n, cuotasOpen: false }) };
+    }) : [];
+    let cuotaHeadline = current ? ('Elegí tu plan · 1 a ' + (current.maxCuotas || 12) + ' cuotas') : '';
+    let detailWaMsg = current ? ('Hola SOMAR, estoy interesado/a en el producto: ' + current.name + '.') : '';
+    if (current && s.selectedCuota) {
+      const cc = current.cuotasFmt.find(x => x.n === s.selectedCuota);
+      if (cc) {
+        cuotaHeadline = cc.label + ' · ' + cc.vFmt;
+        detailWaMsg += (s.selectedCuota === 1) ? (' Lo quiero de contado (' + cc.vFmt + ').') : (' Me interesa en ' + s.selectedCuota + ' cuotas de ' + cc.vFmt + '.');
+      }
+    }
+    const detailWaLink = this.wa(detailWaMsg || 'Hola SOMAR, quiero hacer una consulta.');
     const cartLines = s.cart.map(c => {
       const p = all.find(x => x.id === c.id);
       return { ...p, qty: c.qty, subtotalFmt: this.fmt(p.price * c.qty), inc: () => this.qty(c.id, 1), dec: () => this.qty(c.id, -1) };
@@ -1000,12 +1223,60 @@ class Component extends DCLogic {
       }
     }));
 
+    // Árbol del menú desplegable: Categoría -> Marca -> Color (solo con productos)
+    const withProd = CATEGORIES.filter(c => PRODUCTS.some(p => p.category === c));
+    const uniq = arr => Array.from(new Set(arr));
+    const mActiveCat = (s.menuCat && withProd.includes(s.menuCat)) ? s.menuCat : (withProd[0] || null);
+    const mBrands = mActiveCat ? uniq(PRODUCTS.filter(p => p.category === mActiveCat).map(p => p.brand)) : [];
+    const mActiveBrand = (s.menuBrand && mBrands.includes(s.menuBrand)) ? s.menuBrand : (mBrands[0] || null);
+    const mColors = (mActiveCat && mActiveBrand) ? uniq(PRODUCTS.filter(p => p.category === mActiveCat && p.brand === mActiveBrand).map(p => p.color)) : [];
+    const menuCats = withProd.map(cat => ({
+      name: cat, count: PRODUCTS.filter(p => p.category === cat).length,
+      bg: cat === mActiveCat ? '#EEF3EF' : 'transparent', fg: cat === mActiveCat ? '#1D703A' : '#202023',
+      hover: () => this.setState({ menuCat: cat, menuBrand: null }),
+      go: () => this.goFilter(cat, 'Todas', 'Todos')
+    }));
+    const menuBrands = mBrands.map(b => ({
+      name: b, bg: b === mActiveBrand ? '#EEF3EF' : 'transparent', fg: b === mActiveBrand ? '#1D703A' : '#202023',
+      hover: () => this.setState({ menuBrand: b }),
+      go: () => this.goFilter(mActiveCat, b, 'Todos')
+    }));
+    const menuColors = mColors.map(col => ({
+      name: col, hex: COLOR_HEX[col] || '#c7cec9',
+      go: () => this.goFilter(mActiveCat, mActiveBrand, col)
+    }));
+    // Árbol anidado para el menú mobile (acordeón)
+    const menuTree = withProd.map(cat => ({
+      name: cat, count: PRODUCTS.filter(p => p.category === cat).length,
+      open: s.menuCat === cat,
+      toggle: () => this.setState(x => ({ menuCat: x.menuCat === cat ? null : cat, menuBrand: null })),
+      go: () => this.goFilter(cat, 'Todas', 'Todos'),
+      brands: uniq(PRODUCTS.filter(p => p.category === cat).map(p => p.brand)).map(b => ({
+        name: b, open: s.menuBrand === b,
+        toggle: () => this.setState(x => ({ menuBrand: x.menuBrand === b ? null : b })),
+        go: () => this.goFilter(cat, b, 'Todos'),
+        colors: uniq(PRODUCTS.filter(p => p.category === cat && p.brand === b).map(p => p.color)).map(col => ({
+          name: col, hex: COLOR_HEX[col] || '#c7cec9', go: () => this.goFilter(cat, b, col)
+        }))
+      }))
+    }));
+
     return {
       year: new Date().getFullYear(),
-      isMobile, isDesktop: !isMobile, isWide: s.w >= 1150,
+      isMobile, isDesktop: !isMobile, isWide: s.w >= 1150, isXWide: s.w >= 1360,
       isHome: s.view === 'home', isList: s.view === 'productos', isDetail: s.view === 'detalle' && !!current,
       headerRef: this.headerRef, logoRef: this.logoRef, railRef: this.railRef, paraRef: this.paraRef,
       navItems: nav,
+      menuNav: nav.filter(n => n.label !== 'Categorías'),
+      menuCats, menuBrands, menuColors, menuTree, menuActiveCat: mActiveCat, menuActiveBrand: mActiveBrand,
+      catMenuOpen: s.catMenuOpen,
+      openCatMenu: () => this.setState({ catMenuOpen: true }),
+      closeCatMenu: () => this.setState({ catMenuOpen: false }),
+      toggleCatMenu: () => this.setState(x => ({ catMenuOpen: !x.catMenuOpen })),
+      detailCuotas, cuotaHeadline, detailWaLink, cuotasOpen: s.cuotasOpen,
+      cuotasToggleLabel: s.cuotasOpen ? 'Ocultar' : ('Ver 1 a ' + (current ? (current.maxCuotas || 12) : 12)),
+      cuotasChevron: s.cuotasOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleCuotas: () => this.setState(x => ({ cuotasOpen: !x.cuotasOpen })),
       footerNav: nav.filter(n => n.label !== 'Categorías'),
       social: [
         { label: 'WhatsApp', href: this.wa('Hola SOMAR, estoy interesado/a en conocer más sobre sus productos.') },
@@ -1022,7 +1293,7 @@ class Component extends DCLogic {
       onPrice: e => this.setState({ maxPrice: Number(e.target.value) }),
       toggleOffer: () => this.setState(x => ({ onlyOffer: !x.onlyOffer })),
       toggleStock: () => this.setState(x => ({ onlyStock: !x.onlyStock })),
-      clearFilters: () => this.setState({ q: '', cat: 'Todas', brand: 'Todas', maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados' }),
+      clearFilters: () => this.setState({ q: '', cat: 'Todas', brand: 'Todas', color: 'Todos', maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados' }),
       openFilters: () => this.setState({ filtersOpen: true }),
       closeFilters: () => this.setState({ filtersOpen: false }),
       filtersOpen: s.filtersOpen,
@@ -1034,20 +1305,24 @@ class Component extends DCLogic {
       featured: all.filter(p => p.featured).slice(0, 4),
       bestSellers: all.filter(p => p.best),
       offerCards: all.filter(p => p.previousPrice).slice(0, 2).map(p => ({ ...p, tag: 'Promoción', slot: 'offer-' + p.id, go: () => this.go('detalle', p.slug) })),
-      categories: CATEGORIES.map(c => ({
-        name: c, slot: 'cat-' + c.toLowerCase().replace(/[^a-z]+/g, '-'),
-        count: PRODUCTS.filter(p => p.category === c).length,
-        go: () => { this.setState({ cat: c, q: '' }); this.go('productos'); }
-      })).filter(c => c.count > 0),
+      categories: CATEGORIES.map(c => {
+        const st = CATEGORY_STYLE[c] || { icon: '🛍️', accent: '#1D703A' };
+        return {
+          name: c,
+          count: PRODUCTS.filter(p => p.category === c).length,
+          icon: st.icon, accent: st.accent, tint: hexToRgba(st.accent, 0.12), glow: hexToRgba(st.accent, 0.30),
+          go: () => this.goFilter(c, 'Todas', 'Todos')
+        };
+      }).filter(c => c.count > 0),
       current, related: current ? all.filter(p => p.category === current.category && p.id !== current.id).concat(all.filter(p => p.category !== current.category)).slice(0, 4) : [],
       heroPoints: ['Calidad garantizada', 'Atención cercana', 'Entregas coordinadas'],
       benefits: ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'],
       steps: [
-        { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.' },
-        { n: '2', title: 'Consultanos por WhatsApp', text: 'Te respondemos con precio, stock y formas de pago.' },
-        { n: '3', title: 'Coordinamos tu compra', text: 'Acordamos entrega o retiro y listo.' }
+        { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.', accent: '#1D703A', tint: hexToRgba('#1D703A', 0.08), border: hexToRgba('#1D703A', 0.22) },
+        { n: '2', title: 'Consultanos por WhatsApp', text: 'Te respondemos con precio, stock y formas de pago.', accent: '#2F8FD6', tint: hexToRgba('#2F8FD6', 0.09), border: hexToRgba('#2F8FD6', 0.24) },
+        { n: '3', title: 'Coordinamos tu compra', text: 'Acordamos entrega o retiro y listo.', accent: '#E8722A', tint: hexToRgba('#E8722A', 0.09), border: hexToRgba('#E8722A', 0.24) }
       ],
-      brandsList: ['SAMSUNG', 'LG', 'TOKYO', 'MIDEA', 'WHIRLPOOL', 'ELECTROLUX', 'PHILIPS', 'XIAOMI'],
+      brandsList: Array.from(new Set(PRODUCTS.map(p => p.brand))).filter(b => b !== 'Nacional').map((b, i) => { const c = BRAND_PALETTE[i % BRAND_PALETTE.length]; return { name: b, color: c, tint: hexToRgba(c, 0.13) }; }),
       stats: [{ v: '+8', l: 'Categorías' }, { v: '2', l: 'Líneas de atención' }, { v: '100%', l: 'Atención personalizada' }],
       testimonials: [
         { name: 'María G.', initial: 'M', stars: '★★★★★', text: 'Compré mi heladera y me asesoraron en todo. La entrega fue rápida y en el horario acordado.' },
