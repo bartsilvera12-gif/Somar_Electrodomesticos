@@ -407,12 +407,32 @@ alter default privileges in schema somarelectrodomesticos
 --  Project Settings → API → "Exposed schemas" y agregar
 --  'somarelectrodomesticos'.  (Ver docs/ADMIN_SETUP.md)
 -- =====================================================================
+--  IMPORTANTE (self-hosted con varios proyectos): NO pisar la lista de
+--  schemas ya expuestos. Se AGREGA 'somarelectrodomesticos' preservando los
+--  demás (tradexpar, etc.).
 do $$
+declare
+  current_val text;
+  new_val text;
 begin
+  select split_part(cfg, '=', 2) into current_val
+  from pg_roles r, unnest(coalesce(r.rolconfig, '{}'::text[])) cfg
+  where r.rolname = 'authenticator' and cfg like 'pgrst.db_schemas=%'
+  limit 1;
+
+  if current_val is null or btrim(current_val) = '' then
+    new_val := 'public, somarelectrodomesticos, storage';
+  elsif position('somarelectrodomesticos' in current_val) > 0 then
+    new_val := current_val;                                  -- ya expuesto
+  else
+    new_val := btrim(current_val) || ', somarelectrodomesticos';  -- agregar sin pisar
+  end if;
+
   begin
-    alter role authenticator set pgrst.db_schemas = 'public, somarelectrodomesticos, storage';
+    execute format('alter role authenticator set pgrst.db_schemas = %L', new_val);
+    raise notice 'PostgREST db_schemas = %', new_val;
   exception when others then
-    raise notice 'No se pudo alterar authenticator (hacelo desde el Dashboard: Exposed schemas).';
+    raise notice 'No se pudo alterar authenticator; exponé somarelectrodomesticos desde el Dashboard o con exponer-schema.sh (sin pisar los otros).';
   end;
 end$$;
 notify pgrst, 'reload config';

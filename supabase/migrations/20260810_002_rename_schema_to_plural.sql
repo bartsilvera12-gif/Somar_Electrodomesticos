@@ -74,13 +74,30 @@ create policy "somar_media_admin_write" on storage.objects
   using (bucket_id = 'somar-media' and somarelectrodomesticos.is_admin())
   with check (bucket_id = 'somar-media' and somarelectrodomesticos.is_admin());
 
--- 5) Exponer el schema plural en PostgREST y recargar.
+-- 5) Exponer el schema plural en PostgREST SIN pisar otros schemas expuestos.
 do $$
+declare
+  current_val text;
+  new_val text;
 begin
+  select split_part(cfg, '=', 2) into current_val
+  from pg_roles r, unnest(coalesce(r.rolconfig, '{}'::text[])) cfg
+  where r.rolname = 'authenticator' and cfg like 'pgrst.db_schemas=%'
+  limit 1;
+
+  if current_val is null or btrim(current_val) = '' then
+    new_val := 'public, somarelectrodomesticos, storage';
+  elsif position('somarelectrodomesticos' in current_val) > 0 then
+    new_val := current_val;
+  else
+    new_val := btrim(current_val) || ', somarelectrodomesticos';
+  end if;
+
   begin
-    alter role authenticator set pgrst.db_schemas = 'public, somarelectrodomesticos, storage';
+    execute format('alter role authenticator set pgrst.db_schemas = %L', new_val);
+    raise notice 'PostgREST db_schemas = %', new_val;
   exception when others then
-    raise notice 'No se pudo alterar authenticator; exponé el schema desde el Dashboard (Settings -> API -> Exposed schemas).';
+    raise notice 'No se pudo alterar authenticator; exponé somarelectrodomesticos desde el Dashboard o con exponer-schema.sh (sin pisar los otros).';
   end;
 end$$;
 notify pgrst, 'reload config';
