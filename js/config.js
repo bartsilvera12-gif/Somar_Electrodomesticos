@@ -11,7 +11,7 @@ window.SOMAR_CONFIG = {
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc0MTAxNDYxLCJleHAiOjE5MzE3ODE0NjF9.7_wAph8IolPMXtgfpezSwS5XR62IdD__qhqCywLDp3Q',
 
   // Schema exclusivo del proyecto (PostgREST debe exponerlo)
-  DB_SCHEMA: 'somarelectrodomestico',
+  DB_SCHEMA: 'somarelectrodomesticos',
 
   // Bucket de Storage para medios
   STORAGE_BUCKET: 'somar-media',

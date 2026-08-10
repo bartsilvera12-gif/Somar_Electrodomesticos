@@ -1,35 +1,35 @@
 -- =====================================================================
 --  SOMAR Electrodomésticos — SEED
 --  Reconstruye el contenido ACTUAL del sitio (18 productos + contenido)
---  Ejecutar DESPUÉS de la migración 20260809_001_somarelectrodomestico.sql
+--  Ejecutar DESPUÉS de la migración 20260809_001_somarelectrodomesticos.sql
 --  Es re-ejecutable (limpia y vuelve a cargar).
 -- =====================================================================
-set search_path = somarelectrodomestico, public;
+set search_path = somarelectrodomesticos, public;
 
 begin;
 
 -- Limpieza (orden por dependencias; cascade cubre tablas hijas de products)
 truncate table
-  somarelectrodomestico.product_installments,
-  somarelectrodomestico.product_specifications,
-  somarelectrodomestico.product_features,
-  somarelectrodomestico.product_images,
-  somarelectrodomestico.products,
-  somarelectrodomestico.categories,
-  somarelectrodomestico.brands,
-  somarelectrodomestico.benefits,
-  somarelectrodomestico.purchase_steps,
-  somarelectrodomestico.testimonials,
-  somarelectrodomestico.stats,
-  somarelectrodomestico.social_posts,
-  somarelectrodomestico.banners,
-  somarelectrodomestico.site_settings
+  somarelectrodomesticos.product_installments,
+  somarelectrodomesticos.product_specifications,
+  somarelectrodomesticos.product_features,
+  somarelectrodomesticos.product_images,
+  somarelectrodomesticos.products,
+  somarelectrodomesticos.categories,
+  somarelectrodomesticos.brands,
+  somarelectrodomesticos.benefits,
+  somarelectrodomesticos.purchase_steps,
+  somarelectrodomesticos.testimonials,
+  somarelectrodomesticos.stats,
+  somarelectrodomesticos.social_posts,
+  somarelectrodomesticos.banners,
+  somarelectrodomesticos.site_settings
   restart identity cascade;
 
 -- ---------------------------------------------------------------------
 --  SITE SETTINGS (singleton)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.site_settings
+insert into somarelectrodomesticos.site_settings
   (business_name, slogan, logo_url, whatsapp_primary, whatsapp_secondary,
    facebook_url, instagram_url, currency, currency_symbol,
    default_installment_rate, default_max_installments, low_stock_threshold,
@@ -46,7 +46,7 @@ values
 -- ---------------------------------------------------------------------
 --  CATEGORÍAS (icon + accent tomados de CATEGORY_STYLE)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.categories (name, slug, icon, accent_color, display_order, is_active) values
+insert into somarelectrodomesticos.categories (name, slug, icon, accent_color, display_order, is_active) values
   ('Televisores','televisores','📺','#3A6EA5',1,true),
   ('Heladeras','heladeras','❄️','#2AA5B5',2,true),
   ('Cocinas','cocinas','🍳','#E8722A',3,true),
@@ -64,7 +64,7 @@ insert into somarelectrodomestico.categories (name, slug, icon, accent_color, di
 -- ---------------------------------------------------------------------
 --  MARCAS
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.brands (name, slug, display_order, is_active) values
+insert into somarelectrodomesticos.brands (name, slug, display_order, is_active) values
   ('JAM','jam',1,true),
   ('Tokyo','tokyo',2,true),
   ('Paraná','parana',3,true),
@@ -85,7 +85,7 @@ insert into somarelectrodomestico.brands (name, slug, display_order, is_active) 
 --  PRODUCTOS (IDs 1..18 preservados)
 --  category_id / brand_id se resuelven por slug.
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.products
+insert into somarelectrodomesticos.products
   (id, slug, name, category_id, brand_id, color, description, price, previous_price,
    stock, badge, is_active, is_featured, is_best_seller, is_new, display_order,
    installment_rate, max_installments, warranty_months)
@@ -164,20 +164,20 @@ values
     1722000,null,5,null,true,true,true,false,18,0.0640,12,12);
 
 -- Reajustar la secuencia de IDs (para que los nuevos productos sean > 18)
-select setval(pg_get_serial_sequence('somarelectrodomestico.products','id'),
-              (select max(id) from somarelectrodomestico.products));
+select setval(pg_get_serial_sequence('somarelectrodomesticos.products','id'),
+              (select max(id) from somarelectrodomesticos.products));
 
 -- ---------------------------------------------------------------------
 --  IMÁGENES (principal por producto)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.product_images (product_id, image_url, storage_path, is_primary, display_order)
+insert into somarelectrodomesticos.product_images (product_id, image_url, storage_path, is_primary, display_order)
 select g.id, 'assets/prod-'||g.id||'.jpg', 'products/'||g.id||'/prod-'||g.id||'.jpg', true, 0
 from generate_series(1,18) as g(id);
 
 -- ---------------------------------------------------------------------
 --  CARACTERÍSTICAS (features)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.product_features (product_id, feature, display_order) values
+insert into somarelectrodomesticos.product_features (product_id, feature, display_order) values
   (1,'6 kg de capacidad',0),(1,'Carga frontal',1),(1,'Múltiples programas de lavado',2),(1,'Panel con display digital',3),
   (2,'56 litros de capacidad',0),(2,'Control de temperatura',1),(2,'Timer con apagado automático',2),(2,'Incluye parrilla y bandeja',3),
   (3,'4 hornallas a gas',0),(3,'Horno amplio',1),(3,'Tapa de vidrio templado',2),(3,'Terminación blanca',3),
@@ -200,7 +200,7 @@ insert into somarelectrodomestico.product_features (product_id, feature, display
 -- ---------------------------------------------------------------------
 --  ESPECIFICACIONES (label / value)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.product_specifications (product_id, label, value, display_order) values
+insert into somarelectrodomesticos.product_specifications (product_id, label, value, display_order) values
   (1,'Capacidad','6 kg',0),(1,'Carga','Frontal',1),(1,'Modelo','Grace F-056B',2),(1,'Garantía','12 meses',3),
   (2,'Capacidad','56 litros',0),(2,'Tipo','Eléctrico de mesada',1),(2,'Funciones','Temperatura / timer',2),(2,'Garantía','12 meses',3),
   (3,'Hornallas','4',0),(3,'Tipo','A gas',1),(3,'Color','Blanco',2),(3,'Garantía','12 meses',3),
@@ -223,7 +223,7 @@ insert into somarelectrodomestico.product_specifications (product_id, label, val
 -- ---------------------------------------------------------------------
 --  CUOTAS (overrides específicos = cuotasFix del sitio actual)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.product_installments (product_id, installments, amount) values
+insert into somarelectrodomesticos.product_installments (product_id, installments, amount) values
   (1,6,493000),(1,12,277000),
   (2,6,199000),(2,12,112000),
   (3,6,177000),(3,8,138000),(3,10,114000),(3,12,99000),
@@ -246,7 +246,7 @@ insert into somarelectrodomestico.product_installments (product_id, installments
 -- ---------------------------------------------------------------------
 --  BENEFICIOS
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.benefits (title, icon, display_order, is_active) values
+insert into somarelectrodomesticos.benefits (title, icon, display_order, is_active) values
   ('Productos de calidad','✓',1,true),
   ('Atención personalizada','✓',2,true),
   ('Compra fácil','✓',3,true),
@@ -257,7 +257,7 @@ insert into somarelectrodomestico.benefits (title, icon, display_order, is_activ
 -- ---------------------------------------------------------------------
 --  PASOS DE COMPRA
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.purchase_steps (step_number, title, description, accent_color, display_order, is_active) values
+insert into somarelectrodomesticos.purchase_steps (step_number, title, description, accent_color, display_order, is_active) values
   (1,'Elegí tu producto','Explorá el catálogo y guardá lo que te interesa en Mi pedido.','#1D703A',1,true),
   (2,'Consultanos por WhatsApp','Te respondemos con precio, stock y formas de pago.','#2F8FD6',2,true),
   (3,'Coordinamos tu compra','Acordamos entrega o retiro y listo.','#E8722A',3,true);
@@ -265,7 +265,7 @@ insert into somarelectrodomestico.purchase_steps (step_number, title, descriptio
 -- ---------------------------------------------------------------------
 --  TESTIMONIOS
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.testimonials (customer_name, review, rating, display_order, is_active) values
+insert into somarelectrodomesticos.testimonials (customer_name, review, rating, display_order, is_active) values
   ('María G.','Compré mi heladera y me asesoraron en todo. La entrega fue rápida y en el horario acordado.',5,1,true),
   ('Carlos R.','Consulté por WhatsApp y en minutos tenía el precio y la disponibilidad. Muy práctico.',5,2,true),
   ('Lucía B.','Buenos precios y atención cercana. Volvería a comprar sin dudarlo.',4,3,true);
@@ -273,7 +273,7 @@ insert into somarelectrodomestico.testimonials (customer_name, review, rating, d
 -- ---------------------------------------------------------------------
 --  ESTADÍSTICAS
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.stats (value, label, display_order, is_active) values
+insert into somarelectrodomesticos.stats (value, label, display_order, is_active) values
   ('+8','Categorías',1,true),
   ('2','Líneas de atención',2,true),
   ('100%','Atención personalizada',3,true);
@@ -281,7 +281,7 @@ insert into somarelectrodomestico.stats (value, label, display_order, is_active)
 -- ---------------------------------------------------------------------
 --  REDES / GALERÍA (misma selección que la grilla actual)
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.social_posts (platform, image_url, link_url, display_order, is_active) values
+insert into somarelectrodomesticos.social_posts (platform, image_url, link_url, display_order, is_active) values
   ('instagram','assets/prod-10.jpg','https://instagram.com',1,true),
   ('instagram','assets/prod-11.jpg','https://instagram.com',2,true),
   ('instagram','assets/prod-4.jpg','https://instagram.com',3,true),
@@ -292,7 +292,7 @@ insert into somarelectrodomestico.social_posts (platform, image_url, link_url, d
 -- ---------------------------------------------------------------------
 --  BANNERS / CONTENIDO PRINCIPAL
 -- ---------------------------------------------------------------------
-insert into somarelectrodomestico.banners (type, eyebrow, title, subtitle, image_url, cta_label, cta_url, theme, display_order, is_active) values
+insert into somarelectrodomesticos.banners (type, eyebrow, title, subtitle, image_url, cta_label, cta_url, theme, display_order, is_active) values
   ('hero','Tecnología para tu hogar','Todo lo que necesitás para hacer tu hogar mejor.',
    'Electrodomésticos, tecnología y calidad al mejor alcance.','assets/prod-1.jpg','Ver productos','#productos','light',1,true),
   ('featured_promotion','Promoción destacada','Equipá tu hogar con SOMAR',

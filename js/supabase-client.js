@@ -2,7 +2,7 @@
  *  SOMAR — Cliente Supabase (frontend público)
  *  Requiere que @supabase/supabase-js (UMD) esté cargado antes:
  *    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- *  Apunta EXPLÍCITAMENTE al schema del proyecto: somarelectrodomestico.
+ *  Apunta EXPLÍCITAMENTE al schema del proyecto: somarelectrodomesticos.
  * ===================================================================== */
 (function () {
   var cfg = window.SOMAR_CONFIG || {};
@@ -21,7 +21,7 @@
 
   // Cliente con el schema del proyecto por defecto (no public).
   window.SOMAR_SB = lib.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-    db: { schema: cfg.DB_SCHEMA || 'somarelectrodomestico' },
+    db: { schema: cfg.DB_SCHEMA || 'somarelectrodomesticos' },
     auth: { persistSession: true, autoRefreshToken: true },
     global: { headers: { 'x-client-info': 'somar-web' } }
   });

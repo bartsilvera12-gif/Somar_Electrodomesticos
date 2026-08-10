@@ -1,6 +1,6 @@
 /* =====================================================================
  *  SOMAR — Capa de acceso a datos (frontend público)
- *  Lee desde Supabase (schema somarelectrodomestico) y transforma los
+ *  Lee desde Supabase (schema somarelectrodomesticos) y transforma los
  *  registros al formato que ya usa la web (compatible con el P() actual).
  *  Expone window.SOMAR_DATA con métodos async.
  * ===================================================================== */

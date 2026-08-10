@@ -24,7 +24,7 @@ Editar `js/config.js`:
 window.SOMAR_CONFIG = {
   SUPABASE_URL: 'https://api.neura.com.py',
   SUPABASE_ANON_KEY: '<TU_ANON_KEY_PUBLICA>',
-  DB_SCHEMA: 'somarelectrodomestico',
+  DB_SCHEMA: 'somarelectrodomesticos',
   STORAGE_BUCKET: 'somar-media',
   USE_EMBEDDED_FALLBACK: true
 };
@@ -41,10 +41,10 @@ verificado (para tener una única fuente de verdad).
 En **SQL Editor** de Supabase, pegar y ejecutar:
 
 ```
-supabase/migrations/20260809_001_somarelectrodomestico.sql
+supabase/migrations/20260809_001_somarelectrodomesticos.sql
 ```
 
-Crea el schema `somarelectrodomestico`, todas las tablas, funciones
+Crea el schema `somarelectrodomesticos`, todas las tablas, funciones
 (`set_updated_at`, `is_admin`), triggers, RLS, grants y el bucket `somar-media`.
 
 Con la CLI:
@@ -52,8 +52,15 @@ Con la CLI:
 ```bash
 supabase db push
 # o
-psql "$DATABASE_URL" -f supabase/migrations/20260809_001_somarelectrodomestico.sql
+psql "$DATABASE_URL" -f supabase/migrations/20260809_001_somarelectrodomesticos.sql
 ```
+
+> **¿Ya habías corrido una versión anterior con el schema en SINGULAR
+> (`somarelectrodomestico`)?** No re-ejecutes la migración inicial (crearía un
+> schema plural vacío en paralelo). Corré **una sola vez**
+> `supabase/migrations/20260810_002_rename_schema_to_plural.sql`: renombra el
+> schema a `somarelectrodomesticos` **sin perder datos** y corrige las
+> referencias internas (search_path, policies de Storage y PostgREST).
 
 ---
 
@@ -76,15 +83,15 @@ testimonios, stats, redes, banners y configuración del sitio. Es re-ejecutable.
 PostgREST solo expone `public` por defecto. Hay que agregar el schema:
 
 **Opción A — Dashboard:** Project Settings → **API** → *Exposed schemas* →
-agregar `somarelectrodomestico` → guardar.
+agregar `somarelectrodomesticos` → guardar.
 
 **Opción B — SQL:**
 ```sql
-alter role authenticator set pgrst.db_schemas = 'public, somarelectrodomestico, storage';
+alter role authenticator set pgrst.db_schemas = 'public, somarelectrodomesticos, storage';
 notify pgrst, 'reload config';
 ```
 
-El cliente JS ya apunta al schema (`db.schema = 'somarelectrodomestico'`).
+El cliente JS ya apunta al schema (`db.schema = 'somarelectrodomesticos'`).
 
 ---
 
@@ -98,7 +105,7 @@ Los usuarios se crean con **Supabase Auth** (no con SQL de contraseñas).
 3. Insertarlo en `admin_users`:
 
 ```sql
-insert into somarelectrodomestico.admin_users (user_id, full_name, role, is_active)
+insert into somarelectrodomesticos.admin_users (user_id, full_name, role, is_active)
 values ('8f6a7243-b63b-47b6-8c3e-884b1beaf32b', 'Administrador SOMAR', 'superadmin', true);
 ```
 

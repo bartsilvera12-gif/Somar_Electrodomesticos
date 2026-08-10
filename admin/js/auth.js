@@ -12,7 +12,7 @@
     if (client) return client;
     if (!lib || !lib.createClient) { console.error('[SOMAR Admin] supabase-js no cargado'); return null; }
     client = lib.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-      db: { schema: cfg.DB_SCHEMA || 'somarelectrodomestico' },
+      db: { schema: cfg.DB_SCHEMA || 'somarelectrodomesticos' },
       auth: { persistSession: true, autoRefreshToken: true, storageKey: 'somar-admin-auth' }
     });
     return client;
