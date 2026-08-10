@@ -10,6 +10,11 @@ create schema if not exists somarelectrodomesticos;
 -- Extensiones útiles (por si no están)
 create extension if not exists pgcrypto;
 
+-- is_admin() referencia admin_users, que se crea más abajo. Con esto Postgres
+-- NO valida el cuerpo de las funciones al crearlas (se valida en runtime, cuando
+-- la tabla ya existe). Evita el error 42P01 al ejecutar toda la migración de una.
+set check_function_bodies = off;
+
 -- ---------------------------------------------------------------------
 --  Función reutilizable: updated_at automático
 -- ---------------------------------------------------------------------
