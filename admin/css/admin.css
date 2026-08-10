@@ -3,8 +3,8 @@
   --verde:#1D703A; --verde2:#3A8A47; --carbon:#202023; --claro:#EEF3EF;
   --panel:#14261a; --panel2:#1b3323; --line:#e8eee9; --muted:#7c8781;
   --radius:16px;
-  /* Fondo verde pastel unificado para imágenes de PRODUCTOS (igual que la web pública). */
-  --prod-bg:#CDE9D5;
+  /* Fondo blanco unificado para imágenes de PRODUCTOS (coincide con el fondo de las fotos). */
+  --prod-bg:#FFFFFF;
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
