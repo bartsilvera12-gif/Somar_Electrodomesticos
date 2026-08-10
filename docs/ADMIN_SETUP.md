@@ -99,10 +99,10 @@ Los usuarios se crean con **Supabase Auth** (no con SQL de contraseñas).
 
 ```sql
 insert into somarelectrodomestico.admin_users (user_id, full_name, role, is_active)
-values ('PEGAR-UUID-AQUI', 'Administrador SOMAR', 'superadmin', true);
+values ('8f6a7243-b63b-47b6-8c3e-884b1beaf32b', 'Administrador SOMAR', 'superadmin', true);
 ```
 
-> Con el UUID de ejemplo provisto: `acea2467-6f2a-4cf1-880c-dbe2e6bded3a`.
+> UUID del administrador: `8f6a7243-b63b-47b6-8c3e-884b1beaf32b`.
 > Verificá que ese UUID exista en `auth.users` (creá el usuario primero).
 
 Solo los usuarios en `admin_users` con `is_active = true` pueden entrar al panel
