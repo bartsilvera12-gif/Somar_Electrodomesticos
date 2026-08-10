@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel — SOMAR Electrodomésticos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="backdrop" id="backdrop"></div>
+
+    <aside class="sidebar">
+      <div class="brand"><img src="/assets/somar-logo-oval.png" alt="SOMAR"></div>
+      <nav class="nav">
+        <a class="active" href="/admin/"><span class="ic">▚</span> Dashboard</a>
+        <a href="#" data-soon><span class="ic">📦</span> Productos <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">🗂️</span> Categorías <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">🏷️</span> Marcas <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">🎯</span> Promociones <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">📝</span> Contenido <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">⭐</span> Testimonios <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">📷</span> Redes <span class="soon">pronto</span></a>
+        <a href="#" data-soon><span class="ic">⚙️</span> Configuración <span class="soon">pronto</span></a>
+      </nav>
+      <div class="bottom">
+        <div class="sep"></div>
+        <a href="/" target="_blank" rel="noopener"><span class="ic">🌐</span> Ver sitio web</a>
+        <button id="logoutBtn"><span class="ic">⎋</span> Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="burger" id="burger" aria-label="Menú">☰</button>
+          <div class="title">Dashboard</div>
+        </div>
+        <div class="who">
+          <span id="whoName" class="muted">Cargando…</span>
+          <span class="av" id="whoAvatar">S</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="panel" id="dashError" style="display:none;border-color:#f3c9c4;background:#fdecea;color:#b0433a;margin-bottom:18px">
+          No se pudo cargar la información. Revisá la conexión con Supabase y reintentá.
+        </div>
+
+        <div class="grid">
+          <div class="stat"><div class="lbl">Total productos</div><div class="val" id="stTotal">—</div></div>
+          <div class="stat"><div class="lbl">Activos</div><div class="val" id="stActive">—</div></div>
+          <div class="stat"><div class="lbl">Destacados</div><div class="val" id="stFeatured">—</div></div>
+          <div class="stat warn"><div class="lbl">Poco stock</div><div class="val" id="stLow">—</div></div>
+          <div class="stat"><div class="lbl">Categorías</div><div class="val" id="stCats">—</div></div>
+          <div class="stat"><div class="lbl">Marcas</div><div class="val" id="stBrands">—</div></div>
+        </div>
+
+        <div class="section-title">Acciones rápidas</div>
+        <div class="panel">
+          <div class="quick">
+            <button class="btn" data-soon>+ Nuevo producto</button>
+            <button class="btn ghost" data-soon>+ Nueva categoría</button>
+            <button class="btn ghost" data-soon>+ Nueva marca</button>
+          </div>
+          <p class="muted" style="margin-top:12px;font-size:14px">El CRUD completo (productos, categorías, marcas, contenido y configuración) se habilita en la próxima etapa.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:8px">
+          <div>
+            <div class="section-title">Productos recientes</div>
+            <div class="panel" id="recentBox"><div class="skeleton" style="height:120px"></div></div>
+          </div>
+          <div>
+            <div class="section-title">Alertas de stock bajo</div>
+            <div class="panel" id="lowBox"><div class="skeleton" style="height:120px"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/admin.js"></script>
+</body>
+</html>

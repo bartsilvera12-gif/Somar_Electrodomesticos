@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ingresar — Panel SOMAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --verde:#1D703A; --verde2:#3A8A47; --carbon:#202023; --claro:#EEF3EF; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:'Lato',system-ui,sans-serif; color:var(--carbon); min-height:100vh; display:grid; place-items:center;
+        background:radial-gradient(circle at 20% 20%, #e7f0ea 0%, #f7faf8 55%); padding:24px; }
+  .card{ width:100%; max-width:410px; background:#fff; border:1px solid #e8eee9; border-radius:24px;
+         box-shadow:0 24px 60px rgba(32,32,35,0.10); padding:clamp(26px,5vw,40px); }
+  .logo{ display:flex; justify-content:center; margin-bottom:18px; }
+  .logo img{ height:54px; width:auto; }
+  h1{ text-align:center; font-size:23px; font-weight:900; letter-spacing:-0.01em; }
+  .sub{ text-align:center; color:#7c8781; font-size:14.5px; margin-top:6px; margin-bottom:22px; }
+  label{ display:block; font-family:'Roboto Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.08em;
+         text-transform:uppercase; color:#8b958f; margin:14px 0 7px; }
+  input{ width:100%; height:52px; border:1.5px solid #e2eae4; border-radius:14px; padding:0 16px; font-size:16px;
+         font-family:'Lato',sans-serif; outline:none; transition:border-color .2s ease, box-shadow .2s ease; }
+  input:focus{ border-color:var(--verde); box-shadow:0 0 0 4px rgba(29,112,58,0.10); }
+  .btn{ width:100%; height:54px; margin-top:22px; border:0; border-radius:99px; cursor:pointer; background:var(--verde);
+        color:#fff; font-family:'Lato',sans-serif; font-weight:900; font-size:16.5px; transition:background .2s ease, transform .2s ease; }
+  .btn:hover{ background:var(--verde2); transform:translateY(-1px); }
+  .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+  .link{ display:block; text-align:center; margin-top:16px; background:none; border:0; color:var(--verde); font-weight:700;
+         font-size:14px; cursor:pointer; text-decoration:none; }
+  .msg{ margin-top:16px; padding:12px 14px; border-radius:12px; font-size:14.5px; font-weight:700; display:none; }
+  .msg.err{ display:block; background:#fdecea; color:#b0433a; }
+  .msg.ok{ display:block; background:#e9f6ee; color:var(--verde); }
+  .foot{ text-align:center; margin-top:22px; color:#a3aca7; font-size:12.5px; }
+  .foot a{ color:var(--verde); font-weight:700; text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><a href="/"><img src="/assets/somar-logo-oval.png" alt="SOMAR Electrodomésticos"></a></div>
+    <h1>Panel administrador</h1>
+    <div class="sub">Ingresá con tus credenciales de SOMAR</div>
+
+    <form id="loginForm" autocomplete="on" novalidate>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="tu@correo.com" autocomplete="username">
+      <label for="password">Contraseña</label>
+      <input id="password" name="password" type="password" required placeholder="••••••••" autocomplete="current-password">
+      <button class="btn" id="submitBtn" type="submit">Iniciar sesión</button>
+      <button class="link" id="forgotBtn" type="button">¿Olvidaste tu contraseña?</button>
+    </form>
+
+    <div class="msg" id="msg"></div>
+    <div class="foot">Acceso restringido · <a href="/">Volver al sitio</a></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/admin/js/auth.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById('loginForm');
+      var btn = document.getElementById('submitBtn');
+      var msg = document.getElementById('msg');
+      var forgot = document.getElementById('forgotBtn');
+
+      function show(type, text) { msg.className = 'msg ' + type; msg.textContent = text; }
+      function clear() { msg.className = 'msg'; msg.textContent = ''; }
+
+      // Si ya hay sesión admin, saltar directo al panel.
+      (async function () {
+        try { if (await window.SOMAR_AUTH.isAdmin()) location.replace('/admin/'); } catch (e) {}
+      })();
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clear();
+        var email = document.getElementById('email').value.trim();
+        var pass = document.getElementById('password').value;
+        if (!email || !pass) { show('err', 'Completá email y contraseña.'); return; }
+        btn.disabled = true; btn.textContent = 'Ingresando…';
+        try {
+          var r = await window.SOMAR_AUTH.signIn(email, pass);
+          if (r.ok) { show('ok', 'Bienvenido. Redirigiendo…'); location.replace('/admin/'); }
+          else { show('err', r.error || 'No se pudo iniciar sesión.'); }
+        } catch (err) {
+          show('err', 'Error de conexión. Reintentá.');
+        } finally {
+          btn.disabled = false; btn.textContent = 'Iniciar sesión';
+        }
+      });
+
+      forgot.addEventListener('click', async function () {
+        clear();
+        var email = document.getElementById('email').value.trim();
+        if (!email) { show('err', 'Escribí tu email para recuperar la contraseña.'); return; }
+        var r = await window.SOMAR_AUTH.resetPassword(email);
+        if (r.ok) show('ok', 'Te enviamos un correo para restablecer la contraseña.');
+        else show('err', r.error || 'No se pudo enviar el correo.');
+      });
+    })();
+  </script>
+</body>
+</html>
