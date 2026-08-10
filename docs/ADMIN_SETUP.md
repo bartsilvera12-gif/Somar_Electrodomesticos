@@ -92,9 +92,9 @@ El cliente JS ya apunta al schema (`db.schema = 'somarelectrodomestico'`).
 
 Los usuarios se crean con **Supabase Auth** (no con SQL de contraseñas).
 
-1. Dashboard → **Authentication → Users → Add user** (email + contraseña).
+1. Dashboard → **Authentication → Users → Add user** — email `admin@somarelectrodomesticos.com` + contraseña.
    No habilitar registro público.
-2. Copiar el **UUID** del usuario creado.
+2. Copiar el **UUID** del usuario creado (debe ser `8f6a7243-b63b-47b6-8c3e-884b1beaf32b`).
 3. Insertarlo en `admin_users`:
 
 ```sql
