@@ -10,28 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/admin/css/admin.css">
 </head>
-<body>
+<body data-nav="productos">
   <div class="app" id="app">
     <div class="backdrop" id="backdrop"></div>
-    <aside class="sidebar">
-      <div class="brand"><img src="/assets/somar-logo-oval.png" alt="SOMAR"></div>
-      <nav class="nav">
-        <a href="/admin/"><span class="ic">▚</span> Dashboard</a>
-        <a class="active" href="/admin/productos/"><span class="ic">📦</span> Productos</a>
-        <a href="#" data-soon><span class="ic">🗂️</span> Categorías <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">🏷️</span> Marcas <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">🎯</span> Promociones <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">📝</span> Contenido <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">⭐</span> Testimonios <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">📷</span> Redes <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">⚙️</span> Configuración <span class="soon">pronto</span></a>
-      </nav>
-      <div class="bottom">
-        <div class="sep"></div>
-        <a href="/" target="_blank" rel="noopener"><span class="ic">🌐</span> Ver sitio web</a>
-        <button id="logoutBtn"><span class="ic">⎋</span> Cerrar sesión</button>
-      </div>
-    </aside>
+    <aside class="sidebar"></aside>
 
     <div class="main">
       <header class="topbar">
@@ -168,6 +150,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/supabase-client.js"></script>
   <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/nav.js"></script>
   <script src="/admin/js/products.js"></script>
 </body>
 </html>

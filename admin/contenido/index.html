@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Contenido — Panel SOMAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body data-nav="contenido">
+  <div class="app" id="app">
+    <div class="backdrop" id="backdrop"></div>
+    <aside class="sidebar"></aside>
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="burger" id="burger" aria-label="Menú">☰</button>
+          <div class="title">Contenido de la web</div>
+        </div>
+        <div class="who"><span id="whoName" class="muted">Cargando…</span><span class="av" id="whoAvatar">S</span></div>
+      </header>
+      <div class="content"><div id="crudRoot"></div></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/nav.js"></script>
+  <script src="/admin/js/crud.js"></script>
+  <script>
+    SOMAR_CRUD.tabs('#crudRoot', [
+      {
+        label: 'Banners',
+        config: {
+          table: 'banners',
+          singular: 'banner',
+          search: 'title',
+          columns: [
+            { field: 'title', label: 'Banner', type: 'primary', sub: 'type' },
+            { field: 'image_url', label: 'Imagen', type: 'thumb', width: '60px' },
+            { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
+          ],
+          fields: [
+            { name: 'type', label: 'Ubicación / tipo', type: 'select', optional: false, required: true, default: 'hero',
+              options: [
+                { value: 'hero', label: 'Hero (portada principal)' },
+                { value: 'featured_promotion', label: 'Promoción destacada' },
+                { value: 'offers', label: 'Ofertas' },
+                { value: 'final_cta', label: 'Llamado final (CTA)' },
+                { value: 'about', label: 'Sobre SOMAR' }
+              ] },
+            { name: 'eyebrow', label: 'Etiqueta superior (eyebrow)', type: 'text' },
+            { name: 'title', label: 'Título', type: 'text', col: 2 },
+            { name: 'subtitle', label: 'Subtítulo', type: 'textarea', col: 2 },
+            { name: 'image_url', label: 'Imagen', type: 'image' },
+            { name: 'cta_label', label: 'Texto del botón', type: 'text' },
+            { name: 'cta_url', label: 'Enlace del botón', type: 'url', placeholder: 'https://…' },
+            { name: 'theme', label: 'Tema / color (opcional)', type: 'text', hint: 'Ej: verde, oscuro…' },
+            { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
+            { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
+          ]
+        }
+      },
+      {
+        label: 'Beneficios',
+        config: {
+          table: 'benefits',
+          singular: 'beneficio',
+          columns: [
+            { field: 'title', label: 'Beneficio', type: 'primary' },
+            { field: 'icon', label: 'Icono', type: 'icon' },
+            { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
+          ],
+          fields: [
+            { name: 'title', label: 'Título', type: 'text', required: true, col: 2 },
+            { name: 'icon', label: 'Icono', type: 'text', placeholder: 'Emoji o símbolo', hint: 'Se muestra junto al beneficio.' },
+            { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
+            { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
+          ]
+        }
+      },
+      {
+        label: 'Pasos de compra',
+        config: {
+          table: 'purchase_steps',
+          singular: 'paso',
+          columns: [
+            { field: 'step_number', label: 'N°', type: 'text', width: '60px' },
+            { field: 'title', label: 'Paso', type: 'primary' },
+            { field: 'accent_color', label: 'Color', type: 'color' },
+            { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
+          ],
+          fields: [
+            { name: 'step_number', label: 'Número de paso', type: 'number', required: true, min: 1, default: 1 },
+            { name: 'title', label: 'Título', type: 'text', required: true, col: 2 },
+            { name: 'description', label: 'Descripción', type: 'textarea', col: 2 },
+            { name: 'accent_color', label: 'Color de acento', type: 'color' },
+            { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
+            { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
+          ]
+        }
+      },
+      {
+        label: 'Estadísticas',
+        config: {
+          table: 'stats',
+          singular: 'estadística',
+          columns: [
+            { field: 'value', label: 'Valor', type: 'primary' },
+            { field: 'label', label: 'Etiqueta', type: 'text' },
+            { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
+          ],
+          fields: [
+            { name: 'value', label: 'Valor (ej: +500, 10 años)', type: 'text', required: true },
+            { name: 'label', label: 'Etiqueta (ej: Clientes felices)', type: 'text', required: true },
+            { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
+            { name: 'is_active', label: 'Activa (visible en la web)', type: 'checkbox', default: true }
+          ]
+        }
+      }
+    ]);
+  </script>
+</body>
+</html>

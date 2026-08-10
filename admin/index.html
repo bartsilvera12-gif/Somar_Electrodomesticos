@@ -10,29 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/admin/css/admin.css">
 </head>
-<body>
+<body data-nav="dashboard">
   <div class="app" id="app">
     <div class="backdrop" id="backdrop"></div>
 
-    <aside class="sidebar">
-      <div class="brand"><img src="/assets/somar-logo-oval.png" alt="SOMAR"></div>
-      <nav class="nav">
-        <a class="active" href="/admin/"><span class="ic">▚</span> Dashboard</a>
-        <a href="/admin/productos/"><span class="ic">📦</span> Productos</a>
-        <a href="#" data-soon><span class="ic">🗂️</span> Categorías <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">🏷️</span> Marcas <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">🎯</span> Promociones <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">📝</span> Contenido <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">⭐</span> Testimonios <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">📷</span> Redes <span class="soon">pronto</span></a>
-        <a href="#" data-soon><span class="ic">⚙️</span> Configuración <span class="soon">pronto</span></a>
-      </nav>
-      <div class="bottom">
-        <div class="sep"></div>
-        <a href="/" target="_blank" rel="noopener"><span class="ic">🌐</span> Ver sitio web</a>
-        <button id="logoutBtn"><span class="ic">⎋</span> Cerrar sesión</button>
-      </div>
-    </aside>
+    <aside class="sidebar"></aside>
 
     <div class="main">
       <header class="topbar">
@@ -64,10 +46,12 @@
         <div class="panel">
           <div class="quick">
             <a class="btn" href="/admin/productos/">+ Nuevo producto</a>
-            <a class="btn ghost" href="/admin/productos/">Ver productos</a>
-            <button class="btn ghost" data-soon>+ Nueva categoría</button>
+            <a class="btn ghost" href="/admin/categorias/">Categorías</a>
+            <a class="btn ghost" href="/admin/marcas/">Marcas</a>
+            <a class="btn ghost" href="/admin/contenido/">Contenido</a>
+            <a class="btn ghost" href="/admin/configuracion/">Configuración</a>
           </div>
-          <p class="muted" style="margin-top:12px;font-size:14px">La gestión de productos ya está disponible. Categorías, marcas, contenido y configuración se habilitan en las próximas etapas.</p>
+          <p class="muted" style="margin-top:12px;font-size:14px">Gestioná productos, categorías, marcas, contenido de la web, testimonios, redes y la configuración general desde el menú lateral.</p>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:8px">
@@ -87,6 +71,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/js/config.js"></script>
   <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/nav.js"></script>
   <script src="/admin/js/admin.js"></script>
 </body>
 </html>

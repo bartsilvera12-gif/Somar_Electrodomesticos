@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Configuración — Panel SOMAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body data-nav="configuracion">
+  <div class="app" id="app">
+    <div class="backdrop" id="backdrop"></div>
+    <aside class="sidebar"></aside>
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="burger" id="burger" aria-label="Menú">☰</button>
+          <div class="title">Configuración</div>
+        </div>
+        <div class="who"><span id="whoName" class="muted">Cargando…</span><span class="av" id="whoAvatar">S</span></div>
+      </header>
+      <div class="content"><div id="crudRoot"></div></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/nav.js"></script>
+  <script src="/admin/js/crud.js"></script>
+  <script>
+    SOMAR_CRUD.settings('#crudRoot', {
+      table: 'site_settings',
+      groups: [
+        {
+          title: 'Negocio',
+          fields: [
+            { name: 'business_name', label: 'Nombre del negocio', type: 'text', required: true, col: 2 },
+            { name: 'slogan', label: 'Slogan', type: 'text', col: 2 },
+            { name: 'logo_url', label: 'Logo', type: 'image' },
+            { name: 'email', label: 'Email de contacto', type: 'text', placeholder: 'ventas@somar.com.py' },
+            { name: 'address', label: 'Dirección', type: 'text', col: 2 },
+            { name: 'footer_text', label: 'Texto del pie de página', type: 'textarea', col: 2 }
+          ]
+        },
+        {
+          title: 'WhatsApp y redes',
+          fields: [
+            { name: 'whatsapp_primary', label: 'WhatsApp principal', type: 'text', placeholder: '595971244226', hint: 'Solo números, con código de país (sin + ni espacios).' },
+            { name: 'whatsapp_secondary', label: 'WhatsApp secundario', type: 'text', placeholder: '595975515519' },
+            { name: 'facebook_url', label: 'Facebook (URL)', type: 'url', placeholder: 'https://facebook.com/…' },
+            { name: 'instagram_url', label: 'Instagram (URL)', type: 'url', placeholder: 'https://instagram.com/…' }
+          ]
+        },
+        {
+          title: 'Cuotas e inventario',
+          fields: [
+            { name: 'default_installment_rate', label: 'Tasa mensual de cuotas', type: 'number', step: 0.0001, default: 0.064, hint: 'Ej: 0.064 = 6,4% mensual. Se usa cuando el producto no define cuotas exactas.' },
+            { name: 'default_max_installments', label: 'Máximo de cuotas por defecto', type: 'number', min: 1, default: 12 },
+            { name: 'low_stock_threshold', label: 'Umbral de stock bajo', type: 'number', min: 0, default: 3, hint: 'Genera la alerta de "poco stock" en el dashboard.' }
+          ]
+        },
+        {
+          title: 'Moneda',
+          fields: [
+            { name: 'currency', label: 'Código de moneda', type: 'text', required: true, default: 'PYG' },
+            { name: 'currency_symbol', label: 'Símbolo', type: 'text', required: true, default: 'Gs.' }
+          ]
+        },
+        {
+          title: 'SEO',
+          fields: [
+            { name: 'seo_title', label: 'Título SEO', type: 'text', col: 2 },
+            { name: 'seo_description', label: 'Descripción SEO', type: 'textarea', col: 2 }
+          ]
+        }
+      ]
+    });
+  </script>
+</body>
+</html>

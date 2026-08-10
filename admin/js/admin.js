@@ -83,20 +83,11 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  // Wire UI
-  function wire() {
-    q('#logoutBtn').addEventListener('click', async function () {
-      await AUTH.signOut(); location.replace('/admin/login/');
-    });
-    var app = q('#app');
-    q('#burger').addEventListener('click', function () { app.classList.toggle('open'); });
-    q('#backdrop').addEventListener('click', function () { app.classList.remove('open'); });
-  }
+  // El shell (sidebar + logout + burger) lo maneja /admin/js/nav.js.
 
   document.addEventListener('DOMContentLoaded', async function () {
     var ok = await AUTH.requireAdmin(); // redirige si no es admin
     if (!ok) return;
-    wire();
     loadDashboard();
   });
 })();

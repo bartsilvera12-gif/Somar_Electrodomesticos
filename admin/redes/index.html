@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Redes — Panel SOMAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body data-nav="redes">
+  <div class="app" id="app">
+    <div class="backdrop" id="backdrop"></div>
+    <aside class="sidebar"></aside>
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="burger" id="burger" aria-label="Menú">☰</button>
+          <div class="title">Redes / Galería</div>
+        </div>
+        <div class="who"><span id="whoName" class="muted">Cargando…</span><span class="av" id="whoAvatar">S</span></div>
+      </header>
+      <div class="content"><div id="crudRoot"></div></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/admin/js/auth.js"></script>
+  <script src="/admin/js/nav.js"></script>
+  <script src="/admin/js/crud.js"></script>
+  <script>
+    SOMAR_CRUD.page({
+      table: 'social_posts',
+      singular: 'publicación',
+      columns: [
+        { field: 'image_url', label: 'Imagen', type: 'thumb', width: '60px' },
+        { field: 'platform', label: 'Red', type: 'text' },
+        { field: 'caption', label: 'Texto', type: 'text' },
+        { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
+      ],
+      fields: [
+        { name: 'platform', label: 'Red social', type: 'select', optional: false, default: 'Instagram',
+          options: ['Instagram', 'Facebook', 'TikTok', 'YouTube', 'Otro'] },
+        { name: 'image_url', label: 'Imagen', type: 'image' },
+        { name: 'link_url', label: 'Enlace (URL de la publicación)', type: 'url', placeholder: 'https://…' },
+        { name: 'caption', label: 'Texto / descripción', type: 'textarea', col: 2 },
+        { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
+        { name: 'is_active', label: 'Activa (visible en la web)', type: 'checkbox', default: true }
+      ]
+    });
+  </script>
+</body>
+</html>

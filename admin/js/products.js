@@ -395,11 +395,7 @@
     drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
 
     document.forms.productForm.addEventListener('submit', save);
-
-    $('#logoutBtn').addEventListener('click', async function () { await AUTH.signOut(); location.replace('/admin/login/'); });
-    var app = $('#app');
-    $('#burger').addEventListener('click', function () { app.classList.toggle('open'); });
-    $('#backdrop').addEventListener('click', function () { app.classList.remove('open'); });
+    // El shell (sidebar + logout + burger) lo maneja /admin/js/nav.js.
   }
 
   document.addEventListener('DOMContentLoaded', async function () {
