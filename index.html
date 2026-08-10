@@ -36,7 +36,7 @@
   /* Hero responsive: en pantallas chicas la imagen ancha se apoya abajo y el
      velo verde pasa a vertical para que el texto quede siempre legible. */
   @media (max-width:900px) {
-    .hero { background-position:center bottom !important; min-height:440px !important; }
+    .hero { background-position:center bottom !important; background-size:cover !important; min-height:440px !important; }
     .hero-scrim { background:linear-gradient(180deg,#A6CDB1 0%,rgba(166,205,177,0.92) 46%,rgba(166,205,177,0.5) 76%,rgba(166,205,177,0.14) 100%) !important; }
   }
   @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
@@ -196,7 +196,7 @@
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <section id="inicio" class="hero" style="position:relative;overflow:hidden;background:#A6CDB1 url('assets/hero.jpg') center/cover no-repeat;min-height:clamp(440px,46vw,600px)">
+  <section id="inicio" class="hero" style="position:relative;overflow:hidden;background:#A6CDB1 url('assets/hero.jpg') right center/contain no-repeat;min-height:clamp(440px,46vw,600px)">
     <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none"></canvas>
     <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,#A6CDB1 0%,rgba(166,205,177,1) 38%,rgba(166,205,177,0.88) 54%,rgba(166,205,177,0.6) 68%,rgba(166,205,177,0.3) 82%,rgba(166,205,177,0) 96%)"></div>
     <div style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
