@@ -220,8 +220,8 @@
           (c.sub ? '<div class="muted" style="font-size:12.5px">' + esc(row[c.sub] || '') + '</div>' : '') + '</td>';
       case 'thumb':
         var u = mediaUrl(row[c.field]);
-        return '<td>' + (u ? '<img src="' + esc(u) + '" alt="" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#f4f7f5">'
-          : '<div style="width:46px;height:46px;border-radius:8px;background:#eef2ef"></div>') + '</td>';
+        return '<td>' + (u ? '<img src="' + esc(u) + '" alt="" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:var(--prod-bg)">'
+          : '<div style="width:46px;height:46px;border-radius:8px;background:var(--prod-bg)"></div>') + '</td>';
       case 'color':
         var col = row[c.field] || '';
         return '<td><span style="display:inline-flex;align-items:center;gap:7px">' +

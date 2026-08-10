@@ -26,6 +26,13 @@
   ::selection { background:#1D703A; color:#fff; }
   .sm-scroll::-webkit-scrollbar { height:6px; }
   .sm-scroll::-webkit-scrollbar-thumb { background:#d6e2d8; border-radius:99px; }
+  /* Fondo verde pastel unificado para imágenes de PRODUCTOS (no hero/banners/redes).
+     Cambiá --prod-bg en un solo lugar para actualizar toda la web. */
+  :root { --prod-bg:#EAF4EC; --prod-bg-hover:#E4F0E7; }
+  .prod-media { background:var(--prod-bg); }
+  .prod-media image-slot::part(frame) { background:var(--prod-bg); }
+  .prod-media:hover { background:var(--prod-bg-hover); }
+  .prod-media:hover image-slot::part(frame) { background:var(--prod-bg-hover); }
   @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
   @keyframes somarUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
   @keyframes somarIn { from { opacity:0; } to { opacity:1; } }
@@ -254,7 +261,7 @@
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
       <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
         <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
-          <div style="position:relative;height:210px;background:#f7faf8;overflow:hidden;cursor:pointer" onClick="{{ p.open }}">
+          <div class="prod-media" style="position:relative;height:210px;overflow:hidden;cursor:pointer;padding:12px" onClick="{{ p.open }}">
             <image-slot id="{{ p.slot }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
           </div>
           <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
@@ -304,7 +311,7 @@
         </div>
         <sc-for list="{{ offerCards }}" as="o" hint-placeholder-count="2">
           <button onClick="{{ o.go }}" style="text-align:left;border:0;cursor:pointer;font-family:'Lato',sans-serif;background:#fff;color:#202023;border-radius:24px;padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:280px;transition:transform 260ms ease" style-hover="transform:translateY(-6px)">
-            <div style="flex:1;background:#EEF3EF;min-height:150px">
+            <div class="prod-media" style="flex:1;min-height:150px;padding:12px">
               <image-slot id="{{ o.slot }}" src="{{ o.image }}" shape="rect" fit="contain" placeholder="{{ o.name }}"></image-slot>
             </div>
             <div style="padding:18px">
@@ -348,7 +355,7 @@
       <div ref="{{ railRef }}" class="sm-scroll" style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 12px;scroll-behavior:smooth">
         <sc-for list="{{ bestSellers }}" as="p" hint-placeholder-count="5">
           <article style="scroll-snap-align:start;flex:0 0 auto;width:262px;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;position:relative;display:flex;flex-direction:column;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
-            <div style="height:190px;flex:none;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+            <div class="prod-media" style="height:190px;flex:none;cursor:pointer;padding:12px" onClick="{{ p.open }}">
               <image-slot id="{{ p.slotB }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
             </div>
             <div style="padding:16px;flex:1;display:flex;flex-direction:column">
@@ -556,7 +563,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px">
           <sc-for list="{{ list }}" as="p" hint-placeholder-count="8">
             <article style="position:relative;border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;display:flex;flex-direction:column;animation:somarUp 320ms ease both;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 20px 40px rgba(32,32,35,0.1)">
-              <div style="height:190px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+              <div class="prod-media" style="height:190px;cursor:pointer;padding:12px" onClick="{{ p.open }}">
                 <image-slot id="{{ p.slotL }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
               </div>
               <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
@@ -603,12 +610,12 @@
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,56px)">
     <div>
-      <div style="border-radius:24px;overflow:hidden;background:#f7faf8;aspect-ratio:4/3;border:1px solid #eef3ef">
+      <div class="prod-media" style="border-radius:24px;overflow:hidden;aspect-ratio:4/3;border:1px solid #eef3ef;padding:18px">
         <image-slot id="{{ current.slotD }}" src="{{ current.image }}" shape="rect" fit="contain" placeholder="{{ current.name }}"></image-slot>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
         <sc-for list="{{ current.gallery }}" as="g" hint-placeholder-count="4">
-          <div style="aspect-ratio:1;border-radius:14px;overflow:hidden;background:#f7faf8;border:1px solid #eef3ef">
+          <div class="prod-media" style="aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid #eef3ef;padding:6px">
             <image-slot id="{{ g }}" shape="rect" placeholder="Vista"></image-slot>
           </div>
         </sc-for>
@@ -694,7 +701,7 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px">
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <article style="border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.1)">
-          <div style="height:170px;background:#f7faf8;cursor:pointer" onClick="{{ p.open }}">
+          <div class="prod-media" style="height:170px;cursor:pointer;padding:12px" onClick="{{ p.open }}">
             <image-slot id="{{ p.slotR }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
           </div>
           <div style="padding:15px">
@@ -761,7 +768,7 @@
         <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ true }}">
           <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
             <div style="display:flex;gap:12px;align-items:center;border:1px solid #eef3ef;border-radius:16px;padding:12px">
-              <div style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;background:#f7faf8">
+              <div class="prod-media" style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;padding:5px">
                 <image-slot id="{{ l.slotC }}" src="{{ l.image }}" shape="rect" fit="contain" placeholder="."></image-slot>
               </div>
               <div style="flex:1;min-width:0">
@@ -809,7 +816,7 @@
         <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
           <sc-for list="{{ favLines }}" as="l" hint-placeholder-count="2">
             <div style="display:flex;gap:12px;align-items:center;border:1px solid #eef3ef;border-radius:16px;padding:12px">
-              <button onClick="{{ l.open }}" style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;background:#f7faf8;border:0;cursor:pointer;padding:0">
+              <button class="prod-media" onClick="{{ l.open }}" style="width:64px;height:64px;flex:none;border-radius:12px;overflow:hidden;border:0;cursor:pointer;padding:5px">
                 <image-slot id="{{ l.slotF }}" src="{{ l.image }}" shape="rect" fit="contain" placeholder="."></image-slot>
               </button>
               <div style="flex:1;min-width:0">

@@ -68,8 +68,8 @@
     if (!state.products.length) { box.innerHTML = '<tr><td colspan="7"><div class="empty">No hay productos con esos filtros.</div></td></tr>'; return; }
     box.innerHTML = state.products.map(function (p) {
       var img = primaryImg(p);
-      var thumb = img ? '<img src="' + esc(img) + '" alt="" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#f4f7f5">'
-                      : '<div style="width:46px;height:46px;border-radius:8px;background:#eef2ef"></div>';
+      var thumb = img ? '<img src="' + esc(img) + '" alt="" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:var(--prod-bg)">'
+                      : '<div style="width:46px;height:46px;border-radius:8px;background:var(--prod-bg)"></div>';
       var status = p.is_active ? '<span class="pill on">Activo</span>' : '<span class="pill off">Inactivo</span>';
       var low = p.stock <= 3 ? ' style="color:#b0433a;font-weight:800"' : '';
       return '<tr>' +
