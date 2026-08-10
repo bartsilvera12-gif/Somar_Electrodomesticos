@@ -190,10 +190,11 @@
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <section id="inicio" style="position:relative;overflow:hidden;background:#A6CDB1">
+  <section id="inicio" style="position:relative;overflow:hidden;background:#A6CDB1 url('assets/hero.jpg') center/cover no-repeat;min-height:clamp(440px,46vw,600px)">
     <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none"></canvas>
-    <div style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
-      <div>
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(166,205,177,0.92) 0%,rgba(166,205,177,0.55) 30%,rgba(166,205,177,0) 55%)"></div>
+    <div style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
+      <div style="max-width:560px">
         <h1 style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">Todo lo que necesitás para hacer tu hogar mejor.</h1>
         <p style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">Electrodomésticos, tecnología y calidad al mejor alcance.</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:somarUp 560ms 240ms ease both">
@@ -207,12 +208,6 @@
               <span style="width:20px;height:20px;border-radius:99px;background:#1D703A;color:#fff;display:grid;place-items:center;font-size:12px;line-height:1">✓</span>{{ h }}
             </div>
           </sc-for>
-        </div>
-      </div>
-
-      <div style="position:relative;min-height:clamp(340px,42vw,470px)">
-        <div style="position:absolute;inset:0;border-radius:28px;overflow:hidden;animation:somarUp 700ms 120ms ease both">
-          <image-slot id="somar-hero" src="assets/hero.jpg" fit="cover" shape="rect" placeholder="Composición de electrodomésticos SOMAR"></image-slot>
         </div>
       </div>
     </div>
