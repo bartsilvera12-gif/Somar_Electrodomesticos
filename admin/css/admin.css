@@ -3,8 +3,9 @@
   --verde:#1D703A; --verde2:#3A8A47; --carbon:#202023; --claro:#EEF3EF;
   --panel:#14261a; --panel2:#1b3323; --line:#e8eee9; --muted:#7c8781;
   --radius:16px;
-  /* Fondo blanco unificado para imágenes de PRODUCTOS (coincide con el fondo de las fotos). */
-  --prod-bg:#FFFFFF;
+  /* Fondo verde pastel para imágenes de PRODUCTOS. Con la eliminación de fondo
+     por IA las imágenes son PNG transparentes → se ven sobre este verde. */
+  --prod-bg:#EAF4EC;
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
@@ -201,6 +202,48 @@ select.inp{ padding-right:8px; cursor:pointer; }
 
 /* Formulario singleton (Configuración): una sola columna de secciones */
 .crudForm > .card-sec{ max-width:920px; }
+
+/* =====================================================================
+ *  Eliminación de fondo con IA — dropzone + estados de imágenes
+ * ===================================================================== */
+.dropzone{ border:1.5px solid #cfe6d6; border-radius:16px; padding:22px 18px; text-align:center;
+           color:var(--muted); background:#F5FAF6; transition:border-color .15s ease,background .15s ease; }
+.dropzone.over{ border-color:var(--verde); background:#e7f3ea; }
+.dz-btn{ margin-bottom:12px; }
+.dz-hint{ margin:0; font-size:14px; }
+.dz-ai{ margin:8px auto 0; font-size:12.5px; line-height:1.5; color:var(--muted); max-width:440px; }
+
+/* Indicador de cola */
+.img-proc-count{ display:none; align-items:center; gap:9px; margin-top:12px; padding:9px 13px;
+                 border-radius:10px; background:var(--claro); color:var(--verde); font-size:13.5px; font-weight:700; }
+
+/* Spinner reutilizable */
+.img-spin{ width:16px; height:16px; flex:none; border-radius:50%; border:2px solid rgba(29,112,58,.25);
+           border-top-color:var(--verde); animation:som-spin .7s linear infinite; }
+@keyframes som-spin{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ .img-spin{ animation:none; } }
+
+/* Card en proceso */
+.img-card.busy{ border-color:#bfe0c9; }
+.img-proc{ width:100%; height:104px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+           gap:8px; padding:8px; text-align:center; background:var(--prod-bg); }
+.img-proc .img-spin{ width:22px; height:22px; }
+.img-proc-t{ font-size:11.5px; font-weight:700; color:var(--verde); line-height:1.3; }
+.img-proc-bar{ width:82%; height:4px; border-radius:99px; background:rgba(29,112,58,.15); overflow:hidden; }
+.img-proc-bar i{ display:block; height:100%; background:var(--verde); transition:width .2s ease; }
+
+/* Card en error */
+.img-card.err{ border-color:#eecfca; }
+.img-err{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+          gap:8px; padding:8px; text-align:center; background:rgba(255,255,255,.72); }
+.img-err-t{ font-size:11.5px; font-weight:700; color:#c0392b; }
+.img-err-a{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.img-err-a .mini{ height:26px; padding:0 9px; font-size:11.5px; }
+.mini.ghost{ color:var(--carbon); }
+
+/* Badge "✓ Fondo eliminado" (arriba-izquierda) */
+.img-ok{ position:absolute; left:5px; top:5px; z-index:1; font-size:10px; font-weight:800; color:#fff;
+         background:var(--verde); padding:2px 7px; border-radius:99px; letter-spacing:.01em; }
 
 /* Mobile */
 .backdrop{ display:none; }

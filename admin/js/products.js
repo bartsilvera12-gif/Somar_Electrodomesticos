@@ -7,7 +7,7 @@
   var cfg = window.SOMAR_CONFIG || {};
   var sb = null;
 
-  var state = { products: [], categories: [], brands: [], editing: null, images: [], removedImageIds: [] };
+  var state = { products: [], categories: [], brands: [], editing: null, images: [], removedImageIds: [], removedPaths: [] };
 
   // ---- helpers -------------------------------------------------------
   function $(s, r) { return (r || document).querySelector(s); }
@@ -100,7 +100,7 @@
   function openForm(product) {
     state.editing = product || null;
     state.images = product ? (product.product_images || []).slice().sort(function (a, b) { return (a.display_order || 0) - (b.display_order || 0); }) : [];
-    state.removedImageIds = [];
+    state.removedImageIds = []; state.removedPaths = [];
     $('#formTitle').textContent = product ? 'Editar producto' : 'Nuevo producto';
 
     var f = document.forms.productForm;
@@ -186,36 +186,122 @@
     return row;
   }
 
-  // Images
+  // Images (con eliminación de fondo por IA en el navegador) ----------
+  var procQueue = [];      // cola serial de imágenes a procesar
+  var procRunning = false;
+
   function renderImages() {
     var box = $('#imgBox'); box.innerHTML = '';
     state.images.forEach(function (im, idx) {
-      var card = el('div', { class: 'img-card' + (im.is_primary ? ' primary' : '') });
-      var url = im._localUrl || mediaUrl(im.image_url);
-      card.innerHTML = '<img src="' + esc(url) + '" alt="">' +
-        '<div class="img-tools">' +
-        '<button type="button" data-i="' + idx + '" data-a="primary" title="Principal">★</button>' +
-        '<button type="button" data-i="' + idx + '" data-a="up" title="Subir">↑</button>' +
-        '<button type="button" data-i="' + idx + '" data-a="down" title="Bajar">↓</button>' +
-        '<button type="button" data-i="' + idx + '" data-a="rm" title="Quitar">×</button>' +
-        '</div>' + (im.is_primary ? '<span class="img-badge">Principal</span>' : '');
+      var cls = 'img-card' + (im.is_primary ? ' primary' : '') +
+        (im._status === 'processing' ? ' busy' : '') + (im._status === 'error' ? ' err' : '');
+      var card = el('div', { class: cls });
+      if (im._status === 'processing') {
+        card.innerHTML =
+          '<div class="img-proc">' +
+            '<span class="img-spin"></span>' +
+            '<span class="img-proc-t">' + esc(im._statusText || 'Procesando…') + '</span>' +
+            (im._pct != null ? '<span class="img-proc-bar"><i style="width:' + im._pct + '%"></i></span>' : '') +
+          '</div>' +
+          '<div class="img-tools"><button type="button" data-i="' + idx + '" data-a="rm" title="Quitar">×</button></div>';
+      } else if (im._status === 'error') {
+        card.innerHTML =
+          '<img src="' + esc(im._localUrl || mediaUrl(im.image_url)) + '" alt="" style="opacity:.45">' +
+          '<div class="img-err">' +
+            '<span class="img-err-t">No pudimos quitar el fondo</span>' +
+            '<span class="img-err-a">' +
+              '<button type="button" class="mini" data-i="' + idx + '" data-a="retry">Reintentar</button>' +
+              '<button type="button" class="mini ghost" data-i="' + idx + '" data-a="useorig">Usar original</button>' +
+            '</span>' +
+          '</div>' +
+          '<div class="img-tools"><button type="button" data-i="' + idx + '" data-a="rm" title="Quitar">×</button></div>';
+      } else {
+        var url = im._localUrl || mediaUrl(im.image_url);
+        card.innerHTML = '<img src="' + esc(url) + '" alt="">' +
+          '<div class="img-tools">' +
+          '<button type="button" data-i="' + idx + '" data-a="primary" title="Principal">★</button>' +
+          '<button type="button" data-i="' + idx + '" data-a="up" title="Subir">↑</button>' +
+          '<button type="button" data-i="' + idx + '" data-a="down" title="Bajar">↓</button>' +
+          (im._bgRemoved ? '<button type="button" data-i="' + idx + '" data-a="reproc" title="Volver a quitar fondo">⟲</button>' : '') +
+          '<button type="button" data-i="' + idx + '" data-a="rm" title="Quitar">×</button>' +
+          '</div>' +
+          (im._bgRemoved ? '<span class="img-ok">✓ Fondo eliminado</span>' : '') +
+          (im.is_primary ? '<span class="img-badge">Principal</span>' : '');
+      }
       box.appendChild(card);
     });
+    updateProcCount();
   }
+
+  function updateProcCount() {
+    var elp = $('#imgProc'); if (!elp) return;
+    var doing = state.images.filter(function (x) { return x._status === 'processing'; }).length;
+    var pending = doing + procQueue.length;
+    if (pending > 0) { elp.style.display = 'flex'; elp.querySelector('span').textContent = 'Procesando imágenes… (' + pending + ' en cola)'; }
+    else { elp.style.display = 'none'; }
+  }
+
   function addFiles(files) {
     Array.prototype.forEach.call(files, function (file) {
-      if (!/^image\//.test(file.type)) { toast('Solo imágenes.', 'err'); return; }
-      if (file.size > 5 * 1024 * 1024) { toast('Máximo 5MB por imagen.', 'err'); return; }
-      state.images.push({ id: null, _file: file, _localUrl: URL.createObjectURL(file), is_primary: state.images.length === 0, display_order: state.images.length });
+      if (!/^image\/(jpeg|jpg|png|webp)$/i.test(file.type || '')) { toast('Formato no soportado. Usá JPG, PNG o WebP.', 'err'); return; }
+      if (file.size > 15 * 1024 * 1024) { toast('Máximo 15MB por imagen.', 'err'); return; }
+      var im = {
+        id: null, _file: null, _localUrl: URL.createObjectURL(file), _originalFile: file,
+        _status: 'processing', _statusText: 'Preparando imagen…', _pct: null, _bgRemoved: false,
+        is_primary: state.images.length === 0, display_order: state.images.length
+      };
+      state.images.push(im);
+      procQueue.push(im);
     });
     renderImages();
+    runQueue();
   }
+
+  async function runQueue() {
+    if (procRunning) return;
+    procRunning = true;
+    while (procQueue.length) {
+      var im = procQueue.shift();
+      if (state.images.indexOf(im) < 0) continue;   // fue eliminado mientras esperaba
+      await processOne(im);
+    }
+    procRunning = false;
+    updateProcCount();
+  }
+
+  async function processOne(im) {
+    im._status = 'processing'; im._statusText = 'Preparando imagen…'; im._pct = null; renderImages();
+    if (!window.SOMAR_BG || !SOMAR_BG.isSupported()) { im._status = 'error'; renderImages(); return; }
+    try {
+      var res = await SOMAR_BG.removeImageBackground(im._originalFile, {
+        onProgress: function (p) { im._statusText = p.text; im._pct = (p.pct != null ? p.pct : null); renderImages(); }
+      });
+      if (state.images.indexOf(im) < 0) { URL.revokeObjectURL(res.previewUrl); return; }  // eliminado durante el proceso
+      if (im._localUrl) URL.revokeObjectURL(im._localUrl);
+      im._file = res.file; im._localUrl = res.previewUrl; im._bgRemoved = true; im._status = 'ready';
+    } catch (err) {
+      console.warn('[SOMAR] bg-removal falló:', err && (err.message || err));
+      im._status = 'error';   // el original queda como fallback (Usar original)
+    }
+    renderImages();
+  }
+
   function imgAction(idx, action) {
-    var arr = state.images;
-    if (action === 'primary') { arr.forEach(function (x) { x.is_primary = false; }); arr[idx].is_primary = true; }
-    else if (action === 'rm') { var rm = arr.splice(idx, 1)[0]; if (rm && rm.id) state.removedImageIds.push(rm.id); if (!arr.some(function (x) { return x.is_primary; }) && arr[0]) arr[0].is_primary = true; }
+    var arr = state.images; var im = arr[idx]; if (!im) return;
+    if (action === 'primary') { arr.forEach(function (x) { x.is_primary = false; }); im.is_primary = true; }
+    else if (action === 'rm') {
+      var rm = arr.splice(idx, 1)[0];
+      if (rm) { if (rm._localUrl) { try { URL.revokeObjectURL(rm._localUrl); } catch (e) {} } if (rm.id) { state.removedImageIds.push(rm.id); if (rm.storage_path) state.removedPaths.push(rm.storage_path); } }
+      if (!arr.some(function (x) { return x.is_primary; }) && arr[0]) arr[0].is_primary = true;
+    }
     else if (action === 'up' && idx > 0) { var t = arr[idx - 1]; arr[idx - 1] = arr[idx]; arr[idx] = t; }
     else if (action === 'down' && idx < arr.length - 1) { var t2 = arr[idx + 1]; arr[idx + 1] = arr[idx]; arr[idx] = t2; }
+    else if (action === 'retry' || action === 'reproc') { im._status = 'processing'; im._bgRemoved = false; procQueue.push(im); renderImages(); runQueue(); return; }
+    else if (action === 'useorig') {
+      if (im._localUrl) { try { URL.revokeObjectURL(im._localUrl); } catch (e) {} }
+      im._file = im._originalFile; im._localUrl = URL.createObjectURL(im._originalFile);
+      im._bgRemoved = false; im._status = 'ready';
+    }
     renderImages();
   }
 
@@ -225,6 +311,8 @@
     var f = document.forms.productForm;
     var name = f.name.value.trim();
     if (!name) { toast('El nombre es obligatorio.', 'err'); return; }
+    if (state.images.some(function (x) { return x._status === 'processing'; })) { toast('Esperá a que terminen de procesarse las imágenes.', 'err'); return; }
+    if (state.images.some(function (x) { return x._status === 'error'; })) { toast('Hay imágenes con error: reintentá o elegí "Usar original".', 'err'); return; }
     var slug = f.slug.value.trim() || slugify(name);
     var payload = {
       name: name, slug: slug, sku: f.sku.value.trim() || null,
@@ -269,6 +357,12 @@
 
       // Imágenes: eliminar quitadas, subir nuevas, actualizar orden/principal
       if (state.removedImageIds.length) await sb.from('product_images').delete().in('id', state.removedImageIds);
+      // Borrar también los archivos de Storage de las imágenes quitadas (evita huérfanos).
+      if (state.removedPaths.length) {
+        try { await sb.storage.from(cfg.STORAGE_BUCKET || 'somar-media').remove(state.removedPaths.slice()); }
+        catch (e) { console.warn('[SOMAR] no se pudieron borrar archivos de Storage:', e && (e.message || e)); }
+        state.removedPaths = [];
+      }
       await syncImages(id);
 
       toast(state.editing ? 'Producto actualizado.' : 'Producto creado.');
@@ -329,7 +423,7 @@
     if (act === 'edit') {
       // Traer datos completos (features/specs/installments) para editar
       var r = await sb.from('products').select(
-        '*, product_images(id,image_url,is_primary,display_order), product_features(feature,display_order),' +
+        '*, product_images(id,image_url,storage_path,is_primary,display_order), product_features(feature,display_order),' +
         ' product_specifications(label,value,display_order), product_installments(installments,amount)'
       ).eq('id', id).single();
       if (r.error) { toast(r.error.message, 'err'); return; }
