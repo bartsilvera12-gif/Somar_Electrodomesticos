@@ -12,6 +12,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 <script src="./image-slot.js"></script>
+<!-- Supabase (Etapa 6): capa de datos. Solo ANON key. Fallback a datos embebidos. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./js/config.js"></script>
+<script src="./js/supabase-client.js"></script>
+<script src="./js/data-service.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin:0; background:#fff; color:#202023; font-family:'Lato',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
@@ -895,7 +900,7 @@ const DEFAULT_RATE = 0.064; // interés mensual por defecto para calcular cuotas
 const P = (id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate, cuotasFix, maxCuotas) =>
   ({ id, slug, name, brand, category, price, previousPrice, badge, stock, featured, best, description, features, specs, rate: (typeof rate === 'number') ? rate : DEFAULT_RATE, cuotasFix: cuotasFix || {}, maxCuotas: maxCuotas || 12 });
 
-const PRODUCTS = [
+let PRODUCTS = [
   P(1,'lavarropas-jam-grace-6kg','Lavarropas Automático JAM Grace 6 kg','JAM','Lavarropas',2270000,null,null,5,true,true,
     'Lavarropas automático de carga frontal JAM Grace (modelo F-056B) con 6 kilos de capacidad. Práctico y eficiente, con múltiples programas para el lavado diario del hogar.',
     ['6 kg de capacidad','Carga frontal','Múltiples programas de lavado','Panel con display digital'],
@@ -988,7 +993,7 @@ const PRODUCTS = [
     0.064, {6:374000, 8:259000, 10:242000, 12:210000})
 ];
 
-const CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Muebles','Hogar','Pesca','Belleza y Salud','Deportes','Herramientas'];
+let CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Muebles','Hogar','Pesca','Belleza y Salud','Deportes','Herramientas'];
 
 // Color por producto (inferido de las fotos). Se puede ajustar libremente.
 const PRODUCT_COLORS = { 1:'Blanco', 2:'Negro', 3:'Blanco', 4:'Negro', 5:'Cerezo', 6:'Negro', 7:'Camuflado', 8:'Negro', 9:'Blanco', 10:'Naranja', 11:'Marrón', 12:'Rojo', 13:'Azul', 14:'Blanco', 15:'Acero', 16:'Negro', 17:'Negro', 18:'Blanco' };
@@ -998,7 +1003,7 @@ const PRODUCT_IMAGES = { 1:'assets/prod-1.jpg', 2:'assets/prod-2.jpg', 3:'assets
 const COLOR_HEX = { 'Blanco':'#eef0ee', 'Negro':'#202023', 'Cerezo':'#9a5b3b', 'Camuflado':'#5b6b3a', 'Naranja':'#e8722a', 'Marrón':'#7a4a2b', 'Rojo':'#c0392b', 'Azul':'#2f6fb0', 'Acero':'#b8bcbe', 'Varios':'#c7cec9' };
 
 // Ícono + color de acento por categoría (para las tarjetas del home)
-const CATEGORY_STYLE = {
+let CATEGORY_STYLE = {
   'Televisores': { icon:'📺', accent:'#3A6EA5' },
   'Heladeras': { icon:'❄️', accent:'#2AA5B5' },
   'Cocinas': { icon:'🍳', accent:'#E8722A' },
@@ -1016,13 +1021,28 @@ const CATEGORY_STYLE = {
 const hexToRgba = (hex, a) => { const h = hex.replace('#',''); return 'rgba(' + parseInt(h.slice(0,2),16) + ',' + parseInt(h.slice(2,4),16) + ',' + parseInt(h.slice(4,6),16) + ',' + a + ')'; };
 const BRAND_PALETTE = ['#1D703A','#3A8A47'];
 
+// Contenido y configuración: valores embebidos = fallback; se reasignan desde Supabase (Etapa 6).
+let SETTINGS = null;
+let BENEFITS = ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'];
+let PURCHASE_STEPS = [
+  { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.', accent: '#1D703A', tint: hexToRgba('#1D703A', 0.08), border: hexToRgba('#1D703A', 0.22) },
+  { n: '2', title: 'Consultanos por WhatsApp', text: 'Te respondemos con precio, stock y formas de pago.', accent: '#2F8FD6', tint: hexToRgba('#2F8FD6', 0.09), border: hexToRgba('#2F8FD6', 0.24) },
+  { n: '3', title: 'Coordinamos tu compra', text: 'Acordamos entrega o retiro y listo.', accent: '#E8722A', tint: hexToRgba('#E8722A', 0.09), border: hexToRgba('#E8722A', 0.24) }
+];
+let TESTIMONIALS = [
+  { name: 'María G.', initial: 'M', stars: '★★★★★', text: 'Compré mi heladera y me asesoraron en todo. La entrega fue rápida y en el horario acordado.' },
+  { name: 'Carlos R.', initial: 'C', stars: '★★★★★', text: 'Consulté por WhatsApp y en minutos tenía el precio y la disponibilidad. Muy práctico.' },
+  { name: 'Lucía B.', initial: 'L', stars: '★★★★☆', text: 'Buenos precios y atención cercana. Volvería a comprar sin dudarlo.' }
+];
+let STATS = [{ v: '+8', l: 'Categorías' }, { v: '2', l: 'Líneas de atención' }, { v: '100%', l: 'Atención personalizada' }];
+
 class Component extends DCLogic {
   state = {
     view: 'home', slug: null, q: '', cat: 'Todas', brand: 'Todas', color: 'Todos',
     maxPrice: 6000000, onlyOffer: false, onlyStock: false, sort: 'destacados',
     cart: [], favs: [], cartOpen: false, favsOpen: false, menuOpen: false, filtersOpen: false,
     catMenuOpen: false, menuCat: null, menuBrand: null,
-    cuotasOpen: false, selectedCuota: null,
+    cuotasOpen: false, selectedCuota: null, remoteLoaded: false,
     toast: null, w: typeof window !== 'undefined' ? window.innerWidth : 1280
   };
 
@@ -1066,6 +1086,38 @@ class Component extends DCLogic {
       this.armReveals();
     }
     this.startMesh();
+    this.loadRemote();
+  }
+  async loadRemote() {
+    try {
+      if (!window.SOMAR_DATA || !window.SOMAR_DATA.ready() || !window.SOMAR_SB) return;
+      // Probe liviano: si el schema no está expuesto/cargado, evitamos ~10 requests fallidos.
+      const probe = await window.SOMAR_SB.from('site_settings').select('id').limit(1);
+      if (probe.error) { console.info('[SOMAR] Supabase todavía no configurado; usando datos embebidos.'); return; }
+      const b = await window.SOMAR_DATA.getBootstrap();
+      if (!b || !Array.isArray(b.products) || !b.products.length) return; // DB vacía → mantener embebido
+      PRODUCTS = b.products;
+      if (Array.isArray(b.categories) && b.categories.length) {
+        CATEGORIES = b.categories.map(c => c.name);
+        const st = {};
+        b.categories.forEach(c => { st[c.name] = { icon: c.icon || '🛍️', accent: c.accent_color || '#1D703A' }; });
+        CATEGORY_STYLE = st;
+      }
+      if (b.settings) SETTINGS = b.settings;
+      if (Array.isArray(b.benefits) && b.benefits.length) BENEFITS = b.benefits.map(x => x.title);
+      if (Array.isArray(b.steps) && b.steps.length) PURCHASE_STEPS = b.steps.map(s => {
+        const ac = s.accent_color || '#1D703A';
+        return { n: String(s.step_number), title: s.title, text: s.description || '', accent: ac, tint: hexToRgba(ac, 0.09), border: hexToRgba(ac, 0.24) };
+      });
+      if (Array.isArray(b.testimonials) && b.testimonials.length) TESTIMONIALS = b.testimonials.map(t => ({
+        name: t.customer_name, initial: (t.customer_name || '?').trim().charAt(0).toUpperCase(),
+        stars: '★'.repeat(t.rating || 0) + '☆'.repeat(Math.max(0, 5 - (t.rating || 0))), text: t.review
+      }));
+      if (Array.isArray(b.stats) && b.stats.length) STATS = b.stats.map(x => ({ v: x.value, l: x.label }));
+      this.setState({ remoteLoaded: true }); // re-render con datos de Supabase
+    } catch (e) {
+      console.warn('[SOMAR] Usando datos embebidos (Supabase no disponible):', e && e.message);
+    }
   }
   componentDidUpdate() {
     if (this.io) this.armReveals();
@@ -1094,7 +1146,7 @@ class Component extends DCLogic {
   }
 
   fmt(n) { return 'Gs. ' + Math.round(n).toLocaleString('de-DE'); }
-  wa(text) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+  wa(text) { const num = (SETTINGS && SETTINGS.whatsapp_primary) || WA; return 'https://wa.me/' + num + '?text=' + encodeURIComponent(text); }
   // Mesh gradient "Pipo / Bloom Field" (21st.dev) adaptado a la marca SOMAR.
   // Movimiento: reloj t en segundos, ph = t*0.86, drift por blob con fase estática p (hash del seed).
   // Cada modulación es exactamente 0 en ph=0 (sin(x+p)-sin(p)) para que no salte al iniciar.
@@ -1203,7 +1255,7 @@ class Component extends DCLogic {
     return {
       ...p,
       slot: 'prod-' + p.id, slotB: 'best-' + p.id, slotL: 'list-' + p.id, slotR: 'rel-' + p.id, slotD: 'det-' + p.id, slotC: 'cart-' + p.id, slotF: 'fav-' + p.id,
-      image: PRODUCT_IMAGES[p.id] || '',
+      image: p.image || PRODUCT_IMAGES[p.id] || '',
       priceFmt: this.fmt(p.price),
       prevFmt: p.previousPrice ? this.fmt(p.previousPrice) : null,
       cuotasFmt: this.cuotaPlans(p.price, p.rate, p.cuotasFix, p.maxCuotas),
@@ -1385,19 +1437,11 @@ class Component extends DCLogic {
       }).filter(c => c.count > 0),
       current, related: current ? all.filter(p => p.category === current.category && p.id !== current.id).concat(all.filter(p => p.category !== current.category)).slice(0, 4) : [],
       heroPoints: ['Calidad garantizada', 'Atención cercana', 'Entregas coordinadas'],
-      benefits: ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'],
-      steps: [
-        { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.', accent: '#1D703A', tint: hexToRgba('#1D703A', 0.08), border: hexToRgba('#1D703A', 0.22) },
-        { n: '2', title: 'Consultanos por WhatsApp', text: 'Te respondemos con precio, stock y formas de pago.', accent: '#2F8FD6', tint: hexToRgba('#2F8FD6', 0.09), border: hexToRgba('#2F8FD6', 0.24) },
-        { n: '3', title: 'Coordinamos tu compra', text: 'Acordamos entrega o retiro y listo.', accent: '#E8722A', tint: hexToRgba('#E8722A', 0.09), border: hexToRgba('#E8722A', 0.24) }
-      ],
+      benefits: BENEFITS,
+      steps: PURCHASE_STEPS,
       brandsList: Array.from(new Set(PRODUCTS.map(p => p.brand))).filter(b => b !== 'Nacional').map((b, i) => { const c = BRAND_PALETTE[i % BRAND_PALETTE.length]; return { name: b, color: c, tint: hexToRgba(c, 0.13) }; }),
-      stats: [{ v: '+8', l: 'Categorías' }, { v: '2', l: 'Líneas de atención' }, { v: '100%', l: 'Atención personalizada' }],
-      testimonials: [
-        { name: 'María G.', initial: 'M', stars: '★★★★★', text: 'Compré mi heladera y me asesoraron en todo. La entrega fue rápida y en el horario acordado.' },
-        { name: 'Carlos R.', initial: 'C', stars: '★★★★★', text: 'Consulté por WhatsApp y en minutos tenía el precio y la disponibilidad. Muy práctico.' },
-        { name: 'Lucía B.', initial: 'L', stars: '★★★★☆', text: 'Buenos precios y atención cercana. Volvería a comprar sin dudarlo.' }
-      ],
+      stats: STATS,
+      testimonials: TESTIMONIALS,
       instagram: [10, 11, 4, 7, 3, 6].map((pid, i) => ({ slot: 'ig-' + (i + 1), img: 'assets/prod-' + pid + '.jpg' })),
       cartOpen: s.cartOpen, menuOpen: s.menuOpen, toast: s.toast,
       hasCart: cartLines.length > 0, emptyCart: cartLines.length === 0,
