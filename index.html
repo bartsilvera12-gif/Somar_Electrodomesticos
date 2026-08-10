@@ -190,9 +190,8 @@
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <section id="inicio" style="position:relative;overflow:hidden;background:#EFF4F0">
-    <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none"></canvas>
-    <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:16%;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#ffffff 97%)"></div>
+  <section id="inicio" style="position:relative;overflow:hidden;background:#A6CDB1">
+    <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none"></canvas>
     <div style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
       <div>
         <h1 style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">Todo lo que necesitás para hacer tu hogar mejor.</h1>
