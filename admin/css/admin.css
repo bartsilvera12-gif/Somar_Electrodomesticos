@@ -4,7 +4,7 @@
   --panel:#14261a; --panel2:#1b3323; --line:#e8eee9; --muted:#7c8781;
   --radius:16px;
   /* Fondo verde pastel unificado para imágenes de PRODUCTOS (igual que la web pública). */
-  --prod-bg:#EAF4EC;
+  --prod-bg:#CDE9D5;
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
