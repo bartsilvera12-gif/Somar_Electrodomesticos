@@ -38,10 +38,12 @@
   @media (max-width:900px) {
     .hero { background-image:none !important; background-color:#A8CAB4 !important; min-height:0 !important; }
     .hero-scrim { display:none !important; }
-    .hero-copy { padding-bottom:4px; }
-    .hero-img-m { display:block !important; width:100%; height:auto; margin:0; }
-    /* El texto ya no está sobre la imagen: vuelve a color oscuro, sin sombra. */
-    .hero-h1 { color:#202023 !important; text-shadow:none !important; }
+    /* Imagen ARRIBA centrada, texto ABAJO (como tradexpar). */
+    .hero-inner { display:flex; flex-direction:column; padding-top:26px !important; }
+    .hero-img-m { order:-1; display:block !important; width:100%; max-width:420px; height:auto; margin:0 auto 22px; }
+    .hero-copy { order:1; max-width:none; }
+    /* El texto ya no está sobre la imagen: color oscuro, sin sombra. */
+    .hero-h1 { color:#202023 !important; text-shadow:none !important; margin-top:0 !important; }
     .hero-sub { color:#55605a !important; text-shadow:none !important; }
     .hero-point { color:#3f4a44 !important; text-shadow:none !important; }
   }
@@ -205,7 +207,7 @@
   <section id="inicio" class="hero" style="position:relative;overflow:hidden;background:#A8CAB4 url('assets/hero.jpg') right center/contain no-repeat;min-height:clamp(440px,46vw,600px)">
     <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none"></canvas>
     <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:transparent"></div>
-    <div style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
+    <div class="hero-inner" style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
       <div class="hero-copy" style="max-width:560px">
         <h1 class="hero-h1" style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">¡Tu Hogar Merece lo Mejor!</h1>
         <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">Electrodomésticos de Calidad a tu Alcance</p>
