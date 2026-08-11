@@ -36,7 +36,7 @@ insert into somarelectrodomesticos.site_settings
    seo_title, seo_description, footer_text)
 values
   ('SOMAR Electrodomésticos', 'Innovación y calidad', 'assets/somar-logo-oval.png',
-   '595971244226', '595975515519',
+   '595975515519', '',
    'https://www.facebook.com/share/198XbcDP84/', 'https://instagram.com', 'PYG', 'Gs.',
    0.0640, 12, 3,
    'SOMAR Electrodomésticos — Tecnología para tu hogar',
