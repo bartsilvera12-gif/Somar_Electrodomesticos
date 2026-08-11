@@ -240,7 +240,9 @@
       <sc-for list="{{ categories }}" as="c" hint-placeholder-count="8">
         <button onClick="{{ c.go }}" class="somar-cat" style="position:relative;scroll-snap-align:start;min-width:200px;text-align:left;border:1.5px solid #e8eee9;background:#fff;border-radius:22px;padding:22px 18px 18px;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif" style-hover="border-color:{{ c.accent }};box-shadow:0 20px 40px {{ c.glow }}">
           <span aria-hidden="true" class="somar-cat-blob" style="position:absolute;top:-34px;right:-34px;width:96px;height:96px;border-radius:99px;background:{{ c.tint }}"></span>
-          <span class="somar-cat-icon" style="position:relative;width:56px;height:56px;border-radius:16px;background:{{ c.tint }};color:{{ c.accent }};display:grid;place-items:center;font-size:28px;line-height:1">{{ c.icon }}</span>
+          <span class="somar-cat-icon prod-media" style="position:relative;width:66px;height:66px;border-radius:16px;overflow:hidden;display:block;padding:6px;border:1px solid #eef3ef">
+            <image-slot id="{{ c.slot }}" src="{{ c.image }}" shape="rect" fit="contain" placeholder="{{ c.name }}"></image-slot>
+          </span>
           <div style="position:relative;margin-top:16px">
             <div style="font-weight:900;font-size:17px;color:#202023">{{ c.name }}</div>
             <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;color:#7c8781;margin-top:2px">{{ c.count }} productos</div>
@@ -1015,6 +1017,23 @@ PRODUCTS.forEach(p => { p.color = PRODUCT_COLORS[p.id] || 'Varios'; });
 const PRODUCT_IMAGES = { 1:'assets/prod-1.jpg', 2:'assets/prod-2.jpg', 3:'assets/prod-3.jpg', 4:'assets/prod-4.jpg', 5:'assets/prod-5.jpg', 6:'assets/prod-6.jpg', 7:'assets/prod-7.jpg', 8:'assets/prod-8.jpg', 9:'assets/prod-9.jpg', 10:'assets/prod-10.jpg', 11:'assets/prod-11.jpg', 12:'assets/prod-12.jpg', 13:'assets/prod-13.jpg', 14:'assets/prod-14.jpg', 15:'assets/prod-15.jpg', 16:'assets/prod-16.jpg', 17:'assets/prod-17.jpg', 18:'assets/prod-18.jpg' };
 const COLOR_HEX = { 'Blanco':'#eef0ee', 'Negro':'#202023', 'Cerezo':'#9a5b3b', 'Camuflado':'#5b6b3a', 'Naranja':'#e8722a', 'Marrón':'#7a4a2b', 'Rojo':'#c0392b', 'Azul':'#2f6fb0', 'Acero':'#b8bcbe', 'Varios':'#c7cec9' };
 
+// Foto representativa por categoría para las tarjetas del home (usa una foto de
+// un producto real de esa categoría). Si una categoría no está acá, se usa la
+// foto del primer producto que tenga esa categoría (fallback automático).
+const CATEGORY_REP_IMG = {
+  'Heladeras': 'assets/prod-18.jpg',                      // Heladera Enxuta
+  'Cocinas': 'assets/prod-3.jpg',                         // Cocina JAM 4 hornallas
+  'Lavarropas': 'assets/prod-1.jpg',                      // Lavarropas JAM
+  'Celulares': 'assets/prod-13.jpg',                      // Redmi 15C
+  'Pequeños electrodomésticos': 'assets/prod-14.jpg',     // Licuadora Arno
+  'Muebles': 'assets/prod-11.jpg',                        // Juego de sillones ratán
+  'Hogar': 'assets/prod-6.jpg',                           // Ventilador Tokyo
+  'Pesca': 'assets/prod-7.jpg',                           // Carpa camping
+  'Belleza y Salud': 'assets/prod-8.jpg',                 // Secador Babyliss
+  'Deportes': 'assets/prod-10.jpg',                       // Bicicleta Milano
+  'Herramientas': 'assets/prod-16.jpg'                    // Compresor VCP
+};
+
 // Ícono + color de acento por categoría (para las tarjetas del home)
 let CATEGORY_STYLE = {
   'Televisores': { icon:'📺', accent:'#3A6EA5' },
@@ -1439,12 +1458,15 @@ class Component extends DCLogic {
       featured: all.filter(p => p.featured).slice(0, 4),
       bestSellers: all.filter(p => p.best),
       offerCards: all.filter(p => p.previousPrice).slice(0, 2).map(p => ({ ...p, tag: 'Promoción', slot: 'offer-' + p.id, go: () => this.go('detalle', p.slug) })),
-      categories: CATEGORIES.map(c => {
+      categories: CATEGORIES.map((c, ci) => {
         const st = CATEGORY_STYLE[c] || { icon: '🛍️', accent: '#1D703A' };
+        const rep = PRODUCTS.find(p => p.category === c);
+        const image = CATEGORY_REP_IMG[c] || (rep ? (PRODUCT_IMAGES[rep.id] || '') : '');
         return {
           name: c,
           count: PRODUCTS.filter(p => p.category === c).length,
           icon: st.icon, accent: st.accent, tint: hexToRgba(st.accent, 0.12), glow: hexToRgba(st.accent, 0.30),
+          image: image, slot: 'cat-' + ci,
           go: () => this.goFilter(c, 'Todas', 'Todos')
         };
       }).filter(c => c.count > 0),
