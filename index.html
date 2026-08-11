@@ -1220,10 +1220,10 @@ class Component extends DCLogic {
   }
   cuotaPlans(price, rate, fix, max) {
     const out = [];
-    const top = max || 12;
-    for (let n = 1; n <= top; n++) {
-      out.push({ n, label: n === 1 ? 'Contado (1 pago)' : (n + ' cuotas'), vFmt: this.fmt(this.cuotaValue(price, rate, n, fix)) });
-    }
+    // Mostrar SOLO las cuotas cargadas (fix) + Contado. No inventar cuotas calculadas.
+    const keys = (fix ? Object.keys(fix).map(Number) : []).filter(n => Number.isFinite(n) && n > 1).sort((a, b) => a - b);
+    const ns = keys.length ? [1].concat(keys) : (function () { const a = []; for (let n = 1; n <= (max || 12); n++) a.push(n); return a; })();
+    ns.forEach(n => out.push({ n, label: n === 1 ? 'Contado (1 pago)' : (n + ' cuotas'), vFmt: this.fmt(this.cuotaValue(price, rate, n, fix)) }));
     return out;
   }
   toast(msg) {
@@ -1307,7 +1307,7 @@ class Component extends DCLogic {
         rowBg: sel ? '#f2f8f4' : '#ffffff', dotBorder: sel ? '#1D703A' : '#cdd8d1', dotFill: sel ? '#1D703A' : 'transparent',
         select: () => this.setState({ selectedCuota: c.n, cuotasOpen: false }) };
     }) : [];
-    let cuotaHeadline = current ? ('Elegí tu plan · 1 a ' + (current.maxCuotas || 12) + ' cuotas') : '';
+    let cuotaHeadline = current ? 'Elegí tu plan de pago' : '';
     let detailWaMsg = current ? ('Hola SOMAR, estoy interesado/a en el producto: ' + current.name + '.') : '';
     if (current && s.selectedCuota) {
       const cc = current.cuotasFmt.find(x => x.n === s.selectedCuota);
@@ -1395,7 +1395,7 @@ class Component extends DCLogic {
       closeCatMenu: () => this.setState({ catMenuOpen: false }),
       toggleCatMenu: () => this.setState(x => ({ catMenuOpen: !x.catMenuOpen })),
       detailCuotas, cuotaHeadline, detailWaLink, cuotasOpen: s.cuotasOpen,
-      cuotasToggleLabel: s.cuotasOpen ? 'Ocultar' : ('Ver 1 a ' + (current ? (current.maxCuotas || 12) : 12)),
+      cuotasToggleLabel: s.cuotasOpen ? 'Ocultar' : 'Ver cuotas',
       cuotasChevron: s.cuotasOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       toggleCuotas: () => this.setState(x => ({ cuotasOpen: !x.cuotasOpen })),
       footerNav: nav.filter(n => n.label !== 'Categorías'),
