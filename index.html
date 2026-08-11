@@ -921,12 +921,12 @@ let PRODUCTS = [
     'Lavarropas automático de carga frontal JAM Grace (modelo F-056B) con 6 kilos de capacidad. Práctico y eficiente, con múltiples programas para el lavado diario del hogar.',
     ['6 kg de capacidad','Carga frontal','Múltiples programas de lavado','Panel con display digital'],
     [{k:'Capacidad',v:'6 kg'},{k:'Carga',v:'Frontal'},{k:'Modelo',v:'Grace F-056B'},{k:'Garantía',v:'12 meses'}],
-    0.064, {6:493000, 12:277000}),
+    0.064, {6:493000, 8:384000, 10:319000, 12:277000}),
   P(2,'horno-electrico-tokyo-listo-plus-56l','Horno Eléctrico Tokyo Listo Plus 56 L','Tokyo','Cocinas',920000,null,null,8,true,true,
     'Horno eléctrico Tokyo Listo Plus de 56 litros con control de temperatura, timer y selector de funciones. Ideal para hornear, gratinar y calentar con comodidad.',
     ['56 litros de capacidad','Control de temperatura','Timer con apagado automático','Incluye parrilla y bandeja'],
     [{k:'Capacidad',v:'56 litros'},{k:'Tipo',v:'Eléctrico de mesada'},{k:'Funciones',v:'Temperatura / timer'},{k:'Garantía',v:'12 meses'}],
-    0.064, {6:199000, 12:112000}),
+    0.064, {6:199000, 8:156000, 10:129000, 12:112000}),
   P(3,'cocina-jam-estandar-4h-blanca','Cocina JAM Estándar 4 Hornallas Blanca','JAM','Cocinas',813000,null,null,6,true,true,
     'Cocina JAM Estándar de 4 hornallas a gas, color blanco, con horno amplio y tapa de vidrio templado. Práctica y confiable para el uso diario del hogar.',
     ['4 hornallas a gas','Horno amplio','Tapa de vidrio templado','Terminación blanca'],
@@ -1009,6 +1009,12 @@ let PRODUCTS = [
     0.064, {6:374000, 8:259000, 10:242000, 12:210000})
 ];
 
+// Cuotas fijas por slug definidas en el código = fuente de verdad. Se aplican
+// sobre los productos que vengan de Supabase (por si product_installments está
+// incompleto/desactualizado en la base).
+const CUOTA_MASTER = {};
+PRODUCTS.forEach(p => { CUOTA_MASTER[p.slug] = { cuotasFix: p.cuotasFix, maxCuotas: p.maxCuotas }; });
+
 let CATEGORIES = ['Televisores','Heladeras','Cocinas','Lavarropas','Aires acondicionados','Celulares','Pequeños electrodomésticos','Muebles','Hogar','Pesca','Belleza y Salud','Deportes','Herramientas'];
 
 // Color por producto (inferido de las fotos). Se puede ajustar libremente.
@@ -1023,8 +1029,8 @@ const COLOR_HEX = { 'Blanco':'#eef0ee', 'Negro':'#202023', 'Cerezo':'#9a5b3b', '
 // foto del primer producto que tenga esa categoría (fallback automático).
 const CATEGORY_REP_IMG = {
   'Heladeras': 'assets/cat-heladeras.jpg',
-  'Cocinas': 'assets/cat-cocinas.jpg',
-  'Lavarropas': 'assets/cat-lavarropas.jpg',
+  'Cocinas': 'assets/prod-3.jpg',                        // Cocina JAM (foto de producto)
+  'Lavarropas': 'assets/prod-1.jpg',                     // Lavarropas JAM (foto de producto)
   'Celulares': 'assets/cat-celulares.jpg',
   'Pequeños electrodomésticos': 'assets/cat-pequenos.jpg',
   'Muebles': 'assets/cat-muebles.jpg',
@@ -1130,6 +1136,11 @@ class Component extends DCLogic {
       const b = await window.SOMAR_DATA.getBootstrap();
       if (!b || !Array.isArray(b.products) || !b.products.length) return; // DB vacía → mantener embebido
       PRODUCTS = b.products;
+      // Imponer las cuotas del código sobre las de la base (por slug).
+      PRODUCTS.forEach(p => {
+        const m = CUOTA_MASTER[p.slug];
+        if (m && m.cuotasFix && Object.keys(m.cuotasFix).length) { p.cuotasFix = m.cuotasFix; p.maxCuotas = m.maxCuotas; }
+      });
       if (Array.isArray(b.categories) && b.categories.length) {
         CATEGORIES = b.categories.map(c => c.name);
         const st = {};
