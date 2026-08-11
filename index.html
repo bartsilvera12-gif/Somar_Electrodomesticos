@@ -46,6 +46,8 @@
     .hero-h1 { color:#202023 !important; text-shadow:none !important; margin-top:0 !important; }
     .hero-sub { color:#55605a !important; text-shadow:none !important; }
     .hero-point { color:#3f4a44 !important; text-shadow:none !important; }
+    /* Header: achicar gap/padding para que los íconos + menú entren sin cortarse. */
+    .hdr-inner { gap:8px !important; padding-left:14px !important; padding-right:14px !important; }
   }
   @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
   @keyframes somarUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
@@ -68,7 +70,7 @@
 <div style="min-height:100vh;display:flex;flex-direction:column">
 
 <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:60;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-bottom:1px solid #e8eee9;transition:padding 260ms ease, box-shadow 260ms ease">
-  <div style="max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:18px;height:100%">
+  <div class="hdr-inner" style="max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:18px;height:100%">
     <a href="#inicio" onClick="{{ goHome }}" style="display:flex;align-items:center;flex:none">
       <img src="assets/somar-logo-oval.png" alt="SOMAR Electrodomésticos" style="height:46px;width:auto;display:block;transition:height 260ms ease" ref="{{ logoRef }}">
     </a>
