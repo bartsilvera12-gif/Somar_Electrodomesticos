@@ -568,7 +568,9 @@
       this._subFn = () => this._render();
       // Shadow-DOM listeners live with the shadow DOM — bound once here so
       // disconnect/reconnect (e.g. React remount) doesn't stack handlers.
-      this._empty.addEventListener('click', () => this._input.click());
+      // Click para elegir archivo SOLO en el editor. En el sitio público/desplegado
+      // las imágenes se cargan únicamente desde el panel admin.
+      this._empty.addEventListener('click', () => { if (window.omelette && window.omelette.writeFile) this._input.click(); });
       root.addEventListener('click', (e) => {
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
         if (!act) return;
@@ -855,6 +857,9 @@
     // handleEvent — one listener object for all four drag events keeps the
     // add/remove symmetric and the depth counter correct.
     handleEvent(e) {
+      // Solo interactivo en el editor (omelette). En el sitio desplegado NO se
+      // pueden arrastrar/soltar imágenes: se cargan desde el panel admin.
+      if (!(window.omelette && window.omelette.writeFile)) return;
       if (e.type === 'dragenter' || e.type === 'dragover') {
         // Without preventDefault the browser never fires 'drop'.
         e.preventDefault();
