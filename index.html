@@ -242,8 +242,8 @@
       <sc-for list="{{ categories }}" as="c" hint-placeholder-count="8">
         <button onClick="{{ c.go }}" class="somar-cat" style="position:relative;scroll-snap-align:start;min-width:200px;text-align:left;border:1.5px solid #e8eee9;background:#fff;border-radius:22px;padding:22px 18px 18px;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif" style-hover="border-color:{{ c.accent }};box-shadow:0 20px 40px {{ c.glow }}">
           <span aria-hidden="true" class="somar-cat-blob" style="position:absolute;top:-34px;right:-34px;width:96px;height:96px;border-radius:99px;background:{{ c.tint }}"></span>
-          <span class="somar-cat-photo" style="position:relative;display:block;width:100%;height:120px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid #e9eeeb">
-            <img src="{{ c.image }}" alt="{{ c.name }}" style="width:100%;height:100%;object-fit:contain;padding:14px;display:block">
+          <span class="somar-cat-photo" style="position:relative;display:block;width:100%;height:150px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid #e9eeeb">
+            <img src="{{ c.image }}" alt="{{ c.name }}" style="width:100%;height:100%;object-fit:contain;padding:8px;display:block">
           </span>
           <div style="position:relative;margin-top:16px">
             <div style="font-weight:900;font-size:17px;color:#202023">{{ c.name }}</div>
@@ -1022,17 +1022,17 @@ const COLOR_HEX = { 'Blanco':'#eef0ee', 'Negro':'#202023', 'Cerezo':'#9a5b3b', '
 // un producto real de esa categoría). Si una categoría no está acá, se usa la
 // foto del primer producto que tenga esa categoría (fallback automático).
 const CATEGORY_REP_IMG = {
-  'Heladeras': 'assets/prod-18.jpg',                      // Heladera Enxuta
-  'Cocinas': 'assets/prod-3.jpg',                         // Cocina JAM 4 hornallas
-  'Lavarropas': 'assets/prod-1.jpg',                      // Lavarropas JAM
-  'Celulares': 'assets/prod-13.jpg',                      // Redmi 15C
-  'Pequeños electrodomésticos': 'assets/prod-14.jpg',     // Licuadora Arno
-  'Muebles': 'assets/prod-11.jpg',                        // Juego de sillones ratán
-  'Hogar': 'assets/prod-6.jpg',                           // Ventilador Tokyo
-  'Pesca': 'assets/prod-7.jpg',                           // Carpa camping
-  'Belleza y Salud': 'assets/prod-8.jpg',                 // Secador Babyliss
-  'Deportes': 'assets/prod-10.jpg',                       // Bicicleta Milano
-  'Herramientas': 'assets/prod-16.jpg'                    // Compresor VCP
+  'Heladeras': 'assets/cat-heladeras.jpg',
+  'Cocinas': 'assets/cat-cocinas.jpg',
+  'Lavarropas': 'assets/cat-lavarropas.jpg',
+  'Celulares': 'assets/cat-celulares.jpg',
+  'Pequeños electrodomésticos': 'assets/cat-pequenos.jpg',
+  'Muebles': 'assets/cat-muebles.jpg',
+  'Hogar': 'assets/cat-hogar.jpg',
+  'Pesca': 'assets/cat-pesca.jpg',
+  'Belleza y Salud': 'assets/cat-belleza.jpg',
+  'Deportes': 'assets/cat-deportes.jpg',
+  'Herramientas': 'assets/prod-16.jpg'                    // sin imagen nueva: se mantiene el compresor
 };
 
 // Ícono + color de acento por categoría (para las tarjetas del home)
