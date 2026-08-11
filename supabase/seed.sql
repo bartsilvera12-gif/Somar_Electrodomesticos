@@ -37,7 +37,7 @@ insert into somarelectrodomesticos.site_settings
 values
   ('SOMAR Electrodomésticos', 'Innovación y calidad', 'assets/somar-logo-oval.png',
    '595971244226', '595975515519',
-   'https://facebook.com', 'https://instagram.com', 'PYG', 'Gs.',
+   'https://www.facebook.com/share/198XbcDP84/', 'https://instagram.com', 'PYG', 'Gs.',
    0.0640, 12, 3,
    'SOMAR Electrodomésticos — Tecnología para tu hogar',
    'Electrodomésticos, tecnología y productos para el hogar. Comprá fácil por WhatsApp.',
