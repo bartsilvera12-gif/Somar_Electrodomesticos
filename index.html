@@ -38,10 +38,10 @@
   @media (max-width:900px) {
     .hero { background-image:none !important; background-color:#A8CAB4 !important; min-height:0 !important; }
     .hero-scrim { display:none !important; }
-    /* Imagen ARRIBA centrada, texto ABAJO (como tradexpar). */
-    .hero-inner { display:flex; flex-direction:column; padding-top:26px !important; }
-    .hero-img-m { order:-1; display:block !important; width:100%; max-width:420px; height:auto; margin:0 auto 22px; }
-    .hero-copy { order:1; max-width:none; }
+    /* Imagen ARRIBA grande (a todo el ancho) y centrada, texto ABAJO. */
+    .hero-inner { display:flex; flex-direction:column; padding:18px 0 clamp(40px,7vw,72px) !important; }
+    .hero-img-m { order:-1; display:block !important; width:100% !important; max-width:none !important; height:auto; margin:0 0 26px !important; border-radius:0 !important; }
+    .hero-copy { order:1; max-width:none; padding:0 20px; }
     /* El texto ya no está sobre la imagen: color oscuro, sin sombra. */
     .hero-h1 { color:#202023 !important; text-shadow:none !important; margin-top:0 !important; }
     .hero-sub { color:#55605a !important; text-shadow:none !important; }
