@@ -1136,7 +1136,13 @@ class Component extends DCLogic {
         b.categories.forEach(c => { st[c.name] = { icon: c.icon || '🛍️', accent: c.accent_color || '#1D703A' }; });
         CATEGORY_STYLE = st;
       }
-      if (b.settings) SETTINGS = b.settings;
+      if (b.settings) {
+        SETTINGS = b.settings;
+        // Corrección: si la BD trae valores viejos/placeholder, usar los correctos.
+        if (!SETTINGS.whatsapp_primary || SETTINGS.whatsapp_primary === '595971244226') SETTINGS.whatsapp_primary = '595975515519';
+        if (SETTINGS.whatsapp_secondary === '595971244226') SETTINGS.whatsapp_secondary = '';
+        if (!SETTINGS.facebook_url || SETTINGS.facebook_url === 'https://facebook.com') SETTINGS.facebook_url = 'https://www.facebook.com/share/198XbcDP84/';
+      }
       if (Array.isArray(b.benefits) && b.benefits.length) BENEFITS = b.benefits.map(x => x.title);
       if (Array.isArray(b.steps) && b.steps.length) PURCHASE_STEPS = b.steps.map(s => {
         const ac = s.accent_color || '#1D703A';
