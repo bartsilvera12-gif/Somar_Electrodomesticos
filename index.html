@@ -48,6 +48,11 @@
     .hero-point { color:#3f4a44 !important; text-shadow:none !important; }
     /* Header: achicar gap/padding para que los íconos + menú entren sin cortarse. */
     .hdr-inner { gap:8px !important; padding-left:14px !important; padding-right:14px !important; }
+    /* Testimonios más compactos en móvil. */
+    .testi { padding-top:34px !important; }
+    .testi [data-reveal]:first-child { margin-bottom:16px !important; }
+    .testi-card { padding:16px !important; gap:9px !important; border-radius:16px !important; }
+    .testi-card p { font-size:14px !important; line-height:1.5 !important; }
   }
   @keyframes somarFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
   @keyframes somarUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
@@ -460,21 +465,21 @@
     </div>
   </section>
 
-  <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
+  <section class="testi" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="margin-bottom:26px">
-      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Testimonios · datos demo</span>
+      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Testimonios</span>
       <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Clientes que confían en SOMAR</h2>
     </div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
       <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
-        <div style="border:1px solid #e8eee9;border-radius:20px;padding:26px;background:#fff;display:flex;flex-direction:column;gap:14px">
+        <div class="testi-card" style="border:1px solid #e8eee9;border-radius:20px;padding:26px;background:#fff;display:flex;flex-direction:column;gap:14px">
           <div style="color:#1D703A;font-size:16px;letter-spacing:2px">{{ t.stars }}</div>
           <p style="font-size:16px;line-height:1.6;color:#3f4a44;margin:0;text-wrap:pretty">{{ t.text }}</p>
           <div style="display:flex;align-items:center;gap:12px;margin-top:auto">
             <span style="width:40px;height:40px;border-radius:99px;background:#EEF3EF;color:#1D703A;display:grid;place-items:center;font-weight:900">{{ t.initial }}</span>
             <div>
               <div style="font-weight:700;font-size:15px">{{ t.name }}</div>
-              <div style="font-size:13px;color:#9aa39d">Testimonio demo</div>
+              <div style="font-size:13px;color:#9aa39d">Cliente SOMAR</div>
             </div>
           </div>
         </div>
