@@ -95,12 +95,23 @@ select.inp{ padding-right:8px; cursor:pointer; }
 .pill.on{ color:var(--verde); background:var(--claro); }
 .pill.off{ color:#8a938d; background:#eef1ef; }
 
-.actions{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+/* La última columna (Estado / Acciones) se ajusta a su contenido:
+   así los botones no quedan amontonados a un lado con hueco a la derecha. */
+.tbl td:last-child, .tbl th:last-child{ width:1%; white-space:nowrap; }
+
+.actions{ display:flex; flex-wrap:nowrap; gap:6px; margin-top:8px; }
 .actions button{ height:32px; padding:0 12px; border-radius:8px; border:1.5px solid var(--line); background:#fff;
-                 font-family:inherit; font-size:13px; font-weight:700; color:var(--carbon); cursor:pointer;
+                 font-family:inherit; font-size:13px; font-weight:700; color:var(--carbon); cursor:pointer; white-space:nowrap;
                  transition:border-color .15s ease,color .15s ease,background .15s ease; }
-.actions button:hover{ border-color:var(--verde); color:var(--verde); }
-.actions button.danger:hover{ border-color:#d9534f; color:#d9534f; background:#fdecea; }
+/* Botones de acción con colores de la marca (variantes claras) --------- */
+.actions button[data-act="edit"]{ background:#E6F2EA; border-color:#BEDDC9; color:#1D703A; }
+.actions button[data-act="edit"]:hover{ background:#1D703A; border-color:#1D703A; color:#fff; }
+.actions button[data-act="up"], .actions button[data-act="down"]{ background:#EEF3EF; border-color:#D8E7DD; color:#3A8A47; }
+.actions button[data-act="up"]:hover, .actions button[data-act="down"]:hover{ background:#3A8A47; border-color:#3A8A47; color:#fff; }
+.actions button[data-act="toggle"]{ background:#EAF4EC; border-color:#C4E3CF; color:#2E7D42; }
+.actions button[data-act="toggle"]:hover{ background:#3A8A47; border-color:#3A8A47; color:#fff; }
+.actions button[data-act="del"], .actions button.danger{ background:#FBEBE9; border-color:#F0C9C4; color:#C0392B; }
+.actions button[data-act="del"]:hover, .actions button.danger:hover{ background:#C0392B; border-color:#C0392B; color:#fff; }
 
 /* Formulario: dos columnas (principal + lateral) */
 .fcols{ display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:18px; align-items:start; }
