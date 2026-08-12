@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOMAR Electrodomésticos</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="icon" type="image/png" href="/assets/somar-logo-oval.png">
+<link rel="apple-touch-icon" href="/assets/somar-logo-oval.png">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -193,8 +197,8 @@
     <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:transparent"></div>
     <div class="hero-inner" style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
       <div class="hero-copy" style="max-width:560px">
-        <h1 class="hero-h1" style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">¡Tu Hogar Merece lo Mejor!</h1>
-        <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">Electrodomésticos de Calidad a tu Alcance</p>
+        <h1 class="hero-h1" style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">{{ heroTitle }}</h1>
+        <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">{{ heroSub }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:somarUp 560ms 240ms ease both">
           <a href="#productos" onClick="{{ goList }}" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.24);transition:transform 220ms ease,background 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">Ver productos
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"></line><polyline points="13,6 19,12 13,18"></polyline></svg>
@@ -293,7 +297,7 @@
         <a href="#productos" onClick="{{ goOffers }}" style="height:50px;padding:0 26px;border-radius:99px;background:#fff;color:#1D703A;font-weight:900;font-size:15.5px;display:inline-flex;align-items:center;transition:transform 220ms ease" style-hover="transform:translateY(-2px);color:#1D703A">Ver todas las ofertas</a>
       </div>
       <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-        <div style="grid-column:span 2;min-width:0;background:#175c30;border-radius:24px;padding:clamp(26px,3.4vw,42px);display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:280px;position:relative;overflow:hidden">
+        <div style="display:none;grid-column:span 2;min-width:0;background:#175c30;border-radius:24px;padding:clamp(26px,3.4vw,42px);flex-direction:column;justify-content:space-between;gap:26px;min-height:280px;position:relative;overflow:hidden">
           <div>
             <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.75">Tiempo limitado</span>
             <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:clamp(52px,8vw,96px);line-height:0.95;letter-spacing:-0.02em;margin-top:10px">HASTA 20% OFF</div>
@@ -370,13 +374,13 @@
   <section style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="position:relative;border-radius:28px;overflow:hidden;background:#202023;color:#fff;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));min-height:340px">
       <div style="padding:clamp(32px,4.4vw,58px);display:flex;flex-direction:column;justify-content:center;gap:18px">
-        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:#7ec78f">Promoción destacada</span>
-        <h2 style="font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-0.025em;line-height:1.06;margin:0">Equipá tu hogar con SOMAR</h2>
-        <p style="font-size:17.5px;line-height:1.55;color:#c4ccc7;margin:0;max-width:44ch">Encontrá tecnología, comodidad y calidad en un solo lugar.</p>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:#7ec78f">{{ featEyebrow }}</span>
+        <h2 style="font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-0.025em;line-height:1.06;margin:0">{{ featTitle }}</h2>
+        <p style="font-size:17.5px;line-height:1.55;color:#c4ccc7;margin:0;max-width:44ch">{{ featSub }}</p>
         <a href="#productos" onClick="{{ goList }}" style="align-self:flex-start;margin-top:8px;height:54px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">Descubrir productos</a>
       </div>
       <div style="position:relative;min-height:260px" ref="{{ paraRef }}">
-        <image-slot id="somar-promo" src="assets/prod-11.jpg" fit="cover" shape="rect" placeholder="Ambiente de hogar equipado"></image-slot>
+        <image-slot id="somar-promo" src="{{ featImg }}" fit="cover" shape="rect" placeholder="Ambiente de hogar equipado"></image-slot>
       </div>
     </div>
   </section>
@@ -733,6 +737,7 @@
       <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.14em;text-transform:uppercase;color:#7f8c84;margin-bottom:14px">Contacto</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <a href="tel:0975515519" style="color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:21px;transition:color 200ms ease" style-hover="color:#7ec78f">0975 515 519</a>
+        <a href="tel:0971244226" style="color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:21px;transition:color 200ms ease" style-hover="color:#7ec78f">0971 244 226</a>
       </div>
       <div style="display:flex;gap:10px;margin-top:18px">
         <sc-for list="{{ social }}" as="s">
@@ -1044,6 +1049,9 @@ const BRAND_PALETTE = ['#1D703A','#3A8A47'];
 
 // Contenido y configuración: valores embebidos = fallback; se reasignan desde Supabase (Etapa 6).
 let SETTINGS = null;
+// Banners editables desde el admin: { hero, featured_promotion, offers, final_cta, about }.
+// Si un banner no existe o su campo está vacío, se usa el texto/imagen embebido (fallback).
+let BANNERS = {};
 let BENEFITS = ['Productos de calidad', 'Atención personalizada', 'Compra fácil', 'Asesoramiento', 'Entregas coordinadas', 'Atención por WhatsApp'];
 let PURCHASE_STEPS = [
   { n: '1', title: 'Elegí tu producto', text: 'Explorá el catálogo y guardá lo que te interesa en Mi pedido.', accent: '#1D703A', tint: hexToRgba('#1D703A', 0.08), border: hexToRgba('#1D703A', 0.22) },
@@ -1136,6 +1144,7 @@ class Component extends DCLogic {
         if (SETTINGS.whatsapp_secondary === '595971244226') SETTINGS.whatsapp_secondary = '';
         if (!SETTINGS.facebook_url || SETTINGS.facebook_url === 'https://facebook.com') SETTINGS.facebook_url = 'https://www.facebook.com/share/198XbcDP84/';
       }
+      if (b.banners && typeof b.banners === 'object') BANNERS = b.banners;
       if (Array.isArray(b.benefits) && b.benefits.length) BENEFITS = b.benefits.map(x => x.title);
       if (Array.isArray(b.steps) && b.steps.length) PURCHASE_STEPS = b.steps.map(s => {
         const ac = s.accent_color || '#1D703A';
@@ -1472,6 +1481,13 @@ class Component extends DCLogic {
       }).filter(c => c.count > 0),
       current, related: current ? all.filter(p => p.category === current.category && p.id !== current.id).concat(all.filter(p => p.category !== current.category)).slice(0, 4) : [],
       heroPoints: ['Calidad garantizada', 'Atención cercana', 'Entregas coordinadas'],
+      // Banners editables desde el admin (con fallback al texto/imagen embebido) --------
+      heroTitle: (BANNERS.hero && BANNERS.hero.title) || '¡Tu Hogar Merece lo Mejor!',
+      heroSub: (BANNERS.hero && BANNERS.hero.subtitle) || 'Electrodomésticos de Calidad a tu Alcance',
+      featEyebrow: (BANNERS.featured_promotion && BANNERS.featured_promotion.eyebrow) || 'Promoción destacada',
+      featTitle: (BANNERS.featured_promotion && BANNERS.featured_promotion.title) || 'Equipá tu hogar con SOMAR',
+      featSub: (BANNERS.featured_promotion && BANNERS.featured_promotion.subtitle) || 'Encontrá tecnología, comodidad y calidad en un solo lugar.',
+      featImg: (BANNERS.featured_promotion && BANNERS.featured_promotion.image_url) || 'assets/prod-11.jpg',
       benefits: BENEFITS,
       steps: PURCHASE_STEPS,
       brandsList: Array.from(new Set(PRODUCTS.map(p => p.brand))).filter(b => b !== 'Nacional').map((b, i) => { const c = BRAND_PALETTE[i % BRAND_PALETTE.length]; return { name: b, color: c, tint: hexToRgba(c, 0.13) }; }),

@@ -35,6 +35,10 @@
   function mediaUrl(path) {
     if (!path) return '';
     if (/^https?:\/\//.test(path) || /^data:/.test(path)) return path;
+    if (String(path).charAt(0) === '/') return path;
+    // Recursos locales del repo (imágenes semilla): root-absolutos para que
+    // funcionen desde cualquier subcarpeta del admin, no desde Storage.
+    if (String(path).indexOf('assets/') === 0) return '/' + path;
     var base = (cfg.SUPABASE_URL || '').replace(/\/+$/, '');
     return base + '/storage/v1/object/public/' + (cfg.STORAGE_BUCKET || 'somar-media') + '/' + String(path).replace(/^\/+/, '');
   }
@@ -250,7 +254,6 @@
     if (conf.reorder !== false) a += '<button data-act="up" data-id="' + row.id + '" title="Subir">&#8593;</button>' +
       '<button data-act="down" data-id="' + row.id + '" title="Bajar">&#8595;</button>';
     if ('is_active' in row) a += '<button data-act="toggle" data-id="' + row.id + '">' + (row.is_active ? 'Desactivar' : 'Activar') + '</button>';
-    if (conf.duplicate !== false) a += '<button data-act="dup" data-id="' + row.id + '">Duplicar</button>';
     a += '<button data-act="del" data-id="' + row.id + '" class="danger">Eliminar</button>';
     a += '</div></td>';
     return a;
@@ -319,7 +322,10 @@
       q = q.order(conf.orderBy, { ascending: true }).order('id', { ascending: true });
       var r = await q;
       if (r.error) { toast('Error al cargar: ' + r.error.message, 'err'); return; }
-      inst.rows = r.data || []; renderRows();
+      var rows = r.data || [];
+      // Ocultar filas de la lista sin borrarlas de la base (filtro opcional por config).
+      if (typeof conf.hideWhere === 'function') rows = rows.filter(function (row) { return !conf.hideWhere(row); });
+      inst.rows = rows; renderRows();
     }
 
     function openForm(row) {

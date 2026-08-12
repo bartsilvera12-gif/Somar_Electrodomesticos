@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Configuración — Panel SOMAR</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="icon" type="image/png" href="/assets/somar-logo-oval.png">
+<link rel="apple-touch-icon" href="/assets/somar-logo-oval.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
@@ -42,17 +45,14 @@
           fields: [
             { name: 'business_name', label: 'Nombre del negocio', type: 'text', required: true, col: 2 },
             { name: 'slogan', label: 'Slogan', type: 'text', col: 2 },
-            { name: 'logo_url', label: 'Logo', type: 'image' },
-            { name: 'email', label: 'Email de contacto', type: 'text', placeholder: 'ventas@somar.com.py' },
-            { name: 'address', label: 'Dirección', type: 'text', col: 2 },
-            { name: 'footer_text', label: 'Texto del pie de página', type: 'textarea', col: 2 }
+            { name: 'logo_url', label: 'Logo', type: 'image' }
           ]
         },
         {
           title: 'WhatsApp y redes',
           fields: [
-            { name: 'whatsapp_primary', label: 'WhatsApp principal', type: 'text', placeholder: '595971244226', hint: 'Solo números, con código de país (sin + ni espacios).' },
-            { name: 'whatsapp_secondary', label: 'WhatsApp secundario', type: 'text', placeholder: '595975515519' },
+            { name: 'whatsapp_primary', label: 'WhatsApp principal', type: 'text', default: '595975515519', placeholder: '595975515519', hint: 'Solo números, con código de país (sin + ni espacios). Es el número al que llegan los mensajes de WhatsApp del sitio.' },
+            { name: 'whatsapp_secondary', label: 'WhatsApp secundario', type: 'text', default: '595971244226', placeholder: '595971244226' },
             { name: 'facebook_url', label: 'Facebook (URL)', type: 'url', placeholder: 'https://facebook.com/…' },
             { name: 'instagram_url', label: 'Instagram (URL)', type: 'url', placeholder: 'https://instagram.com/…' }
           ]

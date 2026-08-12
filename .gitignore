@@ -1,2 +1,5 @@
 # Config local de desarrollo (no afecta al sitio)
 .claude/
+
+# Carpeta de build para Hostinger (se regenera con: node build.mjs)
+dist/

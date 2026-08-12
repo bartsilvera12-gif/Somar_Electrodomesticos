@@ -29,7 +29,10 @@
   // URL pública de un archivo en el bucket de medios.
   window.SOMAR_MEDIA_URL = function (path) {
     if (!path) return '';
-    if (/^https?:\/\//.test(path) || path.indexOf('assets/') === 0) return path;
+    if (/^https?:\/\//.test(path) || path.charAt(0) === '/') return path;
+    // Recursos locales del repo: root-absolutos para que funcionen desde
+    // cualquier subcarpeta (p. ej. /admin/productos/), no solo la home.
+    if (path.indexOf('assets/') === 0) return '/' + path;
     var base = (cfg.SUPABASE_URL || '').replace(/\/$/, '');
     return base + '/storage/v1/object/public/' + (cfg.STORAGE_BUCKET || 'somar-media') + '/' + path;
   };

@@ -11,8 +11,9 @@
     { key: 'categorias',    href: '/admin/categorias/',   icon: '🗂️', label: 'Categorías' },
     { key: 'marcas',        href: '/admin/marcas/',       icon: '🏷️', label: 'Marcas' },
     { key: 'contenido',     href: '/admin/contenido/',    icon: '📝', label: 'Contenido' },
-    { key: 'testimonios',   href: '/admin/testimonios/',  icon: '⭐', label: 'Testimonios' },
-    { key: 'redes',         href: '/admin/redes/',        icon: '📷', label: 'Redes' },
+    // Ocultos del menú (las páginas siguen existiendo; descomentar para volver a mostrarlos):
+    // { key: 'testimonios',   href: '/admin/testimonios/',  icon: '⭐', label: 'Testimonios' },
+    // { key: 'redes',         href: '/admin/redes/',        icon: '📷', label: 'Redes' },
     { key: 'configuracion', href: '/admin/configuracion/',icon: '⚙️', label: 'Configuración' }
   ];
 

@@ -82,7 +82,6 @@
         '<td>' + status +
           '<div class="actions">' +
           '<button data-act="edit" data-id="' + p.id + '">Editar</button>' +
-          '<button data-act="dup" data-id="' + p.id + '">Duplicar</button>' +
           '<button data-act="toggle" data-id="' + p.id + '">' + (p.is_active ? 'Desactivar' : 'Activar') + '</button>' +
           '<button data-act="del" data-id="' + p.id + '" class="danger">Eliminar</button>' +
           '</div></td>' +
