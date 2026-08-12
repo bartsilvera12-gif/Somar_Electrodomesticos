@@ -7,6 +7,7 @@
 import { rmSync, mkdirSync, cpSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const DIST = join(ROOT, 'dist');
@@ -47,4 +48,16 @@ function dirSize(p) {
 const mb = (dirSize(DIST) / (1024 * 1024)).toFixed(2);
 
 console.log('\n✅ Build listo en dist/ (' + copied + ' items, ' + mb + ' MB)');
-console.log('   Subí el CONTENIDO de dist/ a public_html en Hostinger.');
+
+// Empaquetar el dist en un ZIP listo para subir a Hostinger (extraer en public_html).
+// Usa PowerShell (Windows). Si falla, el dist/ igual queda disponible.
+try {
+  const ZIP = join(ROOT, 'somar-dist.zip');
+  rmSync(ZIP, { force: true });
+  execFileSync('powershell.exe', ['-NoProfile', '-Command',
+    "Compress-Archive -Path 'dist\\*' -DestinationPath 'somar-dist.zip' -Force"],
+    { cwd: ROOT, stdio: 'ignore' });
+  console.log('📦 ZIP listo: somar-dist.zip (subilo a public_html y extraé, sobrescribiendo)');
+} catch (e) {
+  console.log('   (No se pudo crear el ZIP automáticamente; usá la carpeta dist/ directamente)');
+}

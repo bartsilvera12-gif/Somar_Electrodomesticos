@@ -3,3 +3,4 @@
 
 # Carpeta de build para Hostinger (se regenera con: node build.mjs)
 dist/
+somar-dist.zip
