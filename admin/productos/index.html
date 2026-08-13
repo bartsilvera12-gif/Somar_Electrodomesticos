@@ -69,11 +69,11 @@
                 <div class="card-sec">
                   <h3>Información general</h3>
                   <div class="fgrid">
-                    <div class="field col2"><label>Nombre</label><input name="name" type="text" required></div>
+                    <div class="field col2"><label>Nombre *</label><input name="name" type="text" required></div>
                     <div class="field"><label>Slug</label><input name="slug" type="text" placeholder="se-genera-solo"></div>
                     <div class="field"><label>SKU</label><input name="sku" type="text"></div>
-                    <div class="field"><label>Categoría</label><select name="category_id"></select></div>
-                    <div class="field"><label>Marca</label><select name="brand_id"></select></div>
+                    <div class="field"><label>Categoría *</label><select name="category_id" required></select></div>
+                    <div class="field"><label>Marca *</label><select name="brand_id" required></select></div>
                     <div class="field"><label>Color</label><input name="color" type="text" placeholder="Blanco, Negro…"></div>
                   </div>
                 </div>
@@ -117,12 +117,12 @@
               <div>
                 <div class="card-sec">
                   <h3>Precio</h3>
-                  <div class="field"><label>Precio actual (Gs.)</label><input name="price" type="number" min="0" step="1000" required></div>
+                  <div class="field"><label>Precio actual (Gs.) *</label><input name="price" type="number" min="0" step="1000" required></div>
                   <div class="field"><label>Precio anterior (oferta)</label><input name="previous_price" type="number" min="0" step="1000"></div>
                 </div>
                 <div class="card-sec">
                   <h3>Inventario</h3>
-                  <div class="field"><label>Stock</label><input name="stock" type="number" min="0" value="0"></div>
+                  <div class="field"><label>Stock *</label><input name="stock" type="number" min="0" required></div>
                 </div>
                 <div class="card-sec">
                   <h3>Visibilidad</h3>

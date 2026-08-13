@@ -310,6 +310,10 @@
     var f = document.forms.productForm;
     var name = f.name.value.trim();
     if (!name) { toast('El nombre es obligatorio.', 'err'); return; }
+    if (!f.category_id.value) { toast('Elegí una categoría.', 'err'); f.category_id.focus(); return; }
+    if (!f.brand_id.value) { toast('Elegí una marca.', 'err'); f.brand_id.focus(); return; }
+    if (f.price.value === '' || Number(f.price.value) <= 0) { toast('Ingresá un precio mayor a 0.', 'err'); f.price.focus(); return; }
+    if (f.stock.value === '') { toast('Ingresá el stock (puede ser 0).', 'err'); f.stock.focus(); return; }
     if (state.images.some(function (x) { return x._status === 'processing'; })) { toast('Esperá a que terminen de procesarse las imágenes.', 'err'); return; }
     if (state.images.some(function (x) { return x._status === 'error'; })) { toast('Hay imágenes con error: reintentá o elegí "Usar original".', 'err'); return; }
     var slug = f.slug.value.trim() || slugify(name);
