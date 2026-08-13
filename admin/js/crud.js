@@ -175,7 +175,7 @@
       if (im.file) {
         var ext = (im.file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
         var path = inst.table + '/' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '.' + ext;
-        var up = await inst.sb.storage.from(cfg.STORAGE_BUCKET || 'somar-media').upload(path, im.file, { contentType: im.file.type });
+        var up = await window.SOMAR_STORAGE.upload(path, im.file);
         if (up.error) throw up.error;
         payload[f.name] = path;
       } else if (im.cleared) { payload[f.name] = null; }

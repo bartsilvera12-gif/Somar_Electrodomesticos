@@ -358,7 +358,7 @@
       if (state.removedImageIds.length) await sb.from('product_images').delete().in('id', state.removedImageIds);
       // Borrar también los archivos de Storage de las imágenes quitadas (evita huérfanos).
       if (state.removedPaths.length) {
-        try { await sb.storage.from(cfg.STORAGE_BUCKET || 'somar-media').remove(state.removedPaths.slice()); }
+        try { await window.SOMAR_STORAGE.remove(state.removedPaths.slice()); }
         catch (e) { console.warn('[SOMAR] no se pudieron borrar archivos de Storage:', e && (e.message || e)); }
         state.removedPaths = [];
       }
@@ -403,7 +403,7 @@
       if (im._file) {
         var ext = (im._file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
         var path = 'products/' + productId + '/' + Date.now() + '-' + i + '.' + ext;
-        var up = await sb.storage.from(cfg.STORAGE_BUCKET || 'somar-media').upload(path, im._file, { upsert: false, contentType: im._file.type });
+        var up = await window.SOMAR_STORAGE.upload(path, im._file);
         if (up.error) throw up.error;
         var rec = await sb.from('product_images').insert({
           product_id: productId, image_url: path, storage_path: path,

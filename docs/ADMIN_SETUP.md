@@ -132,6 +132,38 @@ site/...
 social/...
 ```
 
+### 6.1 Subida de imágenes vía `/api/upload.php`
+
+El servicio de Storage de `api.neura.com.py` **no devuelve headers CORS** en
+`/storage/v1/*`. Por eso el navegador bloqueaba el preflight y el panel fallaba
+con `No se pudo guardar: Failed to fetch` al subir una imagen nueva.
+
+El panel ya no sube directo a Storage. Sube a **`/api/upload.php`** (mismo
+origen que el sitio, así que CORS no aplica) y ese archivo reenvía el archivo a
+Storage **desde el servidor** — una llamada servidor↔servidor no tiene CORS.
+
+```
+navegador ──► somarelectropy.com/api/upload.php ──► api.neura.com.py/storage/v1/...
+              (mismo origen, sin CORS)              (servidor↔servidor, sin CORS)
+```
+
+- **No hay secretos en `api/upload.php`.** Se reenvía el JWT del admin logueado,
+  así que la policy `somar_media_admin_write` (`is_admin()`) sigue decidiendo
+  quién puede escribir. La `SERVICE_ROLE_KEY` no se usa ni se guarda ahí.
+- Valida el tipo real del archivo (no el declarado), el tamaño (máx. 10 MB) y
+  bloquea path traversal.
+- **Requiere PHP con cURL** (Hostinger lo trae por defecto).
+- **La carpeta `api/` tiene que subirse al hosting.** `build.mjs` ya la incluye
+  en el `dist/`.
+- Si `api/upload.php` no está en el servidor, el panel vuelve a intentar la
+  subida directa (que fallará mientras Storage no tenga CORS).
+
+**Si algún día NEURA configura CORS en `/storage/v1/*`**, este rodeo deja de ser
+necesario: poner `PROXY_ENDPOINT = null` en `admin/js/storage.js` y todo vuelve
+a ir directo a Storage, sin tocar nada más.
+
+---
+
 Migrar las fotos actuales (`assets/prod-*.jpg`) al bucket es opcional: por ahora
 `product_images.image_url` apunta a `assets/prod-N.jpg` (siguen funcionando).
 Al subir nuevas desde el panel, se guardan en Storage y se actualiza la URL.
