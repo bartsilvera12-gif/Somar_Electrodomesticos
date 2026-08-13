@@ -278,6 +278,7 @@
       if (state.images.indexOf(im) < 0) { URL.revokeObjectURL(res.previewUrl); return; }  // eliminado durante el proceso
       if (im._localUrl) URL.revokeObjectURL(im._localUrl);
       im._file = res.file; im._localUrl = res.previewUrl; im._bgRemoved = true; im._status = 'ready';
+      im._uploadedPath = null;   // cambió el archivo: hay que volver a subirlo
     } catch (err) {
       console.warn('[SOMAR] bg-removal falló:', err && (err.message || err));
       im._status = 'error';   // el original queda como fallback (Usar original)
@@ -300,6 +301,7 @@
       if (im._localUrl) { try { URL.revokeObjectURL(im._localUrl); } catch (e) {} }
       im._file = im._originalFile; im._localUrl = URL.createObjectURL(im._originalFile);
       im._bgRemoved = false; im._status = 'ready';
+      im._uploadedPath = null;   // cambió el archivo: hay que volver a subirlo
     }
     renderImages();
   }
@@ -331,6 +333,12 @@
     };
     var saveBtn = $('#saveBtn'); busy(saveBtn, true, 'Guardar producto');
     try {
+      // Las imágenes se suben ANTES de tocar la base. Si la subida falla,
+      // no queda un producto creado a medias que el admin vuelve a cargar
+      // (y termina duplicado). El path no depende del id: usa el slug, que
+      // ya se conoce acá.
+      await uploadNewImages(slug);
+
       var id = state.editing ? state.editing.id : null;
       if (id) {
         var up = await sb.from('products').update(payload).eq('id', id);
@@ -358,8 +366,9 @@
       if (state.removedImageIds.length) await sb.from('product_images').delete().in('id', state.removedImageIds);
       // Borrar también los archivos de Storage de las imágenes quitadas (evita huérfanos).
       if (state.removedPaths.length) {
-        try { await window.SOMAR_STORAGE.remove(state.removedPaths.slice()); }
-        catch (e) { console.warn('[SOMAR] no se pudieron borrar archivos de Storage:', e && (e.message || e)); }
+        // No es crítico: si falla, solo quedan archivos huérfanos en el bucket.
+        var del = await window.SOMAR_STORAGE.remove(state.removedPaths.slice());
+        if (del.error) console.warn('[SOMAR] no se pudieron borrar archivos de Storage:', del.error.message);
         state.removedPaths = [];
       }
       await syncImages(id);
@@ -397,21 +406,37 @@
     return out;
   }
 
+  // Sube a Storage las imágenes nuevas del formulario y deja el path en
+  // im._uploadedPath. Se llama antes de escribir en la base.
+  // Las que ya se subieron en un intento anterior se saltean, así un
+  // reintento después de un error no deja copias huérfanas en el bucket.
+  async function uploadNewImages(slug) {
+    var folder = 'products/' + (slug || 'producto');
+    var stamp = Date.now();
+    for (var i = 0; i < state.images.length; i++) {
+      var im = state.images[i];
+      if (!im._file || im._uploadedPath) continue;
+      var ext = (im._file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+      var path = folder + '/' + stamp + '-' + i + '.' + ext;
+      var up = await window.SOMAR_STORAGE.upload(path, im._file);
+      if (up.error) throw up.error;
+      im._uploadedPath = (up.data && up.data.path) || path;
+    }
+  }
+
+  // Escribe las filas de product_images. Las imágenes ya están en Storage.
   async function syncImages(productId) {
     for (var i = 0; i < state.images.length; i++) {
       var im = state.images[i];
-      if (im._file) {
-        var ext = (im._file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-        var path = 'products/' + productId + '/' + Date.now() + '-' + i + '.' + ext;
-        var up = await window.SOMAR_STORAGE.upload(path, im._file);
-        if (up.error) throw up.error;
+      if (im._uploadedPath) {
         var rec = await sb.from('product_images').insert({
-          product_id: productId, image_url: path, storage_path: path,
+          product_id: productId, image_url: im._uploadedPath, storage_path: im._uploadedPath,
           is_primary: !!im.is_primary, display_order: i
         });
         if (rec.error) throw rec.error;
       } else if (im.id) {
-        await sb.from('product_images').update({ is_primary: !!im.is_primary, display_order: i }).eq('id', im.id);
+        var upd = await sb.from('product_images').update({ is_primary: !!im.is_primary, display_order: i }).eq('id', im.id);
+        if (upd.error) throw upd.error;
       }
     }
   }

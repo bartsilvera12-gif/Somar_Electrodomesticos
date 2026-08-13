@@ -123,14 +123,20 @@ La migración crea el bucket público `somar-media` con políticas:
 - **Lectura pública** de los objetos.
 - **Escritura/borrado** solo para administradores (`is_admin()`).
 
-Organización sugerida de paths:
+Organización de paths:
 ```
-products/{product-id}/{timestamp}-nombre.webp
-categories/...
+products/{slug}/{timestamp}-{n}.webp
+categories/{timestamp}-{rand}.webp
 brands/...
 site/...
 social/...
 ```
+
+> Los productos se agrupan por **slug**, no por id: las imágenes se suben
+> *antes* de insertar el producto (para no dejar productos a medio crear si la
+> subida falla), y en ese momento el id todavía no existe. El path real de cada
+> archivo queda guardado en `product_images.storage_path`, así que renombrar un
+> producto después no afecta a las imágenes ya subidas.
 
 ### 6.1 Subida de imágenes vía `/api/upload.php`
 
