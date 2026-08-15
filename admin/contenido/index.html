@@ -44,8 +44,8 @@
           table: 'banners',
           singular: 'banner',
           search: 'title',
-          // Oculta de la lista el banner de ofertas ("HASTA 20% OFF") sin borrarlo de la base.
-          hideWhere: function (r) { return r.type === 'offers'; },
+          // Oculta de la lista los banners que la web pública no muestra (quedan en la base).
+          hideWhere: function (r) { return ['offers', 'final_cta', 'about'].indexOf(r.type) !== -1; },
           columns: [
             { field: 'title', label: 'Banner', type: 'primary', sub: 'type' },
             { field: 'image_url', label: 'Imagen', type: 'thumb', width: '60px' },
@@ -55,18 +55,14 @@
             { name: 'type', label: 'Ubicación / tipo', type: 'select', optional: false, required: true, default: 'hero',
               options: [
                 { value: 'hero', label: 'Hero (portada principal)' },
-                { value: 'featured_promotion', label: 'Promoción destacada' },
-                { value: 'offers', label: 'Ofertas' },
-                { value: 'final_cta', label: 'Llamado final (CTA)' },
-                { value: 'about', label: 'Sobre SOMAR' }
+                { value: 'featured_promotion', label: 'Promoción destacada' }
               ] },
-            { name: 'eyebrow', label: 'Etiqueta superior (eyebrow)', type: 'text' },
+            { name: 'eyebrow', label: 'Etiqueta superior (eyebrow)', type: 'text', hint: 'Se muestra solo en "Promoción destacada".' },
             { name: 'title', label: 'Título', type: 'text', col: 2 },
             { name: 'subtitle', label: 'Subtítulo', type: 'textarea', col: 2 },
-            { name: 'image_url', label: 'Imagen', type: 'image' },
-            { name: 'cta_label', label: 'Texto del botón', type: 'text' },
-            { name: 'cta_url', label: 'Enlace del botón', type: 'url', placeholder: 'https://…' },
-            { name: 'theme', label: 'Tema / color (opcional)', type: 'text', hint: 'Ej: verde, oscuro…' },
+            { name: 'image_url', label: 'Imagen', type: 'image', hint: 'Hero: imagen derecha de la portada. Promoción destacada: imagen del bloque.' },
+            { name: 'cta_label', label: 'Texto del botón', type: 'text', placeholder: 'Ver productos' },
+            { name: 'theme', label: 'Puntos del Hero (separá con | )', type: 'text', col: 2, hint: 'Ej: Calidad garantizada | Atención cercana | Entregas coordinadas. Solo se usa en el Hero.' },
             { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
             { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
           ]
@@ -79,12 +75,10 @@
           singular: 'beneficio',
           columns: [
             { field: 'title', label: 'Beneficio', type: 'primary' },
-            { field: 'icon', label: 'Icono', type: 'icon' },
             { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
           ],
           fields: [
             { name: 'title', label: 'Título', type: 'text', required: true, col: 2 },
-            { name: 'icon', label: 'Icono', type: 'text', placeholder: 'Emoji o símbolo', hint: 'Se muestra junto al beneficio.' },
             { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
             { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
           ]
