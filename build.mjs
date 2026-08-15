@@ -54,9 +54,11 @@ console.log('\n✅ Build listo en dist/ (' + copied + ' items, ' + mb + ' MB)');
 try {
   const ZIP = join(ROOT, 'somar-dist.zip');
   rmSync(ZIP, { force: true });
-  execFileSync('powershell.exe', ['-NoProfile', '-Command',
-    "Compress-Archive -Path 'dist\\*' -DestinationPath 'somar-dist.zip' -Force"],
-    { cwd: ROOT, stdio: 'ignore' });
+  // bsdtar genera ZIP con separadores "/" (Compress-Archive usa "\" y los
+  // extractores Linux, como el de Hostinger, lo desarman como archivos sueltos).
+  execFileSync('C:\\Windows\\System32\\tar.exe',
+    ['-a', '-cf', join(ROOT, 'somar-dist.zip')].concat(INCLUDE.filter(i => existsSync(join(DIST, i)))),
+    { cwd: DIST, stdio: 'ignore' });
   // Copia dentro de dist/ para tener todo lo subible en una sola carpeta.
   cpSync(join(ROOT, 'somar-dist.zip'), join(DIST, 'somar-dist.zip'));
   console.log('📦 ZIP listo: somar-dist.zip (también en dist/). Subilo a public_html y extraé.');
