@@ -57,7 +57,9 @@ try {
   execFileSync('powershell.exe', ['-NoProfile', '-Command',
     "Compress-Archive -Path 'dist\\*' -DestinationPath 'somar-dist.zip' -Force"],
     { cwd: ROOT, stdio: 'ignore' });
-  console.log('📦 ZIP listo: somar-dist.zip (subilo a public_html y extraé, sobrescribiendo)');
+  // Copia dentro de dist/ para tener todo lo subible en una sola carpeta.
+  cpSync(join(ROOT, 'somar-dist.zip'), join(DIST, 'somar-dist.zip'));
+  console.log('📦 ZIP listo: somar-dist.zip (también en dist/). Subilo a public_html y extraé.');
 } catch (e) {
   console.log('   (No se pudo crear el ZIP automáticamente; usá la carpeta dist/ directamente)');
 }
