@@ -264,6 +264,9 @@
             <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
           </sc-if>
           <button onClick="{{ p.fav }}" aria-label="Favorito" style="position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:99px;border:1px solid #e8eee9;background:rgba(255,255,255,0.94);cursor:pointer;display:grid;place-items:center;font-size:15px;line-height:1;color:{{ p.favColor }};transition:transform 200ms ease" style-hover="transform:scale(1.12)">♥</button>
+          <button onClick="{{ p.share }}" aria-label="Compartir" title="Compartir" style="position:absolute;top:10px;right:50px;width:34px;height:34px;border-radius:99px;border:1px solid #e8eee9;background:rgba(255,255,255,0.94);cursor:pointer;display:grid;place-items:center;color:#55605a;transition:transform 200ms ease,color 200ms ease" style-hover="transform:scale(1.12);color:#1D703A">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line><line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line></svg>
+          </button>
           <div style="padding:16px;display:flex;flex-direction:column;gap:6px;flex:1">
             <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
             <h3 style="font-size:16.5px;font-weight:700;line-height:1.32;margin:0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
@@ -354,6 +357,9 @@
             <div class="prod-media" style="height:190px;flex:none;cursor:pointer;padding:12px" onClick="{{ p.open }}">
               <image-slot id="{{ p.slotB }}" src="{{ p.image }}" shape="rect" fit="contain" placeholder="{{ p.name }}"></image-slot>
             </div>
+            <button onClick="{{ p.share }}" aria-label="Compartir" title="Compartir" style="position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:99px;border:1px solid #e8eee9;background:rgba(255,255,255,0.94);cursor:pointer;display:grid;place-items:center;color:#55605a;transition:transform 200ms ease,color 200ms ease" style-hover="transform:scale(1.12);color:#1D703A">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line><line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line></svg>
+            </button>
             <div style="padding:16px;flex:1;display:flex;flex-direction:column">
               <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
               <h3 style="font-size:16px;font-weight:700;line-height:1.32;margin:6px 0 0;cursor:pointer;min-height:42px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden" onClick="{{ p.open }}">{{ p.name }}</h3>
@@ -565,6 +571,9 @@
               <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
                 <span style="position:absolute;top:12px;left:12px;background:#1D703A;color:#fff;font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase;padding:5px 11px;border-radius:99px">{{ p.badge }}</span>
               </sc-if>
+              <button onClick="{{ p.share }}" aria-label="Compartir" title="Compartir" style="position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:99px;border:1px solid #e8eee9;background:rgba(255,255,255,0.94);cursor:pointer;display:grid;place-items:center;color:#55605a;transition:transform 200ms ease,color 200ms ease" style-hover="transform:scale(1.12);color:#1D703A">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line><line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line></svg>
+              </button>
               <div style="padding:16px;display:flex;flex-direction:column;gap:5px;flex:1">
                 <div style="font-family:'Roboto Condensed',sans-serif;font-size:13.5px;letter-spacing:0.1em;text-transform:uppercase;color:#8b958f">{{ p.brand }}</div>
                 <h3 style="font-size:16px;font-weight:700;line-height:1.32;margin:0;cursor:pointer" onClick="{{ p.open }}">{{ p.name }}</h3>
@@ -611,15 +620,17 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,56px)">
     <div>
       <div class="prod-media" style="border-radius:24px;overflow:hidden;aspect-ratio:4/3;border:1px solid #eef3ef;padding:18px">
-        <image-slot id="{{ current.slotD }}" src="{{ current.image }}" shape="rect" fit="contain" placeholder="{{ current.name }}"></image-slot>
+        <image-slot id="{{ current.slotD }}" src="{{ current.imageD }}" shape="rect" fit="contain" placeholder="{{ current.name }}"></image-slot>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
-        <sc-for list="{{ current.gallery }}" as="g" hint-placeholder-count="4">
-          <div class="prod-media" style="aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid #eef3ef;padding:6px">
-            <image-slot id="{{ g }}" shape="rect" placeholder="Vista"></image-slot>
-          </div>
-        </sc-for>
-      </div>
+      <sc-if value="{{ current.hasGallery }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">
+          <sc-for list="{{ current.galleryImgs }}" as="g" hint-placeholder-count="4">
+            <button onClick="{{ g.go }}" class="prod-media" aria-label="Ver imagen" style="aspect-ratio:1;border-radius:14px;overflow:hidden;border:2px solid {{ g.border }};padding:6px;cursor:pointer;background:#fff;transition:border-color 180ms ease">
+              <image-slot id="{{ g.slot }}" src="{{ g.src }}" shape="rect" fit="contain" placeholder="Vista"></image-slot>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
     </div>
     <div>
       <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f">{{ current.brand }}</div>
@@ -675,6 +686,9 @@
           Consultar por WhatsApp
         </a>
         <button onClick="{{ current.add }}" style="height:56px;padding:0 28px;border-radius:99px;border:1.5px solid #202023;background:#fff;color:#202023;font-family:'Lato',sans-serif;font-weight:900;font-size:16px;cursor:pointer;transition:border-color 220ms ease,color 220ms ease" style-hover="border-color:#1D703A;color:#1D703A">Agregar al pedido</button>
+        <button onClick="{{ current.share }}" aria-label="Compartir producto" title="Compartir" style="height:56px;width:56px;flex:none;border-radius:99px;border:1.5px solid #e2eae4;background:#fff;color:#202023;cursor:pointer;display:inline-grid;place-items:center;transition:border-color 220ms ease,color 220ms ease" style-hover="border-color:#1D703A;color:#1D703A">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line><line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line></svg>
+        </button>
       </div>
       <div style="margin-top:30px;border-top:1px solid #eef3ef;padding-top:24px">
         <div style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f;margin-bottom:12px">Características</div>
@@ -1092,6 +1106,13 @@ class Component extends DCLogic {
     } catch (e) {}
     this.onResize = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this.onResize);
+    // Enlaces directos a producto (#/producto/slug): al cargar y al navegar (atrás/adelante).
+    this.onHashChange = () => {
+      if (this._silentHash) { this._silentHash = false; return; }
+      if (!this.applyHash() && this.state.view === 'detalle' && !/^#\/producto\//.test(location.hash)) this.go(this._returnTo || 'home');
+    };
+    window.addEventListener('hashchange', this.onHashChange);
+    this.applyHash();
     this.onScroll = () => {
       const y = window.scrollY;
       const h = this.headerRef.current, l = this.logoRef.current;
@@ -1156,6 +1177,7 @@ class Component extends DCLogic {
       }));
       if (Array.isArray(b.stats) && b.stats.length) STATS = b.stats.map(x => ({ v: x.value, l: x.label }));
       this.setState({ remoteLoaded: true }); // re-render con datos de Supabase
+      this.applyHash(); // enlaces compartidos a productos que solo existen en la base
     } catch (e) {
       console.warn('[SOMAR] Usando datos embebidos (Supabase no disponible):', e && e.message);
     }
@@ -1182,6 +1204,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('hashchange', this.onHashChange);
     if (this.io) this.io.disconnect();
     if (this.meshRAF) window.cancelAnimationFrame(this.meshRAF);
   }
@@ -1273,7 +1296,34 @@ class Component extends DCLogic {
     this._t = setTimeout(() => this.setState({ toast: null }), 2200);
   }
   top() { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }); }
-  go(view, slug) { if (view === 'detalle' && this.state.view !== 'detalle') this._returnTo = this.state.view; this.setState({ view, slug: slug || null, menuOpen: false, cuotasOpen: false, selectedCuota: null }); this.top(); }
+  go(view, slug) {
+    if (view === 'detalle' && this.state.view !== 'detalle') this._returnTo = this.state.view;
+    this.setState({ view, slug: slug || null, menuOpen: false, cuotasOpen: false, selectedCuota: null, detailImg: null });
+    // URL compartible por producto (#/producto/slug) sin romper los anclajes (#productos, etc.)
+    const want = (view === 'detalle' && slug) ? '#/producto/' + encodeURIComponent(slug) : '';
+    if (want) { if (location.hash !== want) { this._silentHash = true; location.hash = want; } }
+    else if (/^#\/producto\//.test(location.hash)) { history.replaceState(null, '', location.pathname + location.search); }
+    this.top();
+  }
+  productUrl(p) { return location.origin + location.pathname + '#/producto/' + encodeURIComponent(p.slug); }
+  async shareProduct(p) {
+    const url = this.productUrl(p);
+    const text = p.name + ' — ' + this.fmt(p.price);
+    if (navigator.share) {
+      try { await navigator.share({ title: p.name, text: text, url: url }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(text + ' ' + url); this.toast('Enlace copiado para compartir 📋'); }
+    catch (e) { window.open('https://wa.me/?text=' + encodeURIComponent(text + ' ' + url), '_blank', 'noopener'); }
+  }
+  applyHash() {
+    const m = (location.hash || '').match(/^#\/producto\/(.+)$/);
+    if (!m) return false;
+    const slug = decodeURIComponent(m[1]);
+    const p = PRODUCTS.find(x => x.slug === slug);
+    if (p) { if (this.state.view !== 'detalle' || this.state.slug !== slug) this.go('detalle', slug); return true; }
+    return false;
+  }
   goBack() { this.go(this._returnTo || 'productos'); }
   goFilter(cat, brand, color) {
     this.setState({ cat: cat || 'Todas', brand: brand || 'Todas', color: color || 'Todos', q: '', catMenuOpen: false, menuOpen: false });
@@ -1294,10 +1344,23 @@ class Component extends DCLogic {
   decorate(p, prefix) {
     const disc = p.previousPrice ? Math.round((1 - p.price / p.previousPrice) * 100) : null;
     const fav = this.state.favs.includes(p.id);
+    // Galería: URLs reales del producto (Supabase trae p.gallery; embebido no).
+    const mainImg = p.image || PRODUCT_IMAGES[p.id] || '';
+    const gUrls = (Array.isArray(p.gallery) ? p.gallery.filter(Boolean) : []);
+    if (!gUrls.length && mainImg) gUrls.push(mainImg);
+    const selImg = (this.state.detailImg && gUrls.includes(this.state.detailImg)) ? this.state.detailImg : mainImg;
     return {
       ...p,
       slot: 'prod-' + p.id, slotB: 'best-' + p.id, slotL: 'list-' + p.id, slotR: 'rel-' + p.id, slotD: 'det-' + p.id, slotC: 'cart-' + p.id, slotF: 'fav-' + p.id,
-      image: p.image || PRODUCT_IMAGES[p.id] || '',
+      image: mainImg,
+      imageD: selImg,
+      hasGallery: gUrls.length > 1,
+      galleryImgs: gUrls.slice(0, 8).map((u, i) => ({
+        slot: 'gal-' + p.id + '-' + i, src: u,
+        border: u === selImg ? '#1D703A' : '#eef3ef',
+        go: () => this.setState({ detailImg: u })
+      })),
+      share: (e) => { if (e) e.stopPropagation(); this.shareProduct(p); },
       priceFmt: this.fmt(p.price),
       prevFmt: p.previousPrice ? this.fmt(p.previousPrice) : null,
       cuotasFmt: this.cuotaPlans(p.price, p.rate, p.cuotasFix, p.maxCuotas),
@@ -1307,7 +1370,6 @@ class Component extends DCLogic {
       stockLabel: p.stock === 0 ? 'Sin stock — consultanos' : (p.stock <= 3 ? 'Últimas ' + p.stock + ' unidades' : 'Disponible'),
       stockColor: p.stock === 0 ? '#b0433a' : (p.stock <= 3 ? '#b07a1f' : '#3A8A47'),
       favColor: fav ? '#1D703A' : '#c9d2cc',
-      gallery: [1, 2, 3, 4].map(n => 'gal-' + p.id + '-' + n),
       waLink: this.wa('Hola SOMAR, estoy interesado/a en el producto: ' + p.name + '.'),
       open: () => this.go('detalle', p.slug),
       add: () => this.add(p),
