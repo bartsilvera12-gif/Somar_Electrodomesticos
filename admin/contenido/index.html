@@ -104,25 +104,8 @@
             { name: 'is_active', label: 'Activo (visible en la web)', type: 'checkbox', default: true }
           ]
         }
-      },
-      {
-        label: 'Estadísticas',
-        config: {
-          table: 'stats',
-          singular: 'estadística',
-          columns: [
-            { field: 'value', label: 'Valor', type: 'primary' },
-            { field: 'label', label: 'Etiqueta', type: 'text' },
-            { field: 'display_order', label: 'Orden', type: 'order', width: '70px' }
-          ],
-          fields: [
-            { name: 'value', label: 'Valor (ej: +500, 10 años)', type: 'text', required: true },
-            { name: 'label', label: 'Etiqueta (ej: Clientes felices)', type: 'text', required: true },
-            { name: 'display_order', label: 'Orden', type: 'number', default: 0 },
-            { name: 'is_active', label: 'Activa (visible en la web)', type: 'checkbox', default: true }
-          ]
-        }
       }
+      // "Estadísticas" oculto: el bloque de stats de la web está display:none (no se muestra).
     ]);
   </script>
 </body>
