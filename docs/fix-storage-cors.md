@@ -6,6 +6,28 @@
 
 ---
 
+> ## ⚠️ Estado: el panel ya NO depende de este arreglo
+>
+> Las subidas del panel **funcionan** sin tocar `api.neura.com.py`: el navegador
+> ya no sube directo a Storage, sube a `/api/upload.php` (mismo origen, así que
+> CORS no aplica) y ese archivo reenvía a Storage **desde el servidor**, donde
+> CORS no existe. Ver `ADMIN_SETUP.md` §6.1.
+>
+> Este documento **sigue vigente igual**: el rodeo agrega un salto extra en cada
+> subida y cualquier otro cliente que quiera hablar con Storage desde un
+> navegador va a chocar con lo mismo. Cuando NEURA aplique el fix, se saca el
+> rodeo poniendo `PROXY_ENDPOINT = null` en `admin/js/storage.js`.
+>
+> **Nota para quien aplique el fix:** la lista de headers de abajo es exacta y
+> hay que respetarla completa. Si falta `x-upsert` o `x-client-info` en
+> `Access-Control-Allow-Headers`, el preflight se sigue rechazando aunque
+> `Access-Control-Allow-Origin` esté bien puesto. Y el `OPTIONS` tiene que
+> resolverse **antes** de la autenticación: el navegador no manda `apikey` en
+> el preflight, así que si `key-auth` corre primero responde 401 sin headers
+> CORS y el síntoma es idéntico.
+
+---
+
 ## Resumen
 
 Desde el panel admin, al **guardar un producto/categoría con imagen**, la subida a Supabase Storage
