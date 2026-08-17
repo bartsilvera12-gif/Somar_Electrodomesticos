@@ -415,6 +415,11 @@
   // Las que ya se subieron en un intento anterior se saltean, así un
   // reintento después de un error no deja copias huérfanas en el bucket.
   async function uploadNewImages(slug) {
+    if (!window.SOMAR_STORAGE) {
+      // Copia vieja del panel en el hosting (falta admin/js/storage.js).
+      throw new Error('El panel del servidor está desactualizado: falta ' +
+        'admin/js/storage.js. Volvé a subir la carpeta admin/ del build.');
+    }
     var folder = 'products/' + (slug || 'producto');
     var stamp = Date.now();
     for (var i = 0; i < state.images.length; i++) {

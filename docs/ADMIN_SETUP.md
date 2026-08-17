@@ -168,6 +168,27 @@ navegador ──► somarelectropy.com/api/upload.php ──► api.neura.com.py
 necesario: poner `PROXY_ENDPOINT = null` en `admin/js/storage.js` y todo vuelve
 a ir directo a Storage, sin tocar nada más.
 
+### 6.2 Verificar el deploy: `node check-deploy.mjs`
+
+El extractor de ZIP de Hostinger **no sobrescribe carpetas que ya existen**.
+Pasó una vez: se subió el build y quedó `api/` nueva pero `admin/` vieja. El
+panel entonces no cargaba `storage.js`, subía directo a Storage y fallaba con
+`Failed to fetch` — un error que no dice nada sobre el deploy.
+
+Después de cada subida al hosting:
+
+```
+node check-deploy.mjs
+```
+
+Compara el tamaño de cada `.html`/`.js` de `dist/` contra lo que sirve el
+servidor y lista lo que quedó viejo o falta. Sale con código 1 si hay algo
+desactualizado. También detecta el caso silencioso en que Hostinger devuelve la
+**portada con status 200** para una ruta que no existe.
+
+**Para forzar el reemplazo:** renombrar la carpeta en `public_html` (ej.
+`admin` → `admin_old`) antes de extraer el ZIP, y borrarla una vez verificado.
+
 ---
 
 Migrar las fotos actuales (`assets/prod-*.jpg`) al bucket es opcional: por ahora

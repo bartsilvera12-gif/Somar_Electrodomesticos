@@ -24,6 +24,12 @@
   var AUTH = window.SOMAR_AUTH;
   var cfg = window.SOMAR_CONFIG || {};
 
+  // Si el hosting quedó con una copia vieja del panel (típico: se extrajo el
+  // build sin sobrescribir admin/), falta storage.js y las subidas fallarían
+  // con un error de CORS ilegible. Mejor decir exactamente qué pasa.
+  var STALE_PANEL_MSG = 'El panel del servidor está desactualizado: falta ' +
+    'admin/js/storage.js. Volvé a subir la carpeta admin/ del build.';
+
   // ---- helpers -------------------------------------------------------
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -183,6 +189,7 @@
     return true;
   }
   async function uploadImages(inst, fields, payload) {
+    if (!window.SOMAR_STORAGE) throw new Error(STALE_PANEL_MSG);
     for (var i = 0; i < fields.length; i++) {
       var f = fields[i]; if (f.type !== 'image') continue;
       var im = inst.images[f.name] || {};

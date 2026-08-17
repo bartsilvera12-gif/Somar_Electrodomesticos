@@ -20,7 +20,6 @@
   var PROXY_ENDPOINT = '/api/upload.php';
 
   var cfg = window.SOMAR_CONFIG || {};
-  var proxyMissing = false; // se marca en true si el hosting no tiene el proxy
 
   function bucket() { return cfg.STORAGE_BUCKET || 'somar-media'; }
 
@@ -37,10 +36,13 @@
 
   function err(msg) { return { data: null, error: { message: msg } }; }
 
-  // Lee la respuesta del proxy. Distingue "el proxy no está" de "el proxy
-  // respondió un error", porque la acción a tomar es distinta.
+  // Lee la respuesta del proxy. El 404 se trata aparte: NO se reintenta la
+  // subida directa (que fallaría con un CORS ilegible), se dice qué falta.
   async function readProxy(res) {
-    if (res.status === 404) { proxyMissing = true; return null; }
+    if (res.status === 404) {
+      throw new Error('Falta /api/upload.php en el servidor. Subí la carpeta ' +
+        'api/ del build al hosting y volvé a intentar.');
+    }
     var body = null;
     try { body = await res.json(); } catch (e) { /* respuesta no-JSON */ }
     if (!res.ok || !body || body.ok !== true) {
@@ -64,7 +66,7 @@
       var token = await accessToken();
       if (!token) return err('Tu sesión expiró. Volvé a iniciar sesión para subir imágenes.');
 
-      if (PROXY_ENDPOINT && !proxyMissing) {
+      if (PROXY_ENDPOINT) {
         try {
           var fd = new FormData();
           fd.append('action', 'upload');
@@ -78,7 +80,7 @@
             headers: { 'Authorization': 'Bearer ' + token }
           });
           var body = await readProxy(res);
-          if (body) return { data: { path: body.path || path }, error: null };
+          return { data: { path: body.path || path }, error: null };
         } catch (e) {
           // Un TypeError acá es red/DNS del propio sitio, no CORS.
           if (e instanceof TypeError) {
@@ -88,7 +90,8 @@
         }
       }
 
-      // Fallback: subida directa (solo funciona si Storage tiene CORS).
+      // Camino directo: solo si alguien puso PROXY_ENDPOINT = null a mano,
+      // es decir cuando Storage ya tiene CORS configurado.
       var sb = sbClient();
       if (!sb) return err('Supabase no está inicializado.');
       var up = await sb.storage.from(bucket())
@@ -108,7 +111,7 @@
       var token = await accessToken();
       if (!token) return err('Sesión expirada.');
 
-      if (PROXY_ENDPOINT && !proxyMissing) {
+      if (PROXY_ENDPOINT) {
         try {
           var fd = new FormData();
           fd.append('action', 'delete');
@@ -120,8 +123,8 @@
             body: fd,
             headers: { 'Authorization': 'Bearer ' + token }
           });
-          var body = await readProxy(res);
-          if (body) return { data: null, error: null };
+          await readProxy(res);
+          return { data: null, error: null };
         } catch (e) {
           return err(e.message || String(e));
         }
