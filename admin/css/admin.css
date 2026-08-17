@@ -196,10 +196,16 @@ select.inp{ padding-right:8px; cursor:pointer; }
 .tabpanel{ display:none; }
 .tabpanel.active{ display:block; }
 
-/* Campo de color con muestra en vivo */
+/* Campo de color: selector nativo + hex + paleta de la marca */
 .color-field{ display:flex; align-items:center; gap:10px; }
-.color-field .swatch{ width:34px; height:34px; flex:none; border-radius:9px; border:1.5px solid var(--line); background:transparent; }
-.color-field input{ flex:1; }
+.color-field input[type="color"]{ width:44px; height:40px; flex:none; padding:3px; border:1.5px solid var(--line);
+                                  border-radius:9px; background:#fff; cursor:pointer; }
+.color-field input[type="text"]{ flex:1; }
+.color-pal{ display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
+.pal-sw{ width:26px; height:26px; flex:none; border-radius:8px; border:2px solid #fff; outline:1px solid var(--line);
+         cursor:pointer; padding:0; transition:transform .12s ease, outline-color .12s ease; }
+.pal-sw:hover{ transform:scale(1.16); }
+.pal-sw.on{ outline:2px solid var(--carbon); }
 
 /* Uploader de imagen única */
 .img-single{ display:flex; align-items:center; gap:14px; }
