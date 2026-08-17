@@ -32,6 +32,9 @@
     return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
       .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
+  // Paleta de la marca + acentos usados en la web (categorías / pasos de compra).
+  var COLOR_PALETTE = ['#1D703A', '#3A8A47', '#2F8FD6', '#3A6EA5', '#17A2B8', '#2AA5B5',
+                       '#6C5CE7', '#E1477E', '#E8722A', '#E0A100', '#C0392B', '#202023'];
   function mediaUrl(path) {
     if (!path) return '';
     if (/^https?:\/\//.test(path) || /^data:/.test(path)) return path;
@@ -80,8 +83,13 @@
             return '<option value="' + esc(val) + '">' + esc(lab) + '</option>';
           }).join('') + '</select>';
       case 'color':
-        return '<div class="color-field"><span class="swatch" data-swatch></span>' +
-          '<input name="' + f.name + '" type="text" placeholder="' + esc(f.placeholder || '#1D703A') + '"></div>';
+        return '<div class="color-field">' +
+          '<input type="color" data-colorpick value="#1D703A" aria-label="Elegir color">' +
+          '<input name="' + f.name + '" type="text" placeholder="' + esc(f.placeholder || '#1D703A') + '">' +
+          '</div>' +
+          '<div class="color-pal" data-colorpal>' + COLOR_PALETTE.map(function (c) {
+            return '<button type="button" class="pal-sw" data-pal="' + c + '" style="background:' + c + '" title="' + c + '"></button>';
+          }).join('') + '</div>';
       case 'image':
         return '<div class="img-single" data-imgfield="' + f.name + '">' +
           '<div class="img-single-preview" data-prev></div>' +
@@ -110,8 +118,14 @@
   }
 
   function updateSwatch(input) {
-    var sw = input.parentNode.querySelector('[data-swatch]');
-    if (sw) sw.style.background = (input.value || '').trim() || 'transparent';
+    var field = input.closest('.field') || input.parentNode;
+    var v = (input.value || '').trim();
+    var pick = field.querySelector('[data-colorpick]');
+    if (pick && /^#[0-9a-fA-F]{6}$/.test(v)) pick.value = v;
+    var pal = field.querySelector('[data-colorpal]');
+    if (pal) Array.prototype.forEach.call(pal.querySelectorAll('[data-pal]'), function (b) {
+      b.classList.toggle('on', b.getAttribute('data-pal').toLowerCase() === v.toLowerCase());
+    });
   }
   function renderImagePreview(scope, f, inst) {
     var wrap = scope.querySelector('[data-imgfield="' + f.name + '"]'); if (!wrap) return;
@@ -190,8 +204,17 @@
 
   // ---- cableado de widgets (color/imagen/slug) -----------------------
   function wireWidgets(scope, fields, inst) {
-    Array.prototype.forEach.call(scope.querySelectorAll('.color-field input'), function (i) {
-      updateSwatch(i); i.addEventListener('input', function () { updateSwatch(i); });
+    Array.prototype.forEach.call(scope.querySelectorAll('.color-field input[type="text"]'), function (i) {
+      var field = i.closest('.field') || i.parentNode;
+      updateSwatch(i);
+      i.addEventListener('input', function () { updateSwatch(i); });
+      var pick = field.querySelector('[data-colorpick]');
+      if (pick) pick.addEventListener('input', function () { i.value = pick.value.toUpperCase(); updateSwatch(i); });
+      var pal = field.querySelector('[data-colorpal]');
+      if (pal) pal.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-pal]'); if (!b) return;
+        i.value = b.getAttribute('data-pal'); updateSwatch(i);
+      });
     });
     fields.forEach(function (f) {
       if (f.type !== 'image') return;
