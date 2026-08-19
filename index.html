@@ -1562,8 +1562,8 @@ class Component extends DCLogic {
       // si hay color de campaña definido; si no, mantienen su color original.
       eyebrowColor: (SETTINGS && SETTINGS.heading_color) || '#3A8A47',
       onDarkTitleColor: (SETTINGS && SETTINGS.heading_color) || '#ffffff',
-      heroTitleColor: (BANNERS.hero && BANNERS.hero.text_color) || (SETTINGS && SETTINGS.heading_color) || '#202023',
-      featTitleColor: (BANNERS.featured_promotion && BANNERS.featured_promotion.text_color) || '#ffffff',
+      heroTitleColor: (SETTINGS && SETTINGS.heading_color) || '#202023',
+      featTitleColor: (SETTINGS && SETTINGS.heading_color) || '#ffffff',
       // La imagen semilla (assets/prod-1.jpg) no es un hero real: mantener el diseño hasta que suban una.
       heroImg: (BANNERS.hero && BANNERS.hero.image_url && !/assets\/prod-1\.jpg$/.test(BANNERS.hero.image_url)) ? BANNERS.hero.image_url : 'assets/hero.jpg',
       heroImgM: (BANNERS.hero && BANNERS.hero.image_url && !/assets\/prod-1\.jpg$/.test(BANNERS.hero.image_url)) ? BANNERS.hero.image_url : 'assets/hero-mobile.jpg',
