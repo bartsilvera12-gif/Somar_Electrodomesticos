@@ -220,7 +220,7 @@
     <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
       <div>
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Categorías</span>
-        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">¿Qué estás buscando?</h2>
+        <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">¿Qué estás buscando?</h2>
       </div>
       <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px">Ver todo el catálogo →</a>
     </div>
@@ -250,7 +250,7 @@
     <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
       <div>
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Selección SOMAR</span>
-        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Productos destacados</h2>
+        <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Productos destacados</h2>
       </div>
       <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px">Ver todos →</a>
     </div>
@@ -340,7 +340,7 @@
       <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px">
         <div>
           <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Más vendidos</span>
-          <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Los favoritos de nuestros clientes</h2>
+          <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Los favoritos de nuestros clientes</h2>
         </div>
         <div style="display:flex;gap:10px">
           <button onClick="{{ scrollLeft }}" aria-label="Anterior" style="width:46px;height:46px;border-radius:99px;border:1.5px solid #dde7e0;background:#fff;cursor:pointer;display:grid;place-items:center;transition:border-color 200ms ease,background 200ms ease" style-hover="border-color:#1D703A;background:#EEF3EF">
@@ -398,7 +398,7 @@
       </div>
       <div>
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Cómo comprar</span>
-        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Comprar nunca fue tan fácil</h2>
+        <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Comprar nunca fue tan fácil</h2>
         <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
           <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
             <div style="display:flex;gap:14px;align-items:flex-start;border:1.5px solid {{ s.border }};background:{{ s.tint }};border-radius:16px;padding:14px 16px;transition:transform 220ms ease,box-shadow 220ms ease" style-hover="transform:translateX(4px);box-shadow:0 12px 26px {{ s.tint }}">
@@ -436,7 +436,7 @@
       </div>
       <div>
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Sobre SOMAR</span>
-        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 16px;line-height:1.1">Tecnología y calidad para tu hogar</h2>
+        <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 16px;line-height:1.1">Tecnología y calidad para tu hogar</h2>
         <p style="font-size:17.5px;line-height:1.6;color:#55605a;margin:0;max-width:52ch;text-wrap:pretty">En SOMAR Electrodomésticos ofrecemos productos confiables y una atención cercana. Te acompañamos antes, durante y después de la compra para que elijas con seguridad.</p>
         <div style="display:none;gap:34px;margin-top:28px;flex-wrap:wrap">
           <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
@@ -453,7 +453,7 @@
   <section class="testi" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="margin-bottom:26px">
       <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Testimonios</span>
-      <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Clientes que confían en SOMAR</h2>
+      <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Clientes que confían en SOMAR</h2>
     </div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
       <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
@@ -474,7 +474,7 @@
 
   <section style="display:none;max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px">
-      <h2 style="font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:-0.02em;margin:0">Seguinos en nuestras redes</h2>
+      <h2 style="color:{{ headingColor }};font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:-0.02em;margin:0">Seguinos en nuestras redes</h2>
       <a href="https://instagram.com" target="_blank" rel="noopener" style="height:48px;padding:0 24px;border-radius:99px;border:1.5px solid #202023;color:#202023;font-weight:900;font-size:15px;display:inline-flex;align-items:center;transition:border-color 200ms ease,color 200ms ease" style-hover="border-color:#1D703A;color:#1D703A">Seguir a SOMAR</a>
     </div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
@@ -488,7 +488,7 @@
 
   <section id="contacto" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px clamp(56px,7vw,90px)">
     <div data-reveal style="border-radius:28px;background:#EEF3EF;padding:clamp(36px,5vw,64px);text-align:center">
-      <h2 style="font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-0.025em;margin:0;line-height:1.06">¿Buscás un electrodoméstico?</h2>
+      <h2 style="color:{{ headingColor }};font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-0.025em;margin:0;line-height:1.06">¿Buscás un electrodoméstico?</h2>
       <p style="font-size:18px;color:#55605a;margin:14px auto 0;max-width:48ch;line-height:1.55">Escribinos y te ayudamos a encontrar la mejor opción.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
         <a href="{{ waLink }}" target="_blank" rel="noopener" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">Hablar por WhatsApp</a>
@@ -504,7 +504,7 @@
   <div style="font-family:'Roboto Condensed',sans-serif;font-size:14.5px;color:#8b958f;margin-bottom:18px">
     <a href="#inicio" onClick="{{ goHome }}">Inicio</a> / <span style="color:#202023">Productos</span>
   </div>
-  <h1 style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.025em;margin:0 0 6px">Productos</h1>
+  <h1 style="color:{{ headingColor }};font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.025em;margin:0 0 6px">Productos</h1>
   <p style="color:#7c8781;font-size:16px;margin:0 0 24px">{{ resultLabel }}</p>
 
   <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
@@ -634,7 +634,7 @@
     </div>
     <div>
       <div style="font-family:'Roboto Condensed',sans-serif;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;color:#8b958f">{{ current.brand }}</div>
-      <h1 style="font-size:clamp(26px,3.4vw,38px);font-weight:900;letter-spacing:-0.02em;line-height:1.12;margin:8px 0 0">{{ current.name }}</h1>
+      <h1 style="color:{{ headingColor }};font-size:clamp(26px,3.4vw,38px);font-weight:900;letter-spacing:-0.02em;line-height:1.12;margin:8px 0 0">{{ current.name }}</h1>
       <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:20px">
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:clamp(34px,4.4vw,46px);color:#1D703A;line-height:1">{{ current.priceFmt }}</span>
         <sc-if value="{{ current.prevFmt }}" hint-placeholder-val="{{ true }}">
@@ -711,7 +711,7 @@
   </div>
 
   <div style="margin-top:clamp(48px,6vw,80px)">
-    <h2 style="font-size:clamp(22px,2.8vw,30px);font-weight:900;letter-spacing:-0.02em;margin:0 0 20px">Productos relacionados</h2>
+    <h2 style="color:{{ headingColor }};font-size:clamp(22px,2.8vw,30px);font-weight:900;letter-spacing:-0.02em;margin:0 0 20px">Productos relacionados</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px">
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <article style="border:1px solid #e8eee9;border-radius:20px;background:#fff;overflow:hidden;transition:transform 260ms ease,box-shadow 260ms ease" style-hover="transform:translateY(-6px);box-shadow:0 18px 36px rgba(32,32,35,0.1)">
@@ -1554,8 +1554,11 @@ class Component extends DCLogic {
       heroTitle: (BANNERS.hero && BANNERS.hero.title) || '¡Tu Hogar Merece lo Mejor!',
       heroSub: (BANNERS.hero && BANNERS.hero.subtitle) || 'Electrodomésticos de Calidad a tu Alcance',
       heroCta: (BANNERS.hero && BANNERS.hero.cta_label) || 'Ver productos',
-      // Color del título editable por campaña (vacío = color del diseño).
-      heroTitleColor: (BANNERS.hero && BANNERS.hero.text_color) || '#202023',
+      // Colores de títulos editables por campaña (vacío = color del diseño).
+      // Global (Configuración → Apariencia) para todos los títulos claros;
+      // el color propio de cada banner (Contenido → Banners) tiene prioridad.
+      headingColor: (SETTINGS && SETTINGS.heading_color) || '#202023',
+      heroTitleColor: (BANNERS.hero && BANNERS.hero.text_color) || (SETTINGS && SETTINGS.heading_color) || '#202023',
       featTitleColor: (BANNERS.featured_promotion && BANNERS.featured_promotion.text_color) || '#ffffff',
       // La imagen semilla (assets/prod-1.jpg) no es un hero real: mantener el diseño hasta que suban una.
       heroImg: (BANNERS.hero && BANNERS.hero.image_url && !/assets\/prod-1\.jpg$/.test(BANNERS.hero.image_url)) ? BANNERS.hero.image_url : 'assets/hero.jpg',
