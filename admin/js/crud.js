@@ -24,6 +24,12 @@
   var AUTH = window.SOMAR_AUTH;
   var cfg = window.SOMAR_CONFIG || {};
 
+  // Si el hosting quedó con una copia vieja del panel (típico: se extrajo el
+  // build sin sobrescribir admin/), falta storage.js y las subidas fallarían
+  // con un error de CORS ilegible. Mejor decir exactamente qué pasa.
+  var STALE_PANEL_MSG = 'El panel del servidor está desactualizado: falta ' +
+    'admin/js/storage.js. Volvé a subir la carpeta admin/ del build.';
+
   // ---- helpers -------------------------------------------------------
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -183,15 +189,21 @@
     return true;
   }
   async function uploadImages(inst, fields, payload) {
+    if (!window.SOMAR_STORAGE) throw new Error(STALE_PANEL_MSG);
     for (var i = 0; i < fields.length; i++) {
       var f = fields[i]; if (f.type !== 'image') continue;
       var im = inst.images[f.name] || {};
       if (im.file) {
-        var ext = (im.file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-        var path = inst.table + '/' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '.' + ext;
-        var up = await inst.sb.storage.from(cfg.STORAGE_BUCKET || 'somar-media').upload(path, im.file, { contentType: im.file.type });
-        if (up.error) throw up.error;
-        payload[f.name] = path;
+        // Si ya se subió en un intento anterior que falló al guardar, se
+        // reutiliza: evita dejar copias huérfanas en el bucket al reintentar.
+        if (!im.uploadedPath) {
+          var ext = (im.file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+          var path = inst.table + '/' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '.' + ext;
+          var up = await window.SOMAR_STORAGE.upload(path, im.file);
+          if (up.error) throw up.error;
+          im.uploadedPath = (up.data && up.data.path) || path;
+        }
+        payload[f.name] = im.uploadedPath;
       } else if (im.cleared) { payload[f.name] = null; }
       else { payload[f.name] = im.path || null; }
     }
@@ -221,6 +233,7 @@
         if (!/^image\//.test(fl.type)) { toast('Solo imágenes.', 'err'); return; }
         if (fl.size > 5 * 1024 * 1024) { toast('Máximo 5MB por imagen.', 'err'); return; }
         inst.images[f.name].file = fl; inst.images[f.name].cleared = false;
+        inst.images[f.name].uploadedPath = null;   // archivo nuevo: hay que subirlo
         renderImagePreview(scope, f, inst); e.target.value = '';
       });
       if (clear) clear.addEventListener('click', function () {

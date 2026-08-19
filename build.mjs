@@ -18,6 +18,7 @@ const INCLUDE = [
   'support.js',
   'image-slot.js',
   'js',
+  'api',
   'assets',
   'admin',
   'politicadeprivacidad'

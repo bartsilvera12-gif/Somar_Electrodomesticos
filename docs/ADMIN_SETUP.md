@@ -123,14 +123,73 @@ La migración crea el bucket público `somar-media` con políticas:
 - **Lectura pública** de los objetos.
 - **Escritura/borrado** solo para administradores (`is_admin()`).
 
-Organización sugerida de paths:
+Organización de paths:
 ```
-products/{product-id}/{timestamp}-nombre.webp
-categories/...
+products/{slug}/{timestamp}-{n}.webp
+categories/{timestamp}-{rand}.webp
 brands/...
 site/...
 social/...
 ```
+
+> Los productos se agrupan por **slug**, no por id: las imágenes se suben
+> *antes* de insertar el producto (para no dejar productos a medio crear si la
+> subida falla), y en ese momento el id todavía no existe. El path real de cada
+> archivo queda guardado en `product_images.storage_path`, así que renombrar un
+> producto después no afecta a las imágenes ya subidas.
+
+### 6.1 Subida de imágenes vía `/api/upload.php`
+
+El servicio de Storage de `api.neura.com.py` **no devuelve headers CORS** en
+`/storage/v1/*`. Por eso el navegador bloqueaba el preflight y el panel fallaba
+con `No se pudo guardar: Failed to fetch` al subir una imagen nueva.
+
+El panel ya no sube directo a Storage. Sube a **`/api/upload.php`** (mismo
+origen que el sitio, así que CORS no aplica) y ese archivo reenvía el archivo a
+Storage **desde el servidor** — una llamada servidor↔servidor no tiene CORS.
+
+```
+navegador ──► somarelectropy.com/api/upload.php ──► api.neura.com.py/storage/v1/...
+              (mismo origen, sin CORS)              (servidor↔servidor, sin CORS)
+```
+
+- **No hay secretos en `api/upload.php`.** Se reenvía el JWT del admin logueado,
+  así que la policy `somar_media_admin_write` (`is_admin()`) sigue decidiendo
+  quién puede escribir. La `SERVICE_ROLE_KEY` no se usa ni se guarda ahí.
+- Valida el tipo real del archivo (no el declarado), el tamaño (máx. 10 MB) y
+  bloquea path traversal.
+- **Requiere PHP con cURL** (Hostinger lo trae por defecto).
+- **La carpeta `api/` tiene que subirse al hosting.** `build.mjs` ya la incluye
+  en el `dist/`.
+- Si `api/upload.php` no está en el servidor, el panel vuelve a intentar la
+  subida directa (que fallará mientras Storage no tenga CORS).
+
+**Si algún día NEURA configura CORS en `/storage/v1/*`**, este rodeo deja de ser
+necesario: poner `PROXY_ENDPOINT = null` en `admin/js/storage.js` y todo vuelve
+a ir directo a Storage, sin tocar nada más.
+
+### 6.2 Verificar el deploy: `node check-deploy.mjs`
+
+El extractor de ZIP de Hostinger **no sobrescribe carpetas que ya existen**.
+Pasó una vez: se subió el build y quedó `api/` nueva pero `admin/` vieja. El
+panel entonces no cargaba `storage.js`, subía directo a Storage y fallaba con
+`Failed to fetch` — un error que no dice nada sobre el deploy.
+
+Después de cada subida al hosting:
+
+```
+node check-deploy.mjs
+```
+
+Compara el tamaño de cada `.html`/`.js` de `dist/` contra lo que sirve el
+servidor y lista lo que quedó viejo o falta. Sale con código 1 si hay algo
+desactualizado. También detecta el caso silencioso en que Hostinger devuelve la
+**portada con status 200** para una ruta que no existe.
+
+**Para forzar el reemplazo:** renombrar la carpeta en `public_html` (ej.
+`admin` → `admin_old`) antes de extraer el ZIP, y borrarla una vez verificado.
+
+---
 
 Migrar las fotos actuales (`assets/prod-*.jpg`) al bucket es opcional: por ahora
 `product_images.image_url` apunta a `assets/prod-N.jpg` (siguen funcionando).
