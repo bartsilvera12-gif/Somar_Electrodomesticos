@@ -197,7 +197,7 @@
     <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:transparent"></div>
     <div class="hero-inner" style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
       <div class="hero-copy" style="max-width:560px">
-        <h1 class="hero-h1" style="font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">{{ heroTitle }}</h1>
+        <h1 class="hero-h1" style="color:{{ heroTitleColor }};font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">{{ heroTitle }}</h1>
         <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">{{ heroSub }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:somarUp 560ms 240ms ease both">
           <a href="#productos" onClick="{{ goList }}" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.24);transition:transform 220ms ease,background 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">{{ heroCta }}
@@ -381,7 +381,7 @@
     <div data-reveal style="position:relative;border-radius:28px;overflow:hidden;background:#202023;color:#fff;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));min-height:340px">
       <div style="padding:clamp(32px,4.4vw,58px);display:flex;flex-direction:column;justify-content:center;gap:18px">
         <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;color:#7ec78f">{{ featEyebrow }}</span>
-        <h2 style="font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-0.025em;line-height:1.06;margin:0">{{ featTitle }}</h2>
+        <h2 style="color:{{ featTitleColor }};font-size:clamp(30px,4vw,50px);font-weight:900;letter-spacing:-0.025em;line-height:1.06;margin:0">{{ featTitle }}</h2>
         <p style="font-size:17.5px;line-height:1.55;color:#c4ccc7;margin:0;max-width:44ch">{{ featSub }}</p>
         <a href="#productos" onClick="{{ goList }}" style="align-self:flex-start;margin-top:8px;height:54px;padding:0 28px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16px;display:inline-flex;align-items:center;transition:background 220ms ease,transform 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px);color:#fff">{{ featCta }}</a>
       </div>
@@ -1554,6 +1554,9 @@ class Component extends DCLogic {
       heroTitle: (BANNERS.hero && BANNERS.hero.title) || '¡Tu Hogar Merece lo Mejor!',
       heroSub: (BANNERS.hero && BANNERS.hero.subtitle) || 'Electrodomésticos de Calidad a tu Alcance',
       heroCta: (BANNERS.hero && BANNERS.hero.cta_label) || 'Ver productos',
+      // Color del título editable por campaña (vacío = color del diseño).
+      heroTitleColor: (BANNERS.hero && BANNERS.hero.text_color) || '#202023',
+      featTitleColor: (BANNERS.featured_promotion && BANNERS.featured_promotion.text_color) || '#ffffff',
       // La imagen semilla (assets/prod-1.jpg) no es un hero real: mantener el diseño hasta que suban una.
       heroImg: (BANNERS.hero && BANNERS.hero.image_url && !/assets\/prod-1\.jpg$/.test(BANNERS.hero.image_url)) ? BANNERS.hero.image_url : 'assets/hero.jpg',
       heroImgM: (BANNERS.hero && BANNERS.hero.image_url && !/assets\/prod-1\.jpg$/.test(BANNERS.hero.image_url)) ? BANNERS.hero.image_url : 'assets/hero-mobile.jpg',
