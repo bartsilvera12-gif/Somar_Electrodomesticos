@@ -124,8 +124,9 @@
         (f.hint ? '<span class="fhint">' + esc(f.hint) + '</span>' : '') + '</div>';
     }
     var col = (f.type === 'textarea' || f.type === 'image' || f.col === 2 || f.full) ? ' col2' : '';
+    var only = (f.type === 'color' && f.presetsOnly) ? ' presets-only' : '';
     var inner = fieldControl(f) + (f.hint ? '<span class="fhint">' + esc(f.hint) + '</span>' : '');
-    return '<div class="field' + col + '" data-field="' + f.name + '"><label>' + esc(f.label || f.name) +
+    return '<div class="field' + col + only + '" data-field="' + f.name + '"><label>' + esc(f.label || f.name) +
       (f.required ? ' *' : '') + '</label>' + inner + '</div>';
   }
 

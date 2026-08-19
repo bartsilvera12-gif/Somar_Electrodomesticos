@@ -214,6 +214,10 @@ select.inp{ padding-right:8px; cursor:pointer; }
 .pal-theme:hover{ border-color:var(--verde); transform:translateY(-1px); }
 .pal-theme.on{ border-color:var(--carbon); background:var(--claro); }
 .pal-dot{ width:16px; height:16px; flex:none; border-radius:99px; }
+/* Modo "solo temas": oculta el color libre y la paleta, deja los chips.
+   El input de valor sigue en el DOM (oculto) para guardar la selección. */
+.field.presets-only .color-field, .field.presets-only .color-pal{ display:none; }
+.field.presets-only .theme-pal{ margin-bottom:0; }
 
 /* Uploader de imagen única */
 .img-single{ display:flex; align-items:center; gap:14px; }
