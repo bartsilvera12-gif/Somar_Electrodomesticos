@@ -192,13 +192,13 @@
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div>
-  <section id="inicio" class="hero" style="position:relative;overflow:hidden;background:#A8CAB4 url('{{ heroImg }}') right center/contain no-repeat;min-height:clamp(440px,46vw,600px)">
+  <section id="inicio" class="hero" style="position:relative;overflow:hidden;background:#A8CAB4 url('{{ heroImg }}') right center/contain no-repeat;min-height:clamp(520px,54vw,720px)">
     <canvas id="somar-hero-mesh" ref="{{ heroCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:none;z-index:0;pointer-events:none"></canvas>
-    <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:transparent"></div>
+    <div aria-hidden="true" class="hero-scrim" style="position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 100% at 22% 50%, rgba(246,250,248,0.85) 0%, rgba(246,250,248,0.45) 36%, rgba(246,250,248,0) 64%)"></div>
     <div class="hero-inner" style="position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(40px,7vw,86px) 20px clamp(48px,7vw,96px)">
       <div class="hero-copy" style="max-width:560px">
-        <h1 class="hero-h1" style="color:{{ heroTitleColor }};font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;animation:somarUp 560ms 80ms ease both">{{ heroTitle }}</h1>
-        <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#55605a;max-width:520px;margin:18px 0 0;text-wrap:pretty;animation:somarUp 560ms 160ms ease both">{{ heroSub }}</p>
+        <h1 class="hero-h1" style="color:{{ heroTitleColor }};font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:900;letter-spacing:-0.025em;margin:20px 0 0;text-wrap:balance;text-shadow:0 1px 12px rgba(255,255,255,0.6);animation:somarUp 560ms 80ms ease both">{{ heroTitle }}</h1>
+        <p class="hero-sub" style="font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#2e352f;font-weight:500;max-width:520px;margin:18px 0 0;text-wrap:pretty;text-shadow:0 1px 8px rgba(255,255,255,0.5);animation:somarUp 560ms 160ms ease both">{{ heroSub }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:somarUp 560ms 240ms ease both">
           <a href="#productos" onClick="{{ goList }}" style="height:56px;padding:0 30px;border-radius:99px;background:#1D703A;color:#fff;font-weight:900;font-size:16.5px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(29,112,58,0.24);transition:transform 220ms ease,background 220ms ease" style-hover="background:#3A8A47;transform:translateY(-2px)">{{ heroCta }}
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"></line><polyline points="13,6 19,12 13,18"></polyline></svg>
