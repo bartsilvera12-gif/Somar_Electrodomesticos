@@ -89,7 +89,13 @@
             return '<option value="' + esc(val) + '">' + esc(lab) + '</option>';
           }).join('') + '</select>';
       case 'color':
-        return '<div class="color-field">' +
+        var themes = (f.presets || []).map(function (p) {
+          var dot = p.color ? 'background:' + p.color : 'background:#fff;border:1.5px solid var(--line)';
+          return '<button type="button" class="pal-theme" data-pal="' + esc(p.color || '') + '" title="' + esc(p.name) + '">' +
+            '<span class="pal-dot" style="' + dot + '"></span>' + esc(p.name) + '</button>';
+        }).join('');
+        return (themes ? '<div class="theme-pal" data-colorpal>' + themes + '</div>' : '') +
+          '<div class="color-field">' +
           '<input type="color" data-colorpick value="#1D703A" aria-label="Elegir color">' +
           '<input name="' + f.name + '" type="text" placeholder="' + esc(f.placeholder || '#1D703A') + '">' +
           '</div>' +
@@ -128,9 +134,8 @@
     var v = (input.value || '').trim();
     var pick = field.querySelector('[data-colorpick]');
     if (pick && /^#[0-9a-fA-F]{6}$/.test(v)) pick.value = v;
-    var pal = field.querySelector('[data-colorpal]');
-    if (pal) Array.prototype.forEach.call(pal.querySelectorAll('[data-pal]'), function (b) {
-      b.classList.toggle('on', b.getAttribute('data-pal').toLowerCase() === v.toLowerCase());
+    Array.prototype.forEach.call(field.querySelectorAll('[data-pal]'), function (b) {
+      b.classList.toggle('on', (b.getAttribute('data-pal') || '').toLowerCase() === v.toLowerCase());
     });
   }
   function renderImagePreview(scope, f, inst) {
@@ -217,10 +222,11 @@
       i.addEventListener('input', function () { updateSwatch(i); });
       var pick = field.querySelector('[data-colorpick]');
       if (pick) pick.addEventListener('input', function () { i.value = pick.value.toUpperCase(); updateSwatch(i); });
-      var pal = field.querySelector('[data-colorpal]');
-      if (pal) pal.addEventListener('click', function (e) {
+      // Clic en cualquier swatch/tema (data-pal vacío = "Normal", limpia el color).
+      field.addEventListener('click', function (e) {
         var b = e.target.closest('[data-pal]'); if (!b) return;
-        i.value = b.getAttribute('data-pal'); updateSwatch(i);
+        e.preventDefault();
+        i.value = b.getAttribute('data-pal') || ''; updateSwatch(i);
       });
     });
     fields.forEach(function (f) {

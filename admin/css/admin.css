@@ -206,6 +206,14 @@ select.inp{ padding-right:8px; cursor:pointer; }
          cursor:pointer; padding:0; transition:transform .12s ease, outline-color .12s ease; }
 .pal-sw:hover{ transform:scale(1.16); }
 .pal-sw.on{ outline:2px solid var(--carbon); }
+/* Temas de campaña (chips con nombre) */
+.theme-pal{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.pal-theme{ display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px 0 10px; border-radius:99px;
+            border:1.5px solid var(--line); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700;
+            color:var(--carbon); cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .12s ease; }
+.pal-theme:hover{ border-color:var(--verde); transform:translateY(-1px); }
+.pal-theme.on{ border-color:var(--carbon); background:var(--claro); }
+.pal-dot{ width:16px; height:16px; flex:none; border-radius:99px; }
 
 /* Uploader de imagen única */
 .img-single{ display:flex; align-items:center; gap:14px; }

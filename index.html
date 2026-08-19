@@ -219,7 +219,7 @@
   <section id="categorias" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
       <div>
-        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Categorías</span>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Categorías</span>
         <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">¿Qué estás buscando?</h2>
       </div>
       <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px">Ver todo el catálogo →</a>
@@ -249,7 +249,7 @@
   <section id="productos" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
       <div>
-        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Selección SOMAR</span>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Selección SOMAR</span>
         <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Productos destacados</h2>
       </div>
       <a href="#productos" onClick="{{ goList }}" style="font-weight:700;font-size:15px">Ver todos →</a>
@@ -296,7 +296,7 @@
   <section id="ofertas" style="margin-top:clamp(56px,7vw,90px);background:#1D703A;color:#fff;overflow:hidden">
     <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,6vw,80px) 20px">
       <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px">
-        <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:0;max-width:16ch;line-height:1.08">Ofertas que no podés dejar pasar</h2>
+        <h2 style="color:{{ onDarkTitleColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:0;max-width:16ch;line-height:1.08">Ofertas que no podés dejar pasar</h2>
         <a href="#productos" onClick="{{ goOffers }}" style="height:50px;padding:0 26px;border-radius:99px;background:#fff;color:#1D703A;font-weight:900;font-size:15.5px;display:inline-flex;align-items:center;transition:transform 220ms ease" style-hover="transform:translateY(-2px);color:#1D703A">Ver todas las ofertas</a>
       </div>
       <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
@@ -339,7 +339,7 @@
     <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,6vw,80px) 20px">
       <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px">
         <div>
-          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Más vendidos</span>
+          <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Más vendidos</span>
           <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Los favoritos de nuestros clientes</h2>
         </div>
         <div style="display:flex;gap:10px">
@@ -397,7 +397,7 @@
         <image-slot id="somar-comprar" src="assets/prod-4.jpg" fit="cover" shape="rect" placeholder="Comprá fácil en SOMAR"></image-slot>
       </div>
       <div>
-        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Cómo comprar</span>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Cómo comprar</span>
         <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Comprar nunca fue tan fácil</h2>
         <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
           <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
@@ -435,7 +435,7 @@
         <image-slot id="somar-local" src="assets/prod-10.jpg" fit="cover" shape="rect" placeholder="Foto del local o del equipo SOMAR"></image-slot>
       </div>
       <div>
-        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Sobre SOMAR</span>
+        <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Sobre SOMAR</span>
         <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 16px;line-height:1.1">Tecnología y calidad para tu hogar</h2>
         <p style="font-size:17.5px;line-height:1.6;color:#55605a;margin:0;max-width:52ch;text-wrap:pretty">En SOMAR Electrodomésticos ofrecemos productos confiables y una atención cercana. Te acompañamos antes, durante y después de la compra para que elijas con seguridad.</p>
         <div style="display:none;gap:34px;margin-top:28px;flex-wrap:wrap">
@@ -452,7 +452,7 @@
 
   <section class="testi" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,90px) 20px 0">
     <div data-reveal style="margin-bottom:26px">
-      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#3A8A47">Testimonios</span>
+      <span style="font-family:'Roboto Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:{{ eyebrowColor }}">Testimonios</span>
       <h2 style="color:{{ headingColor }};font-size:clamp(28px,3.6vw,42px);font-weight:900;letter-spacing:-0.02em;margin:8px 0 0">Clientes que confían en SOMAR</h2>
     </div>
     <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
@@ -1558,6 +1558,10 @@ class Component extends DCLogic {
       // Global (Configuración → Apariencia) para todos los títulos claros;
       // el color propio de cada banner (Contenido → Banners) tiene prioridad.
       headingColor: (SETTINGS && SETTINGS.heading_color) || '#202023',
+      // Eyebrows (etiquetas verdes) y títulos sobre fondo verde: solo cambian
+      // si hay color de campaña definido; si no, mantienen su color original.
+      eyebrowColor: (SETTINGS && SETTINGS.heading_color) || '#3A8A47',
+      onDarkTitleColor: (SETTINGS && SETTINGS.heading_color) || '#ffffff',
       heroTitleColor: (BANNERS.hero && BANNERS.hero.text_color) || (SETTINGS && SETTINGS.heading_color) || '#202023',
       featTitleColor: (BANNERS.featured_promotion && BANNERS.featured_promotion.text_color) || '#ffffff',
       // La imagen semilla (assets/prod-1.jpg) no es un hero real: mantener el diseño hasta que suban una.
