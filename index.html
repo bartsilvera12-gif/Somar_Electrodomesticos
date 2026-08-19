@@ -1155,7 +1155,7 @@ class Component extends DCLogic {
       if (Array.isArray(b.categories) && b.categories.length) {
         CATEGORIES = b.categories.map(c => c.name);
         const st = {};
-        b.categories.forEach(c => { st[c.name] = { icon: c.icon || '🛍️', accent: c.accent_color || '#1D703A' }; });
+        b.categories.forEach(c => { st[c.name] = { icon: c.icon || '🛍️', accent: c.accent_color || '#1D703A', image: c.image_url || '' }; });
         CATEGORY_STYLE = st;
       }
       if (b.settings) {
@@ -1537,7 +1537,9 @@ class Component extends DCLogic {
       categories: CATEGORIES.map((c, ci) => {
         const st = CATEGORY_STYLE[c] || { icon: '🛍️', accent: '#1D703A' };
         const rep = PRODUCTS.find(p => p.category === c);
-        const image = CATEGORY_REP_IMG[c] || (rep ? (PRODUCT_IMAGES[rep.id] || '') : '');
+        // Prioridad: imagen cargada en la categoría (Supabase) → mapa embebido → imagen de un producto de la categoría.
+        const catImg = st.image ? (window.SOMAR_MEDIA_URL ? window.SOMAR_MEDIA_URL(st.image) : st.image) : '';
+        const image = catImg || CATEGORY_REP_IMG[c] || (rep ? (rep.image || PRODUCT_IMAGES[rep.id] || '') : '');
         return {
           name: c,
           count: PRODUCTS.filter(p => p.category === c).length,
