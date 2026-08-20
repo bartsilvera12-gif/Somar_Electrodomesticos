@@ -229,7 +229,12 @@
         <button onClick="{{ c.go }}" class="somar-cat" style="position:relative;scroll-snap-align:start;min-width:200px;text-align:left;border:1.5px solid #e8eee9;background:#fff;border-radius:22px;padding:22px 18px 18px;overflow:hidden;cursor:pointer;font-family:'Lato',sans-serif" style-hover="border-color:{{ c.accent }};box-shadow:0 20px 40px {{ c.glow }}">
           <span aria-hidden="true" class="somar-cat-blob" style="position:absolute;top:-34px;right:-34px;width:96px;height:96px;border-radius:99px;background:{{ c.tint }}"></span>
           <span class="somar-cat-photo" style="position:relative;display:block;width:100%;height:150px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid #e9eeeb">
-            <img src="{{ c.image }}" alt="{{ c.name }}" style="width:100%;height:100%;object-fit:contain;padding:8px;display:block">
+            <sc-if value="{{ c.hasImage }}" hint-placeholder-val="{{ true }}">
+              <img src="{{ c.image }}" alt="{{ c.name }}" style="width:100%;height:100%;object-fit:contain;padding:8px;display:block">
+            </sc-if>
+            <sc-if value="{{ c.noImage }}" hint-placeholder-val="{{ false }}">
+              <span aria-hidden="true" style="position:absolute;inset:0;background:{{ c.tint }};display:grid;place-items:center;font-size:46px;line-height:1">{{ c.icon }}</span>
+            </sc-if>
           </span>
           <div style="position:relative;margin-top:16px">
             <div style="font-weight:900;font-size:17px;color:#202023">{{ c.name }}</div>
@@ -1536,15 +1541,14 @@ class Component extends DCLogic {
       offerCards: all.filter(p => p.previousPrice).slice(0, 2).map(p => ({ ...p, tag: 'Promoción', slot: 'offer-' + p.id, go: () => this.go('detalle', p.slug) })),
       categories: CATEGORIES.map((c, ci) => {
         const st = CATEGORY_STYLE[c] || { icon: '🛍️', accent: '#1D703A' };
-        const rep = PRODUCTS.find(p => p.category === c);
-        // Prioridad: imagen cargada en la categoría (Supabase) → mapa embebido → imagen de un producto de la categoría.
-        const catImg = st.image ? (window.SOMAR_MEDIA_URL ? window.SOMAR_MEDIA_URL(st.image) : st.image) : '';
-        const image = catImg || CATEGORY_REP_IMG[c] || (rep ? (rep.image || PRODUCT_IMAGES[rep.id] || '') : '');
+        // La imagen sale SOLO de lo cargado en el panel (categoría). Si no hay, se muestra
+        // un placeholder con el ícono — no se usa ninguna foto de producto ni fija del código.
+        const image = st.image ? (window.SOMAR_MEDIA_URL ? window.SOMAR_MEDIA_URL(st.image) : st.image) : '';
         return {
           name: c,
           count: PRODUCTS.filter(p => p.category === c).length,
           icon: st.icon, accent: st.accent, tint: hexToRgba(st.accent, 0.12), glow: hexToRgba(st.accent, 0.30),
-          image: image, slot: 'cat-' + ci,
+          image: image, hasImage: !!image, noImage: !image, slot: 'cat-' + ci,
           go: () => this.goFilter(c, 'Todas', 'Todos')
         };
       }).filter(c => c.count > 0),
